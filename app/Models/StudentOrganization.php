@@ -26,9 +26,8 @@ class StudentOrganization extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'is_group'  => 'boolean',
+        'is_group' => 'boolean',
     ];
-
 
     public function parent(): BelongsTo
     {

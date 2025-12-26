@@ -14,11 +14,9 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -61,7 +59,7 @@ class StudentOrganizationResource extends Resource
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(\App\Models\Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
+                        ->default(fn () => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
@@ -73,7 +71,9 @@ class StudentOrganizationResource extends Resource
                             ->maxLength(180)
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($state, $set, $get) {
-                                if (filled($get('slug'))) return;
+                                if (filled($get('slug'))) {
+                                    return;
+                                }
                                 $set('slug', Str::slug((string) $state));
                             })
                             ->columnSpan(10),
@@ -111,7 +111,7 @@ class StudentOrganizationResource extends Resource
                         ->relationship(
                             name: 'parent',
                             titleAttribute: 'name',
-                            modifyQueryUsing: fn($query) => $query
+                            modifyQueryUsing: fn ($query) => $query
                                 ->whereNull('parent_id')
                                 ->where('is_group', true)
                                 ->orderBy('sort_order')
@@ -119,7 +119,7 @@ class StudentOrganizationResource extends Resource
                         ->searchable()
                         ->preload()
                         ->nullable()
-                        ->disabled(fn($get) => (bool) $get('is_group')),
+                        ->disabled(fn ($get) => (bool) $get('is_group')),
 
                     Grid::make(12)->schema([
                         FileUpload::make('logo')
@@ -163,6 +163,7 @@ class StudentOrganizationResource extends Resource
                 ]),
         ]);
     }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -218,7 +219,7 @@ class StudentOrganizationResource extends Resource
                     ->relationship(
                         name: 'parent',
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn($query) => $query
+                        modifyQueryUsing: fn ($query) => $query
                             ->whereNull('parent_id')
                             ->where('is_group', true)
                             ->orderBy('sort_order')
@@ -241,10 +242,10 @@ class StudentOrganizationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListStudentOrganizations::route('/'),
+            'index' => ListStudentOrganizations::route('/'),
             'create' => CreateStudentOrganization::route('/create'),
-            'view'   => ViewStudentOrganization::route('/{record}'),
-            'edit'   => EditStudentOrganization::route('/{record}/edit'),
+            'view' => ViewStudentOrganization::route('/{record}'),
+            'edit' => EditStudentOrganization::route('/{record}/edit'),
         ];
     }
 }

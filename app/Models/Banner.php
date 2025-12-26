@@ -24,10 +24,10 @@ class Banner extends Model
     ];
 
     protected $casts = [
-        'is_active'   => 'boolean',
-        'is_pinned'   => 'boolean',
+        'is_active' => 'boolean',
+        'is_pinned' => 'boolean',
         'active_from' => 'datetime',
-        'active_to'   => 'datetime',
+        'active_to' => 'datetime',
     ];
 
     public function language(): BelongsTo

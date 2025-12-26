@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         $tables = ['banners', 'videos', 'student_organizations'];
-        
+
         foreach ($tables as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->foreignId('language_id')
@@ -21,7 +21,7 @@ return new class extends Migration
                     ->after('id')
                     ->constrained('languages')
                     ->nullOnDelete();
-                
+
                 $table->index('language_id');
             });
         }
@@ -38,11 +38,11 @@ return new class extends Migration
     public function down(): void
     {
         $tables = ['banners', 'videos', 'student_organizations'];
-        
+
         foreach ($tables as $table) {
             Schema::table($table, function (Blueprint $table) {
                 $table->dropForeign(['language_id']);
-                $table->dropIndex([$table->getTable() . '_language_id_index']);
+                $table->dropIndex([$table->getTable().'_language_id_index']);
                 $table->dropColumn('language_id');
             });
         }

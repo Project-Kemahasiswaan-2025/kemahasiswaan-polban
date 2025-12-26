@@ -4,21 +4,20 @@ namespace App\Filament\Widgets;
 
 use App\Models\Language;
 use Filament\Widgets\Widget;
-use Livewire\Attributes\On;
 
 class LanguageSwitcher extends Widget
 {
     protected string $view = 'filament.widgets.language-switcher';
-    
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     public function switchLanguage(int $languageId): void
     {
         $language = Language::findOrFail($languageId);
-        
+
         if ($language->is_active) {
             setActiveLanguage($language);
-            
+
             // Redirect to refresh the page with new locale
             $this->redirect(request()->header('Referer') ?: '/admin');
         }
@@ -34,4 +33,3 @@ class LanguageSwitcher extends Widget
         return Language::active()->get();
     }
 }
-

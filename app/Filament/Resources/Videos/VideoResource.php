@@ -44,7 +44,7 @@ class VideoResource extends Resource
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
+                        ->default(fn () => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
@@ -191,17 +191,19 @@ class VideoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListVideos::route('/'),
+            'index' => ListVideos::route('/'),
             'create' => CreateVideo::route('/create'),
-            'view'   => ViewVideo::route('/{record}'),
-            'edit'   => EditVideo::route('/{record}/edit'),
+            'view' => ViewVideo::route('/{record}'),
+            'edit' => EditVideo::route('/{record}/edit'),
         ];
     }
 
     private static function extractYoutubeId(string $url): ?string
     {
         $url = trim($url);
-        if ($url === '') return null;
+        if ($url === '') {
+            return null;
+        }
 
         if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
             return $url;
@@ -224,7 +226,7 @@ class VideoResource extends Resource
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query) {
             parse_str($query, $params);
-            if (!empty($params['v']) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $params['v'])) {
+            if (! empty($params['v']) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $params['v'])) {
                 return $params['v'];
             }
         }

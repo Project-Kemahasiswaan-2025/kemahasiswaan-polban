@@ -23,7 +23,7 @@ class BannerForm
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
+                        ->default(fn () => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
@@ -66,12 +66,12 @@ class BannerForm
                                 Select::make('url_target')
                                     ->label('Target')
                                     ->options([
-                                        '_self'  => 'Tab yang sama',
+                                        '_self' => 'Tab yang sama',
                                         '_blank' => 'Tab baru',
                                     ])
                                     ->default('_self')
-                                    ->visible(fn($get): bool => filled($get('url')))
-                                    ->dehydrated(fn($get): bool => filled($get('url'))),
+                                    ->visible(fn ($get): bool => filled($get('url')))
+                                    ->dehydrated(fn ($get): bool => filled($get('url'))),
                             ]),
                         ])
                         ->columns(1),

@@ -65,7 +65,6 @@ class BannerResource extends Resource
                             ->columnSpan(2),
                     ]),
 
-
                     Fieldset::make('Link (Opsional)')
                         ->schema([
                             Grid::make(2)->schema([
@@ -80,7 +79,7 @@ class BannerResource extends Resource
                                 Select::make('url_target')
                                     ->label('Target')
                                     ->options([
-                                        '_self'  => 'Tab yang sama',
+                                        '_self' => 'Tab yang sama',
                                         '_blank' => 'Tab baru',
                                     ])
                                     ->default('_self'),
@@ -115,7 +114,6 @@ class BannerResource extends Resource
                 ->columns(1),
         ]);
     }
-
 
     public static function infolist(Schema $schema): Schema
     {

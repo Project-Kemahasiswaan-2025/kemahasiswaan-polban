@@ -18,23 +18,23 @@ class SetLocaleMiddleware
     {
         // Get language from session
         $languageId = session('active_language_id');
-        
+
         if ($languageId) {
             $language = Language::find($languageId);
             if ($language && $language->is_active) {
                 app()->setLocale($language->code);
+
                 return $next($request);
             }
         }
-        
+
         // Set default language if not set or invalid
         $defaultLanguage = Language::active()->default()->first() ?? Language::active()->first();
         if ($defaultLanguage) {
             session(['active_language_id' => $defaultLanguage->id]);
             app()->setLocale($defaultLanguage->code);
         }
-        
+
         return $next($request);
     }
 }
-
