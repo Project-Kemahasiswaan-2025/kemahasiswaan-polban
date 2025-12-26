@@ -135,6 +135,15 @@ class BannerResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('language.icon')
+                    ->label('')
+                    ->size(TextColumn\TextColumnSize::Large),
+
+                TextColumn::make('language.name')
+                    ->label('Bahasa')
+                    ->badge()
+                    ->sortable(),
+
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -163,6 +172,10 @@ class BannerResource extends Resource
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
+                \Filament\Tables\Filters\SelectFilter::make('language_id')
+                    ->label('Bahasa')
+                    ->relationship('language', 'name')
+                    ->preload(),
             ])
             ->actions([
                 EditAction::make(),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Banners\Schemas;
 
+use App\Models\Language;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -19,6 +20,14 @@ class BannerForm
         return $schema->schema([
             Section::make('Banner')
                 ->schema([
+                    Select::make('language_id')
+                        ->label('Bahasa')
+                        ->options(Language::active()->pluck('name', 'id'))
+                        ->default(fn() => activeLanguage()?->id)
+                        ->required()
+                        ->native(false)
+                        ->columnSpanFull(),
+
                     FileUpload::make('image_path')
                         ->label('Gambar')
                         ->disk('public')

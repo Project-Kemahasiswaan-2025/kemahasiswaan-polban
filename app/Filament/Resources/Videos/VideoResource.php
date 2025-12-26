@@ -7,11 +7,13 @@ use App\Filament\Resources\Videos\Pages\CreateVideo;
 use App\Filament\Resources\Videos\Pages\EditVideo;
 use App\Filament\Resources\Videos\Pages\ListVideos;
 use App\Filament\Resources\Videos\Pages\ViewVideo;
+use App\Models\Language;
 use App\Models\Video;
 use BackedEnum;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -39,6 +41,14 @@ class VideoResource extends Resource
         return $schema->schema([
             Section::make('Video YouTube')
                 ->schema([
+                    Select::make('language_id')
+                        ->label('Bahasa')
+                        ->options(Language::active()->pluck('name', 'id'))
+                        ->default(fn() => activeLanguage()?->id)
+                        ->required()
+                        ->native(false)
+                        ->columnSpanFull(),
+
                     Grid::make(12)->schema([
                         TextInput::make('title')
                             ->label('Judul')
@@ -128,6 +138,15 @@ class VideoResource extends Resource
                     ->sortable()
                     ->wrap(),
 
+                TextColumn::make('language.icon')
+                    ->label('')
+                    ->size(TextColumn\TextColumnSize::Large),
+
+                TextColumn::make('language.name')
+                    ->label('Bahasa')
+                    ->badge()
+                    ->sortable(),
+
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -151,6 +170,10 @@ class VideoResource extends Resource
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
+                \Filament\Tables\Filters\SelectFilter::make('language_id')
+                    ->label('Bahasa')
+                    ->relationship('language', 'name')
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),

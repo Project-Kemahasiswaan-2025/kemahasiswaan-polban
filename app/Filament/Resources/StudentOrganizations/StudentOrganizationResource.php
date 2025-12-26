@@ -58,6 +58,14 @@ class StudentOrganizationResource extends Resource
         return $schema->schema([
             Section::make('Informasi')
                 ->schema([
+                    Select::make('language_id')
+                        ->label('Bahasa')
+                        ->options(\App\Models\Language::active()->pluck('name', 'id'))
+                        ->default(fn() => activeLanguage()?->id)
+                        ->required()
+                        ->native(false)
+                        ->columnSpanFull(),
+
                     Grid::make(12)->schema([
                         TextInput::make('name')
                             ->label('Nama')
@@ -170,6 +178,15 @@ class StudentOrganizationResource extends Resource
                     ->sortable()
                     ->wrap(),
 
+                TextColumn::make('language.icon')
+                    ->label('')
+                    ->size(TextColumn\TextColumnSize::Large),
+
+                TextColumn::make('language.name')
+                    ->label('Bahasa')
+                    ->badge()
+                    ->sortable(),
+
                 IconColumn::make('is_group')
                     ->label('Group')
                     ->boolean()
@@ -191,6 +208,11 @@ class StudentOrganizationResource extends Resource
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
+                SelectFilter::make('language_id')
+                    ->label('Bahasa')
+                    ->relationship('language', 'name')
+                    ->preload(),
+
                 SelectFilter::make('parent_id')
                     ->label('Kategori')
                     ->relationship(
