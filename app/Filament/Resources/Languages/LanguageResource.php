@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -79,7 +80,7 @@ class LanguageResource extends Resource
             ->columns([
                 TextColumn::make('icon')
                     ->label('')
-                    ->size(TextColumn\TextColumnSize::Large),
+                    ->size(TextSize::Large),
 
                 TextColumn::make('name')
                     ->label('Language')

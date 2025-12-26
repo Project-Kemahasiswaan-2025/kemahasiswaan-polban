@@ -21,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -44,7 +45,7 @@ class VideoResource extends Resource
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn () => activeLanguage()?->id)
+                        ->default(fn() => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
@@ -140,7 +141,7 @@ class VideoResource extends Resource
 
                 TextColumn::make('language.icon')
                     ->label('')
-                    ->size(TextColumn\TextColumnSize::Large),
+                    ->size(TextSize::Large),
 
                 TextColumn::make('language.name')
                     ->label('Bahasa')

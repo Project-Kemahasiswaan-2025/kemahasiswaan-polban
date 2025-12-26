@@ -20,6 +20,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -59,7 +60,7 @@ class StudentOrganizationResource extends Resource
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(\App\Models\Language::active()->pluck('name', 'id'))
-                        ->default(fn () => activeLanguage()?->id)
+                        ->default(fn() => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
@@ -111,7 +112,7 @@ class StudentOrganizationResource extends Resource
                         ->relationship(
                             name: 'parent',
                             titleAttribute: 'name',
-                            modifyQueryUsing: fn ($query) => $query
+                            modifyQueryUsing: fn($query) => $query
                                 ->whereNull('parent_id')
                                 ->where('is_group', true)
                                 ->orderBy('sort_order')
@@ -119,7 +120,7 @@ class StudentOrganizationResource extends Resource
                         ->searchable()
                         ->preload()
                         ->nullable()
-                        ->disabled(fn ($get) => (bool) $get('is_group')),
+                        ->disabled(fn($get) => (bool) $get('is_group')),
 
                     Grid::make(12)->schema([
                         FileUpload::make('logo')
@@ -181,7 +182,7 @@ class StudentOrganizationResource extends Resource
 
                 TextColumn::make('language.icon')
                     ->label('')
-                    ->size(TextColumn\TextColumnSize::Large),
+                    ->size(TextSize::Large),
 
                 TextColumn::make('language.name')
                     ->label('Bahasa')
@@ -219,7 +220,7 @@ class StudentOrganizationResource extends Resource
                     ->relationship(
                         name: 'parent',
                         titleAttribute: 'name',
-                        modifyQueryUsing: fn ($query) => $query
+                        modifyQueryUsing: fn($query) => $query
                             ->whereNull('parent_id')
                             ->where('is_group', true)
                             ->orderBy('sort_order')
