@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class StudentOrganization extends Model
 {
     protected $fillable = [
+        'language_id',
         'parent_id',
         'is_group',
         'name',
@@ -37,5 +38,10 @@ class StudentOrganization extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
+    }
+
+    public function language(): BelongsTo
+    {
+        return $this->belongsTo(Language::class);
     }
 }

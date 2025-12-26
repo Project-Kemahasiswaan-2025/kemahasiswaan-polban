@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Video extends Model
 {
     protected $fillable = [
+        'language_id',
         'title',
         'description',
         'youtube_url',
@@ -23,4 +25,9 @@ class Video extends Model
         'is_pinned' => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    public function language(): BelongsTo
+    {
+        return $this->belongsTo(Language::class);
+    }
 }
