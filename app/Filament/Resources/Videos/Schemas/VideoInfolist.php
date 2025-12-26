@@ -17,7 +17,9 @@ class VideoInfolist
                         ->label('')
                         ->html()
                         ->formatStateUsing(function ($state) {
-                            if (!$state) return '<div style="opacity:.6">Belum ada video.</div>';
+                            if (! $state) {
+                                return '<div style="opacity:.6">Belum ada video.</div>';
+                            }
 
                             $id = e($state);
 
@@ -34,7 +36,7 @@ HTML;
                         }),
 
                     TextEntry::make('title')->label('Judul'),
-                    TextEntry::make('youtube_url')->label('YouTube URL')->url(fn($record) => $record->youtube_url)->openUrlInNewTab(),
+                    TextEntry::make('youtube_url')->label('YouTube URL')->url(fn ($record) => $record->youtube_url)->openUrlInNewTab(),
                 ]),
         ]);
     }

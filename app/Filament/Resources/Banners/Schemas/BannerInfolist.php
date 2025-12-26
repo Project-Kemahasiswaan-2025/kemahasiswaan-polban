@@ -37,7 +37,7 @@ class BannerInfolist
                                 TextEntry::make('url')
                                     ->label('URL')
                                     ->placeholder('-')
-                                    ->url(fn($record) => filled($record->url) ? $record->url : null)
+                                    ->url(fn ($record) => filled($record->url) ? $record->url : null)
                                     ->openUrlInNewTab()
                                     ->columnSpan(8),
 

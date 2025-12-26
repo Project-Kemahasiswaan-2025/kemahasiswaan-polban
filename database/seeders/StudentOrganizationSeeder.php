@@ -20,11 +20,11 @@ class StudentOrganizationSeeder extends Seeder
             StudentOrganization::updateOrCreate(
                 ['slug' => $r['slug']],
                 [
-                    'parent_id'  => null,
-                    'name'       => $r['name'],
+                    'parent_id' => null,
+                    'name' => $r['name'],
                     'sort_order' => $r['sort_order'],
-                    'is_active'  => true,
-                    'is_group'   => $r['is_group'],
+                    'is_active' => true,
+                    'is_group' => $r['is_group'],
                 ]
             );
         }

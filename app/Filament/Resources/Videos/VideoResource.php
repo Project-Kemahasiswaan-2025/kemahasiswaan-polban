@@ -7,11 +7,13 @@ use App\Filament\Resources\Videos\Pages\CreateVideo;
 use App\Filament\Resources\Videos\Pages\EditVideo;
 use App\Filament\Resources\Videos\Pages\ListVideos;
 use App\Filament\Resources\Videos\Pages\ViewVideo;
+use App\Models\Language;
 use App\Models\Video;
 use BackedEnum;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -39,6 +41,14 @@ class VideoResource extends Resource
         return $schema->schema([
             Section::make('Video YouTube')
                 ->schema([
+                    Select::make('language_id')
+                        ->label('Bahasa')
+                        ->options(Language::active()->pluck('name', 'id'))
+                        ->default(fn () => activeLanguage()?->id)
+                        ->required()
+                        ->native(false)
+                        ->columnSpanFull(),
+
                     Grid::make(12)->schema([
                         TextInput::make('title')
                             ->label('Judul')
@@ -128,6 +138,15 @@ class VideoResource extends Resource
                     ->sortable()
                     ->wrap(),
 
+                TextColumn::make('language.icon')
+                    ->label('')
+                    ->size(TextColumn\TextColumnSize::Large),
+
+                TextColumn::make('language.name')
+                    ->label('Bahasa')
+                    ->badge()
+                    ->sortable(),
+
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -151,6 +170,10 @@ class VideoResource extends Resource
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
+                \Filament\Tables\Filters\SelectFilter::make('language_id')
+                    ->label('Bahasa')
+                    ->relationship('language', 'name')
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -168,17 +191,19 @@ class VideoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListVideos::route('/'),
+            'index' => ListVideos::route('/'),
             'create' => CreateVideo::route('/create'),
-            'view'   => ViewVideo::route('/{record}'),
-            'edit'   => EditVideo::route('/{record}/edit'),
+            'view' => ViewVideo::route('/{record}'),
+            'edit' => EditVideo::route('/{record}/edit'),
         ];
     }
 
     private static function extractYoutubeId(string $url): ?string
     {
         $url = trim($url);
-        if ($url === '') return null;
+        if ($url === '') {
+            return null;
+        }
 
         if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
             return $url;
@@ -201,7 +226,7 @@ class VideoResource extends Resource
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query) {
             parse_str($query, $params);
-            if (!empty($params['v']) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $params['v'])) {
+            if (! empty($params['v']) && preg_match('/^[a-zA-Z0-9_-]{11}$/', $params['v'])) {
                 return $params['v'];
             }
         }

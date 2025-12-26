@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Models\Traits\HasPublishWindow;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Banner extends Model
 {
     use HasPublishWindow;
 
     protected $fillable = [
+        'language_id',
         'title',
         'image_path',
         'url',
@@ -22,9 +24,14 @@ class Banner extends Model
     ];
 
     protected $casts = [
-        'is_active'   => 'boolean',
-        'is_pinned'   => 'boolean',
+        'is_active' => 'boolean',
+        'is_pinned' => 'boolean',
         'active_from' => 'datetime',
-        'active_to'   => 'datetime',
+        'active_to' => 'datetime',
     ];
+
+    public function language(): BelongsTo
+    {
+        return $this->belongsTo(Language::class);
+    }
 }
