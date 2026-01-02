@@ -1,0 +1,178 @@
+:root {
+  /* Primary Colors */
+  --color-navy: #001f3f;
+  --color-navy-light: #0d47a1;
+  --color-navy-dark: #001529;
+  
+  /* Secondary Colors */
+  --color-orange: #ff6b35;
+  --color-orange-light: #ff8c61;
+  --color-orange-dark: #e55a2b;
+  
+  /* Neutral Colors */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-light: #f5f5f5;
+  --color-gray: #888888;
+  --color-gray-dark: #333333;
+  
+  /* Functional Colors */
+  --color-primary: var(--color-navy);
+  --color-secondary: var(--color-orange);
+  --color-accent: var(--color-orange-light);
+  
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Spacing */
+  --header-height: 80px;
+  --section-padding: 4rem;
+}
+
+/* Global Styles */
+body {
+  font-family: var(--font-primary);
+  color: var(--color-gray-dark);
+}
+
+/* Navigation */
+.navbar.bg-navy {
+  background-color: var(--color-navy) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+  color: var(--color-orange-light);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-navy-light);
+  border-color: var(--color-navy-light);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-orange-dark);
+  border-color: var(--color-orange-dark);
+}
+
+/* Cards */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Hero Section */
+.hero-section {
+  margin-top: 0;
+}
+
+.carousel-item {
+  height: 500px;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+/* Page Header */
+.page-header {
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+}
+
+/* Quick Links */
+.quick-link-card {
+  cursor: pointer;
+  border: 2px solid transparent !important;
+}
+
+.quick-link-card:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.quick-link-card .card-title {
+  color: var(--color-gray-dark);
+}
+
+/* Search Box */
+.search-box .input-group-text {
+  background-color: var(--color-white);
+  border: 1px solid #dee2e6;
+}
+
+.search-box .form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 31, 63, 0.25);
+}
+
+/* Text Colors */
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+
+.text-secondary {
+  color: var(--color-secondary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary) !important;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-gray-dark) !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .carousel-item {
+    height: 300px;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+}
