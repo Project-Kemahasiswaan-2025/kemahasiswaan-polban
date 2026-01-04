@@ -28,6 +28,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BannerResource extends Resource
 {
@@ -125,9 +127,10 @@ class BannerResource extends Resource
     {
         return $table
             ->columns([
+
                 ImageColumn::make('image_path')
                     ->label('Gambar')
-                    ->square(),
+                    ->disk('public'),
 
                 TextColumn::make('title')
                     ->label('Judul')

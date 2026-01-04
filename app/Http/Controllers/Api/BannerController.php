@@ -27,7 +27,9 @@ class BannerController extends Controller
                 return [
                     'id' => $banner->id,
                     'title' => $banner->title,
-                    'image_url' => $banner->image_path ? Storage::url($banner->image_path) : null,
+                    'image_url' => $banner->image_path
+                        ? (filter_var($banner->image_path, FILTER_VALIDATE_URL) ? $banner->image_path : Storage::url($banner->image_path))
+                        : null,
                     'link' => $banner->url,
                     'order' => $banner->sort_order,
                     'is_active' => $banner->is_active,
