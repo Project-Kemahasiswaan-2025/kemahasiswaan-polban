@@ -1,9 +1,9 @@
 <x-layout.app :title="__('menu.student_organizations')">
     <!-- Page Header -->
-    <section class="page-header bg-primary text-white py-5">
+    <section class="page-header bg-primary text-white py-5" id="page-header">
         <div class="container">
-            <h1 class="display-4 fw-bold">{{ __('menu.student_organizations') }}</h1>
-            <p class="lead">Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa</p>
+            <h1 class="display-4 fw-bold" id="header-title">{{ __('menu.student_organizations') }}</h1>
+            <p class="lead" id="header-lead">Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa</p>
         </div>
     </section>
     
@@ -17,8 +17,7 @@
                 <div class="col-md-6">
                     <select class="form-select" id="category-filter">
                         <option value="">{{ __('app.all') }} {{ __('menu.student_organizations') }}</option>
-                        <option value="hmj" {{ request('category') === 'hmj' ? 'selected' : '' }}>HMJ</option>
-                        <option value="ukm" {{ request('category') === 'ukm' ? 'selected' : '' }}>UKM</option>
+                        <!-- Dynamic options will be loaded via AJAX -->
                     </select>
                 </div>
             </div>
@@ -48,16 +47,58 @@
     <script>
         $(document).ready(function() {
             let searchTimeout;
+            let categoryGroups = [];
+            
+            // Load category groups first
+            loadCategoryGroups();
             
             // Get initial category from URL
             const urlParams = new URLSearchParams(window.location.search);
             const initialCategory = urlParams.get('category');
-            if (initialCategory) {
-                $('#category-filter').val(initialCategory);
+            
+            function loadCategoryGroups() {
+                $.ajax({
+                    url: '/api/ormawa/groups',
+                    method: 'GET',
+                    success: function(response) {
+                        categoryGroups = response.data || [];
+                        
+                        // Populate select options
+                        let options = '<option value="">{{ __("app.all") }} {{ __("menu.student_organizations") }}</option>';
+                        categoryGroups.forEach(group => {
+                            const selected = initialCategory === group.slug ? 'selected' : '';
+                            options += `<option value="${group.slug}" ${selected}>${group.name}</option>`;
+                        });
+                        $('#category-filter').html(options);
+                        
+                        // Update header if category is selected
+                        if (initialCategory) {
+                            updateHeader(initialCategory);
+                        }
+                        
+                        // Load organizations
+                        loadOrmawa();
+                    },
+                    error: function() {
+                        console.error('Failed to load category groups');
+                        loadOrmawa();
+                    }
+                });
             }
             
-            // Load organizations
-            loadOrmawa();
+            function updateHeader(categorySlug) {
+                if (!categorySlug) {
+                    $('#header-title').text('{{ __("menu.student_organizations") }}');
+                    $('#header-lead').text('Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa');
+                    return;
+                }
+                
+                const group = categoryGroups.find(g => g.slug === categorySlug);
+                if (group) {
+                    $('#header-title').text(group.name);
+                    $('#header-lead').text(group.excerpt || 'Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa');
+                }
+            }
             
             // Search functionality
             $('#search-input').on('keyup', function() {
@@ -69,6 +110,8 @@
             
             // Category filter
             $('#category-filter').on('change', function() {
+                const selectedCategory = $(this).val();
+                updateHeader(selectedCategory);
                 loadOrmawa();
             });
         });

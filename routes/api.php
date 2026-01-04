@@ -9,4 +9,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/banners', [BannerController::class, 'index']);
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/ormawa', [OrmawaController::class, 'index']);
+Route::get('/ormawa/groups', [OrmawaController::class, 'groups']);
 Route::get('/competitions', [CompetitionController::class, 'index']);

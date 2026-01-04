@@ -158,6 +158,16 @@ function renderOrmawa(organizations) {
     let html = '';
     
     organizations.forEach(org => {
+        // Determine the correct link based on is_group
+        let readMoreLink = '';
+        if (org.is_group) {
+            // For groups (HMJ, UKM), link to filtered list
+            readMoreLink = `/ormawa?category=${org.slug}`;
+        } else {
+            // For single organizations (MPM, BEM) or children, link to detail page
+            readMoreLink = `/ormawa/${org.slug}`;
+        }
+        
         html += `
             <div class="col-md-4 col-lg-3 fade-in">
                 <div class="card h-100 shadow-sm hover-card">
@@ -174,7 +184,7 @@ function renderOrmawa(organizations) {
                         ${org.description ? `<p class="card-text text-muted">${org.description.substring(0, 100)}${org.description.length > 100 ? '...' : ''}</p>` : ''}
                     </div>
                     <div class="card-footer bg-transparent border-0">
-                        <button class="btn btn-primary btn-sm w-100">Read More</button>
+                        <a href="${readMoreLink}" class="btn btn-primary btn-sm w-100">Read More</a>
                     </div>
                 </div>
             </div>
