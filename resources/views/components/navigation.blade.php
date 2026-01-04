@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
-            <img src="https://via.placeholder.com/50x50/001f3f/ffffff?text=POLBAN" alt="Polban Logo" height="50" class="me-3">
+            <img src="{{ asset('images/logo.png') }}" alt="Polban Logo" height="50" class="me-3">
             <div class="d-flex flex-column">
                 <span class="fw-bold text-white" style="font-size: 1.2rem; line-height: 1.2;">Kemahasiswaan</span>
                 <span class="text-orange" style="font-size: 0.8rem; line-height: 1.2;">Politeknik Negeri Bandung</span>
