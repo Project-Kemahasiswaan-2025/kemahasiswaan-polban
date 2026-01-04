@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/ormawa', [OrmawaController::class, 'index'])->name('ormawa.index');
+Route::get('/ormawa/{slug}', [OrmawaController::class, 'show'])->name('ormawa.show');
 Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competition.index');
 
 // Language switcher

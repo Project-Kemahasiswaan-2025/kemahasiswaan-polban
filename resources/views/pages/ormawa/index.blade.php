@@ -17,10 +17,8 @@
                 <div class="col-md-6">
                     <select class="form-select" id="category-filter">
                         <option value="">{{ __('app.all') }} {{ __('menu.student_organizations') }}</option>
-                        <option value="mpm">MPM</option>
-                        <option value="bem">BEM</option>
-                        <option value="hmj">HMJ</option>
-                        <option value="ukm">UKM</option>
+                        <option value="hmj" {{ request('category') === 'hmj' ? 'selected' : '' }}>HMJ</option>
+                        <option value="ukm" {{ request('category') === 'ukm' ? 'selected' : '' }}>UKM</option>
                     </select>
                 </div>
             </div>
@@ -50,6 +48,13 @@
     <script>
         $(document).ready(function() {
             let searchTimeout;
+            
+            // Get initial category from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialCategory = urlParams.get('category');
+            if (initialCategory) {
+                $('#category-filter').val(initialCategory);
+            }
             
             // Load organizations
             loadOrmawa();

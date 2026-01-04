@@ -44,12 +44,16 @@
                 </li>
                 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->routeIs('ormawa.index') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('ormawa.*') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
                         {{ __('menu.ormawa') }}
                     </a>
                     <ul class="dropdown-menu">
                         @foreach($ormawaGroups as $group)
-                            <li><a class="dropdown-item" href="{{ route('ormawa.index', ['category' => $group->slug]) }}">{{ $group->name }}</a></li>
+                            @if($group->is_group)
+                                <li><a class="dropdown-item" href="{{ route('ormawa.index', ['category' => $group->slug]) }}">{{ $group->name }}</a></li>
+                            @else
+                                <li><a class="dropdown-item" href="{{ route('ormawa.show', $group->slug) }}">{{ $group->name }}</a></li>
+                            @endif
                         @endforeach
                     </ul>
                 </li>
