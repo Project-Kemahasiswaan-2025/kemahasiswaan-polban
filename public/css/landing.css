@@ -50,6 +50,15 @@ body {
   color: var(--color-orange-light);
 }
 
+/* Navbar Brand */
+.navbar-brand .text-orange {
+  color: var(--color-orange) !important;
+}
+
+.navbar-brand:hover .text-orange {
+  color: var(--color-orange-light) !important;
+}
+
 /* Buttons */
 .btn-primary {
   background-color: var(--color-primary);
