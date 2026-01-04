@@ -48,12 +48,6 @@
                         {{ __('menu.ormawa') }}
                     </a>
                     <ul class="dropdown-menu">
-                        @php
-                            $ormawaGroups = \App\Models\StudentOrganization::whereNull('parent_id')
-                                ->where('is_active', true)
-                                ->orderBy('sort_order')
-                                ->get();
-                        @endphp
                         @foreach($ormawaGroups as $group)
                             <li><a class="dropdown-item" href="{{ route('ormawa.index', ['category' => $group->slug]) }}">{{ $group->name }}</a></li>
                         @endforeach
