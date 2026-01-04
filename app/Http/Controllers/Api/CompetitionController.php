@@ -16,7 +16,7 @@ class CompetitionController extends Controller
             ->where('is_group', false);
 
         // Filter by category (parent)
-        if ($request->has('category')) {
+        if ($request->has('category') && $request->category) {
             $query->whereHas('parent', function ($q) use ($request) {
                 $q->where('slug', $request->category);
             });
