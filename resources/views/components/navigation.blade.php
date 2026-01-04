@@ -45,11 +45,18 @@
                 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->routeIs('ormawa.index') ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown">
-                        {{ __('menu.student_organizations') }}
+                        {{ __('menu.ormawa') }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('ormawa.index') }}">{{ __('menu.ormawa') }}</a></li>
-                        <li><a class="dropdown-item" href="{{ route('ormawa.index') }}">{{ __('menu.ukm') }}</a></li>
+                        @php
+                            $ormawaGroups = \App\Models\StudentOrganization::whereNull('parent_id')
+                                ->where('is_active', true)
+                                ->orderBy('sort_order')
+                                ->get();
+                        @endphp
+                        @foreach($ormawaGroups as $group)
+                            <li><a class="dropdown-item" href="{{ route('ormawa.index', ['category' => $group->slug]) }}">{{ $group->name }}</a></li>
+                        @endforeach
                     </ul>
                 </li>
                 
