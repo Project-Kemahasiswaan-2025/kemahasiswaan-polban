@@ -6,6 +6,9 @@
         </div>
     </section>
     
+    <!-- Running Text Section -->
+    <x-running-text />
+    
     <!-- Featured Video Section -->
     <section class="py-5 bg-light">
         <div class="container">
@@ -62,6 +65,9 @@
             
             // Load videos
             loadVideos();
+            
+            // Load running text
+            loadRunningText();
         });
     </script>
     @endpush

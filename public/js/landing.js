@@ -262,3 +262,51 @@ function renderCompetitions(competitions) {
     
     $('#competition-container').html(html);
 }
+
+// Load Running Text
+function loadRunningText() {
+    $.ajax({
+        url: '/api/running-texts',
+        method: 'GET',
+        success: function(response) {
+            if (response.config && response.config.is_enabled && response.data && response.data.length > 0) {
+                renderRunningText(response.config, response.data);
+            }
+        },
+        error: function() {
+            // Silently fail - running text is not critical
+            console.log('Failed to load running texts');
+        }
+    });
+}
+
+// Render Running Text
+function renderRunningText(config, texts) {
+    const container = $('#running-text-container');
+    const iconElement = $('#running-text-icon-content');
+    const scrollElement = $('#running-text-scroll');
+    
+    // Set icon
+    iconElement.text(config.icon_text);
+    
+    // Build running text content
+    let content = '';
+    texts.forEach((text, index) => {
+        content += '<span class="running-text-item">' + text.content + '</span>';
+        if (index < texts.length - 1) {
+            content += '<span class="running-text-separator"> ' + config.separator_text + ' </span>';
+        }
+    });
+    
+    // Duplicate content for seamless scrolling
+    scrollElement.html(content + content);
+    
+    // Show container
+    container.fadeIn();
+    
+    // Calculate animation duration based on content length (adjust speed as needed)
+    const contentWidth = scrollElement[0].scrollWidth / 2; // Divide by 2 because we duplicated
+    const duration = contentWidth / 50; // 50 pixels per second
+    
+    scrollElement.css('animation-duration', duration + 's');
+}
