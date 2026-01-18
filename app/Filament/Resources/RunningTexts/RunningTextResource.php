@@ -56,14 +56,14 @@ class RunningTextResource extends Resource
                         ->columnSpanFull(),
 
                     Grid::make(3)->schema([
-                        TextInput::make('duration_ms')
-                            ->label('Duration (ms)')
+                        TextInput::make('duration_seconds')
+                            ->label('Duration (seconds)')
                             ->numeric()
-                            ->default(8000)
-                            ->minValue(1000)
-                            ->maxValue(60000)
+                            ->default(8)
+                            ->minValue(1)
+                            ->maxValue(60)
                             ->required()
-                            ->helperText('Display duration in milliseconds'),
+                            ->helperText('Display duration in seconds'),
 
                         TextInput::make('sort_order')
                             ->label('Sort Order')
@@ -100,8 +100,8 @@ class RunningTextResource extends Resource
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('duration_ms')
-                    ->label('Duration (ms)')
+                TextColumn::make('duration_seconds')
+                    ->label('Duration (s)')
                     ->sortable(),
 
                 IconColumn::make('is_active')

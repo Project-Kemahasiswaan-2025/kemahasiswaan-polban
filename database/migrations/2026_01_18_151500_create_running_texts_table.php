@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('language_id')->constrained('languages')->cascadeOnDelete();
             $table->text('content');
-            $table->integer('duration_ms')->default(8000);
+            $table->integer('duration_seconds')->default(8);
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
             $table->timestamps();

@@ -10,7 +10,7 @@ class RunningText extends Model
     protected $fillable = [
         'language_id',
         'content',
-        'duration_ms',
+        'duration_seconds',
         'is_active',
         'sort_order',
     ];

@@ -43,7 +43,7 @@ class RunningTextController extends Controller
                 return [
                     'id' => $text->id,
                     'content' => $text->content,
-                    'duration_ms' => $text->duration_ms,
+                    'duration_seconds' => $text->duration_seconds,
                 ];
             });
 
