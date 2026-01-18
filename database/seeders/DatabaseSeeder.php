@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             VideoSeeder::class,
             StudentOrganizationSeeder::class,
             CompetitionSeeder::class,
+            RunningTextConfigSeeder::class,
+            RunningTextSeeder::class,
         ]);
     }
 }
