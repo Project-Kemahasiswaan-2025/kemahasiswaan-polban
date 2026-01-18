@@ -33,8 +33,6 @@ class RunningTextResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'content';
 
-    protected static ?string $navigationGroup = 'Content';
-
     protected static ?string $navigationLabel = 'Running Texts';
 
     public static function form(Schema $schema): Schema

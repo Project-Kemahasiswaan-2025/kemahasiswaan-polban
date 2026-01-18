@@ -17,9 +17,7 @@ class RunningTextConfigResource extends Resource
 {
     protected static ?string $model = RunningTextConfig::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlineCog6Tooth;
-
-    protected static ?string $navigationGroup = 'Content';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $navigationLabel = 'Running Text Config';
 
