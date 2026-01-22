@@ -310,3 +310,77 @@ function renderRunningText(config, texts) {
     
     scrollElement.css('animation-duration', duration + 's');
 }
+
+// Load Posters
+function loadPosters(categoryId = null) {
+    const posterContainer = $('#poster-container');
+    const tabsContainer = $('#poster-tabs');
+
+    // Add loading state to container only (to keep tabs visible)
+    posterContainer.css('opacity', '0.5');
+
+    $.ajax({
+        url: '/api/posters',
+        method: 'GET',
+        data: { category_id: categoryId },
+        success: function(response) {
+            posterContainer.css('opacity', '1');
+            
+            // Render tabs only if categoryId is null (initial load) or refresh them
+            if (response.categories) {
+                renderPosterTabs(response.categories, response.active_category_id);
+            }
+
+            if (response.posters && response.posters.length > 0) {
+                renderPosters(response.posters);
+            } else {
+                posterContainer.html('<div class="col-12 text-center py-5"><p class="text-muted">No posters available for this category</p></div>');
+            }
+        },
+        error: function() {
+            posterContainer.css('opacity', '1');
+            posterContainer.html('<div class="col-12 text-center py-5"><p class="text-danger">Failed to load posters</p></div>');
+        }
+    });
+}
+
+// Render Poster Tabs
+function renderPosterTabs(categories, activeId) {
+    let html = '';
+    categories.forEach(category => {
+        const activeClass = category.id === activeId ? 'active' : '';
+        html += `<button class="btn btn-outline-primary rounded-pill px-4 poster-tab ${activeClass}" 
+                        onclick="loadPosters(${category.id})">
+                    ${category.name}
+                 </button>`;
+    });
+    $('#poster-tabs').html(html);
+}
+
+// Render Posters
+function renderPosters(posters) {
+    let html = '';
+    posters.forEach(poster => {
+        html += `
+            <div class="col-sm-6 col-md-4 col-lg-3 fade-in">
+                <div class="card h-100 border-0 shadow-sm poster-card">
+                    <div class="poster-image-wrapper overflow-hidden position-relative">
+                        <img src="${poster.image_url}" 
+                             class="card-img-top poster-image" 
+                             alt="${poster.title}"
+                             onerror="this.src='https://placehold.co/600x800?text=Poster+Not+Found'">
+                        <div class="poster-overlay">
+                            <span class="badge bg-primary rounded-pill">${poster.published_at || ''}</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h5 class="card-title fs-6 fw-bold mb-0 text-dark line-clamp-2">
+                            ${poster.title}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    $('#poster-container').html(html);
+}

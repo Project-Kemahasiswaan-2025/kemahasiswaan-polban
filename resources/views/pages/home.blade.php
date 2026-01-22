@@ -5,10 +5,10 @@
             <!-- Banners will be loaded via AJAX -->
         </div>
     </section>
-    
+
     <!-- Running Text Section -->
     <x-running-text />
-    
+
     <!-- Featured Video Section -->
     <section class="py-5 bg-light">
         <div class="container">
@@ -18,7 +18,19 @@
             </div>
         </div>
     </section>
-    
+
+    <!-- Poster Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div id="poster-tabs" class="d-flex flex-wrap gap-2 mb-5">
+                <!-- Category tabs will be loaded via AJAX -->
+            </div>
+            <div id="poster-container" class="row g-4">
+                <!-- Posters will be loaded via AJAX -->
+            </div>
+        </div>
+    </section>
+
     <!-- Quick Links Section -->
     <section class="py-5">
         <div class="container">
@@ -33,7 +45,7 @@
                         </div>
                     </a>
                 </div>
-                
+
                 <div class="col-md-4">
                     <a href="{{ route('competition.index') }}" class="text-decoration-none">
                         <div class="card quick-link-card h-100 text-center p-4 border-0 shadow-sm hover-card">
@@ -43,7 +55,7 @@
                         </div>
                     </a>
                 </div>
-                
+
                 <div class="col-md-4">
                     <a href="#" class="text-decoration-none">
                         <div class="card quick-link-card h-100 text-center p-4 border-0 shadow-sm hover-card">
@@ -56,18 +68,21 @@
             </div>
         </div>
     </section>
-    
+
     @push('scripts')
     <script>
         $(document).ready(function() {
             // Load banners
             loadBanners();
-            
+
             // Load videos
             loadVideos();
-            
+
             // Load running text
             loadRunningText();
+
+            // Load posters
+            loadPosters();
         });
     </script>
     @endpush

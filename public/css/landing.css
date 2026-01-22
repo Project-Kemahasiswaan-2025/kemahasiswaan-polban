@@ -238,6 +238,70 @@ footer {
   font-size: 1.2rem;
 }
 
+/* Poster Styles */
+.poster-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+  overflow: hidden;
+  background: var(--color-white);
+  border: none !important;
+}
+
+.poster-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.poster-image-wrapper {
+  aspect-ratio: 3/4;
+  background: var(--color-gray-light);
+}
+
+.poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.poster-card:hover .poster-image {
+  transform: scale(1.05);
+}
+
+.poster-overlay {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5em;
+}
+
+.poster-tab {
+  transition: all 0.3s ease;
+  border-width: 2px;
+  font-weight: 600;
+}
+
+.poster-tab:hover {
+  background-color: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.poster-tab.active {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 31, 63, 0.2);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .carousel-item {

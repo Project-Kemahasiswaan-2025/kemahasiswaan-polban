@@ -25,9 +25,19 @@
                         {{ __('menu.profile') }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">{{ __('menu.about') }}</a></li>
-                        <li><a class="dropdown-item" href="#">{{ __('menu.organizational_structure') }}</a></li>
-                        <li><a class="dropdown-item" href="#">{{ __('menu.regulations') }}</a></li>
+                        @isset($profilePages)
+                            @forelse($profilePages as $p)
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profile.show', $p->slug) }}">
+                                        {{ $p->title }}
+                                    </a>
+                                </li>
+                            @empty
+                                <li><span class="dropdown-item text-muted">Belum ada halaman</span></li>
+                            @endforelse
+                        @else
+                            <li><span class="dropdown-item text-muted">Belum ada halaman</span></li>
+                        @endisset
                     </ul>
                 </li>
                 
