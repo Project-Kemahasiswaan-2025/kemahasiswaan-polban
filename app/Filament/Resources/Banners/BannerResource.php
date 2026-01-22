@@ -7,10 +7,9 @@ use App\Filament\Resources\Banners\Pages\EditBanner;
 use App\Filament\Resources\Banners\Pages\ListBanners;
 use App\Filament\Resources\Banners\Pages\ViewBanner;
 use App\Filament\Resources\Banners\Schemas\BannerInfolist;
+use App\Filament\Resources\Banners\Tables\BannersTable;
 use App\Models\Banner;
 use BackedEnum;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -23,17 +22,13 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -125,66 +120,7 @@ class BannerResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-
-                ImageColumn::make('image_path')
-                    ->label('Gambar')
-                    ->disk('public'),
-
-                TextColumn::make('title')
-                    ->label('Judul')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('language.icon')
-                    ->label('')
-                    ->size(TextSize::Large),
-
-                TextColumn::make('language.name')
-                    ->label('Bahasa')
-                    ->badge()
-                    ->sortable(),
-
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean()
-                    ->sortable(),
-
-                IconColumn::make('is_pinned')
-                    ->label('Pin')
-                    ->boolean()
-                    ->sortable(),
-
-                TextColumn::make('active_from')
-                    ->label('Mulai')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
-
-                TextColumn::make('active_to')
-                    ->label('Sampai')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
-
-                TextColumn::make('sort_order')
-                    ->label('Urutan')
-                    ->sortable(),
-            ])
-            ->defaultSort('is_pinned', 'desc')
-            ->filters([
-                TernaryFilter::make('is_active')->label('Aktif'),
-                TernaryFilter::make('is_pinned')->label('Pin'),
-                \Filament\Tables\Filters\SelectFilter::make('language_id')
-                    ->label('Bahasa')
-                    ->relationship('language', 'name')
-                    ->preload(),
-            ])
-            ->actions([
-                EditAction::make(),
-            ])
-            ->bulkActions([
-                DeleteBulkAction::make(),
-            ]);
+        return BannersTable::configure($table);
     }
 
     public static function getRelations(): array

@@ -6,9 +6,11 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class BannersTable
@@ -17,58 +19,62 @@ class BannersTable
     {
         return $table
             ->columns([
-                TextColumn::make('placement_key')
-                    ->searchable(),
-                TextColumn::make('title_id')
-                    ->searchable(),
-                TextColumn::make('title_en')
-                    ->searchable(),
-                ImageColumn::make('image_path'),
-                ImageColumn::make('image_alt_id'),
-                ImageColumn::make('image_alt_en'),
-                TextColumn::make('link_url')
-                    ->searchable(),
-                TextColumn::make('link_target')
-                    ->searchable(),
+                ImageColumn::make('image_path')
+                    ->label('Gambar')
+                    ->disk('public'),
+
+                TextColumn::make('title')
+                    ->label('Judul')
+                    ->searchable()
+                    ->sortable(),
+
+                // TextColumn::make('language.icon')
+                //     ->label('')
+                //     ->size(TextSize::Large),
+
+                // TextColumn::make('language.name')
+                //     ->label('Bahasa')
+                //     ->badge()
+                //     ->sortable(),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('active_from')
-                    ->dateTime()
+                    ->label('Aktif')
+                    ->boolean()
                     ->sortable(),
-                TextColumn::make('active_to')
-                    ->dateTime()
-                    ->sortable(),
+
                 IconColumn::make('is_pinned')
-                    ->boolean(),
+                    ->label('Pin')
+                    ->boolean()
+                    ->sortable(),
+
+                TextColumn::make('active_from')
+                    ->label('Mulai')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+
+                TextColumn::make('active_to')
+                    ->label('Sampai')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+
                 TextColumn::make('sort_order')
-                    ->numeric()
+                    ->label('Urutan')
                     ->sortable(),
-                TextColumn::make('created_by')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('updated_by')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('is_pinned', 'desc')
             ->filters([
-                //
+                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_pinned')->label('Pin'),
+                \Filament\Tables\Filters\SelectFilter::make('language_id')
+                    ->label('Bahasa')
+                    ->relationship('language', 'name')
+                    ->preload(),
             ])
-            ->recordActions([
-                ViewAction::make(),
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->bulkActions([
+                DeleteBulkAction::make(),
             ]);
     }
 }
