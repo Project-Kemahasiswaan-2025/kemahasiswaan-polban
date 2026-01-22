@@ -35,6 +35,8 @@ class RunningTextResource extends Resource
 
     protected static ?string $navigationLabel = 'Running Texts';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
+
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
@@ -43,7 +45,7 @@ class RunningTextResource extends Resource
                     Select::make('language_id')
                         ->label('Bahasa')
                         ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn () => activeLanguage()?->id)
+                        ->default(fn() => activeLanguage()?->id)
                         ->required()
                         ->native(false)
                         ->columnSpanFull(),
