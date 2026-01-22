@@ -35,6 +35,8 @@ class VideoResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPlayCircle;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
+
     protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Schema $schema): Schema
