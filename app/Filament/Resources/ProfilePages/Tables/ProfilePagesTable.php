@@ -44,11 +44,6 @@ class ProfilePagesTable
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                SelectFilter::make('language_id')
-                    ->label('Bahasa')
-                    ->relationship('language', 'name')
-                    ->preload(),
-
                 TrashedFilter::make(),
             ])->actions([
                 EditAction::make(),

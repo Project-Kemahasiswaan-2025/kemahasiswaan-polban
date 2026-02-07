@@ -14,15 +14,13 @@ return new class extends Migration
         Schema::create('competitions', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('language_id')->constrained('languages');
-
             $table->foreignId('parent_id')
                 ->nullable()
                 ->constrained('competitions')
                 ->nullOnDelete();
 
             $table->string('name', 180);
-            $table->string('slug', 200);
+            $table->string('slug', 200)->unique();
 
             $table->boolean('is_group')->default(false); // kategori vs item
             $table->boolean('is_active')->default(true);
@@ -39,9 +37,6 @@ return new class extends Migration
             $table->longText('content')->nullable();
 
             $table->timestamps();
-
-            // slug boleh sama di bahasa berbeda
-            $table->unique(['language_id', 'slug']);
             $table->index(['parent_id', 'sort_order']);
         });
     }

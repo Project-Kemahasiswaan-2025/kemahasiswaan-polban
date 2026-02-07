@@ -54,15 +54,6 @@ class CompetitionResource extends Resource
         return $schema->schema([
             Section::make('Informasi')
                 ->schema([
-                    Select::make('language_id')
-                        ->label('Bahasa')
-                        ->options(\App\Models\Language::active()->pluck('name', 'id')->toArray())
-                        ->default(fn() => activeLanguage()?->id)
-                        ->required()
-                        ->native(false)
-                        ->live()
-                        ->afterStateUpdated(fn($set) => $set('parent_id', null))
-                        ->columnSpanFull(),
 
                     Grid::make(12)->schema([
                         TextInput::make('name')
@@ -92,7 +83,6 @@ class CompetitionResource extends Resource
                             table: Competition::class,
                             column: 'slug',
                             ignoreRecord: true,
-                            modifyRuleUsing: fn($rule, $get) => $rule->where('language_id', $get('language_id'))
                         ),
 
                     Grid::make(12)->schema([
@@ -114,10 +104,9 @@ class CompetitionResource extends Resource
                         ->relationship(
                             name: 'parent',
                             titleAttribute: 'name',
-                            modifyQueryUsing: fn($query, $get) => $query
+                            modifyQueryUsing: fn($query) => $query
                                 ->whereNull('parent_id')
                                 ->where('is_group', true)
-                                ->where('language_id', $get('language_id'))
                                 ->orderBy('sort_order')
                         )
                         ->searchable()
@@ -182,21 +171,6 @@ class CompetitionResource extends Resource
                     ->sortable()
                     ->wrap(),
 
-                TextColumn::make('language.name')
-                    ->label('Bahasa')
-                    ->badge()
-                    ->sortable(),
-
-                IconColumn::make('is_group')
-                    ->label('Kategori')
-                    ->boolean()
-                    ->sortable(),
-
-                TextColumn::make('parent.name')
-                    ->label('Parent')
-                    ->placeholder('Root')
-                    ->sortable(),
-
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -208,10 +182,6 @@ class CompetitionResource extends Resource
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                SelectFilter::make('language_id')
-                    ->label('Bahasa')
-                    ->relationship('language', 'name')
-                    ->preload(),
 
                 SelectFilter::make('parent_id')
                     ->label('Kategori')

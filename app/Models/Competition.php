@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Competition extends Model
 {
     protected $fillable = [
-        'language_id',
         'parent_id',
         'name',
         'slug',
@@ -25,11 +24,6 @@ class Competition extends Model
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
-
-    public function language()
-    {
-        return $this->belongsTo(Language::class);
-    }
 
     public function parent()
     {

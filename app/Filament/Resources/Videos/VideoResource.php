@@ -7,7 +7,6 @@ use App\Filament\Resources\Videos\Pages\CreateVideo;
 use App\Filament\Resources\Videos\Pages\EditVideo;
 use App\Filament\Resources\Videos\Pages\ListVideos;
 use App\Filament\Resources\Videos\Pages\ViewVideo;
-use App\Models\Language;
 use App\Models\Video;
 use BackedEnum;
 use Filament\Actions\DeleteBulkAction;
@@ -21,7 +20,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
@@ -44,14 +42,6 @@ class VideoResource extends Resource
         return $schema->schema([
             Section::make('Video YouTube')
                 ->schema([
-                    Select::make('language_id')
-                        ->label('Bahasa')
-                        ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
-                        ->required()
-                        ->native(false)
-                        ->columnSpanFull(),
-
                     Grid::make(12)->schema([
                         TextInput::make('title')
                             ->label('Judul')
@@ -141,15 +131,6 @@ class VideoResource extends Resource
                     ->sortable()
                     ->wrap(),
 
-                TextColumn::make('language.icon')
-                    ->label('')
-                    ->size(TextSize::Large),
-
-                TextColumn::make('language.name')
-                    ->label('Bahasa')
-                    ->badge()
-                    ->sortable(),
-
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -173,10 +154,6 @@ class VideoResource extends Resource
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
-                \Filament\Tables\Filters\SelectFilter::make('language_id')
-                    ->label('Bahasa')
-                    ->relationship('language', 'name')
-                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),

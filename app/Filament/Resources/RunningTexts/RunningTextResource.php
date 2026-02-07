@@ -5,12 +5,10 @@ namespace App\Filament\Resources\RunningTexts;
 use App\Filament\Resources\RunningTexts\Pages\CreateRunningText;
 use App\Filament\Resources\RunningTexts\Pages\EditRunningText;
 use App\Filament\Resources\RunningTexts\Pages\ListRunningTexts;
-use App\Models\Language;
 use App\Models\RunningText;
 use BackedEnum;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -18,7 +16,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -36,20 +33,11 @@ class RunningTextResource extends Resource
     protected static ?string $navigationLabel = 'Running Texts';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
-
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
             Section::make('Running Text')
                 ->schema([
-                    Select::make('language_id')
-                        ->label('Bahasa')
-                        ->options(Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
-                        ->required()
-                        ->native(false)
-                        ->columnSpanFull(),
-
                     Textarea::make('content')
                         ->label('Content')
                         ->required()
@@ -93,15 +81,6 @@ class RunningTextResource extends Resource
                     ->limit(50)
                     ->sortable(),
 
-                TextColumn::make('language.icon')
-                    ->label('')
-                    ->size(TextSize::Large),
-
-                TextColumn::make('language.name')
-                    ->label('Language')
-                    ->badge()
-                    ->sortable(),
-
                 TextColumn::make('duration_seconds')
                     ->label('Duration (s)')
                     ->sortable(),
@@ -118,10 +97,6 @@ class RunningTextResource extends Resource
             ->defaultSort('sort_order')
             ->filters([
                 TernaryFilter::make('is_active')->label('Active'),
-                \Filament\Tables\Filters\SelectFilter::make('language_id')
-                    ->label('Language')
-                    ->relationship('language', 'name')
-                    ->preload(),
             ])
             ->actions([
                 EditAction::make(),

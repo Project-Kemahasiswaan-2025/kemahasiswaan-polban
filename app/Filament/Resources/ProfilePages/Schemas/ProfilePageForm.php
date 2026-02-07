@@ -25,14 +25,6 @@ class ProfilePageForm
                         ->dehydrated()
                         ->required(),
 
-                    Select::make('language_id')
-                        ->label('Bahasa')
-                        ->options(\App\Models\Language::active()->pluck('name', 'id'))
-                        ->default(fn() => activeLanguage()?->id)
-                        ->native(false)
-                        ->nullable()
-                        ->columnSpanFull(),
-
                     Grid::make(12)->schema([
                         TextInput::make('title')
                             ->label('Title')

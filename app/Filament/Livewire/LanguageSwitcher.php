@@ -2,7 +2,8 @@
 
 namespace App\Filament\Livewire;
 
-use App\Models\Language;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class LanguageSwitcher extends Component
@@ -11,15 +12,14 @@ class LanguageSwitcher extends Component
 
     public function mount()
     {
-        $this->selectedLanguage = activeLanguage()?->id;
+        $this->selectedLanguage = App::getLocale();
     }
 
     public function updatedSelectedLanguage($value)
     {
-        $language = Language::find($value);
-
-        if ($language && $language->is_active) {
-            setActiveLanguage($language);
+        if (in_array($value, ['en', 'id'])) {
+            Session::put('locale', $value);
+            App::setLocale($value);
 
             // Refresh halaman untuk apply filter
             return redirect()->to(request()->header('Referer') ?: '/admin');
@@ -29,7 +29,10 @@ class LanguageSwitcher extends Component
     public function render()
     {
         return view('filament.livewire.language-switcher', [
-            'languages' => Language::active()->get(),
+            'languages' => [
+                ['id' => 'id', 'name' => 'Bahasa Indonesia'],
+                ['id' => 'en', 'name' => 'English'],
+            ],
         ]);
     }
 }

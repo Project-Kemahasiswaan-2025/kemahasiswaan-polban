@@ -28,15 +28,6 @@ class BannersTable
                     ->searchable()
                     ->sortable(),
 
-                // TextColumn::make('language.icon')
-                //     ->label('')
-                //     ->size(TextSize::Large),
-
-                // TextColumn::make('language.name')
-                //     ->label('Bahasa')
-                //     ->badge()
-                //     ->sortable(),
-
                 IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean()
@@ -65,10 +56,6 @@ class BannersTable
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
-                \Filament\Tables\Filters\SelectFilter::make('language_id')
-                    ->label('Bahasa')
-                    ->relationship('language', 'name')
-                    ->preload(),
             ])
             ->actions([
                 EditAction::make(),

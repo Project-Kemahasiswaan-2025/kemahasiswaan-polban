@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Language;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class LanguageController extends Controller
 {
-    public function switch(string $locale): RedirectResponse
+    public function switch($locale)
     {
-        $language = Language::where('code', $locale)->where('is_active', true)->first();
-        
-        if ($language) {
-            Session::put('active_language_id', $language->id);
+        if (in_array($locale, ['en', 'id'])) {
             Session::put('locale', $locale);
             App::setLocale($locale);
         }
