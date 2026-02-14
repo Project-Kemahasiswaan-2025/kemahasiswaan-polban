@@ -10,6 +10,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Assets\Css;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -32,6 +33,9 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->assets([
+                Css::make('fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'),
+            ])
             ->id('admin')
             ->path('admin')
             ->login()

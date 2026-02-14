@@ -10,6 +10,7 @@ use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -28,14 +29,13 @@ class BannersTable
                     ->searchable()
                     ->sortable(),
 
-                IconColumn::make('is_active')
+
+                ToggleColumn::make('is_active')
                     ->label('Aktif')
-                    ->boolean()
                     ->sortable(),
 
-                IconColumn::make('is_pinned')
+                ToggleColumn::make('is_pinned')
                     ->label('Pin')
-                    ->boolean()
                     ->sortable(),
 
                 TextColumn::make('active_from')
