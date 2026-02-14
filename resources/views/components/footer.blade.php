@@ -8,7 +8,7 @@
                     Politeknik Negeri Bandung
                 </p>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <h5 class="fw-bold mb-3">{{ __('menu.contact') }}</h5>
                 <ul class="list-unstyled text-white-50">
@@ -26,7 +26,7 @@
                     </li>
                 </ul>
             </div>
-            
+
             <div class="col-md-4 mb-4">
                 <h5 class="fw-bold mb-3">{{ __('menu.home') }}</h5>
                 <ul class="list-unstyled">
@@ -39,12 +39,15 @@
                     <li class="mb-2">
                         <a href="{{ route('competition.index') }}" class="text-white-50 text-decoration-none">{{ __('menu.competitions') }}</a>
                     </li>
+                    <li class="mb-2">
+                        <a href="{{ route('download.index') }}" class="text-white-50 text-decoration-none">{{ __('menu.documents') }}</a>
+                    </li>
                 </ul>
             </div>
         </div>
-        
+
         <hr class="border-secondary my-4">
-        
+
         <div class="row">
             <div class="col-12 text-center text-white-50">
                 <p class="mb-0">

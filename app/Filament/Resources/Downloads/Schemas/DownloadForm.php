@@ -29,6 +29,13 @@ class DownloadForm
                             ->columnSpan(4),
                     ]),
 
+                    \Filament\Forms\Components\Select::make('category_id')
+                        ->label('Kategori (Section di Landing Page)')
+                        ->relationship('category', 'name', fn($query) => $query->where('type', 'download'))
+                        ->searchable()
+                        ->preload()
+                        ->placeholder('Pilih section untuk landing page...'),
+
                     FileUpload::make('file_path')
                         ->label('File Dokumen')
                         ->required()

@@ -92,7 +92,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ __('menu.documents') }}</a>
+                    <a class="nav-link {{ request()->routeIs('download.index') ? 'active' : '' }}" href="{{ route('download.index') }}">{{ __('menu.documents') }}</a>
                 </li>
 
                 <li class="nav-item">

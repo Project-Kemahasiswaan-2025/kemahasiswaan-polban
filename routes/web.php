@@ -14,5 +14,6 @@ Route::get('/ormawa', [OrmawaController::class, 'index'])->name('ormawa.index');
 Route::get('/ormawa/{slug}', [OrmawaController::class, 'show'])->name('ormawa.show');
 Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competition.index');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
+Route::get('/unduhan', [\App\Http\Controllers\DownloadController::class, 'index'])->name('download.index');
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');

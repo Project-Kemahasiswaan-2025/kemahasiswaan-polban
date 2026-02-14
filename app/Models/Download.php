@@ -17,6 +17,7 @@ class Download extends Model
         'file_size',
         'downloadable_id',
         'downloadable_type',
+        'category_id',
         'sort_order',
         'is_active',
     ];
@@ -25,7 +26,13 @@ class Download extends Model
         'is_active' => 'boolean',
         'sort_order' => 'integer',
         'file_size' => 'integer',
+        'category_id' => 'integer',
     ];
+
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function downloadable(): MorphTo
     {

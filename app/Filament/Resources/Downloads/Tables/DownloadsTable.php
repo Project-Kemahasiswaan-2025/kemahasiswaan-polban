@@ -18,6 +18,12 @@ class DownloadsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('category.name')
+                    ->label('Kategori (Section)')
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('-'),
+
                 TextColumn::make('downloadable_type')
                     ->label('Tipe Terkait')
                     ->formatStateUsing(fn($state) => class_basename($state))

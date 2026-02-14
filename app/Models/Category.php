@@ -36,4 +36,9 @@ class Category extends Model
     {
         return $this->hasMany(Poster::class);
     }
+
+    public function downloads()
+    {
+        return $this->hasMany(Download::class);
+    }
 }
