@@ -40,6 +40,7 @@ class DownloadCategoriesTable
                 TrashedFilter::make(),
             ])->actions([
                 EditAction::make()
+                    ->modalWidth('md')
             ])->bulkActions([
                 DeleteBulkAction::make(),
             ]);

@@ -2,10 +2,7 @@
 
 namespace App\Filament\Resources\PosterCategories;
 
-use App\Filament\Resources\PosterCategories\Pages\CreatePosterCategory;
-use App\Filament\Resources\PosterCategories\Pages\EditPosterCategory;
 use App\Filament\Resources\PosterCategories\Pages\ListPosterCategories;
-use App\Filament\Resources\PosterCategories\Pages\ViewPosterCategory;
 use App\Filament\Resources\PosterCategories\Schemas\PosterCategoryForm;
 use App\Filament\Resources\PosterCategories\Schemas\PosterCategoryInfolist;
 use App\Filament\Resources\PosterCategories\Tables\PosterCategoriesTable;
@@ -72,9 +69,6 @@ class PosterCategoryResource extends Resource
     {
         return [
             'index' => ListPosterCategories::route('/'),
-            'create' => CreatePosterCategory::route('/create'),
-            // 'view' => ViewPosterCategory::route('/{record}'),
-            'edit' => EditPosterCategory::route('/{record}/edit'),
         ];
     }
 }

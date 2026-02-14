@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\DownloadCategories;
 
-use App\Filament\Resources\DownloadCategories\Pages\CreateDownloadCategory;
-use App\Filament\Resources\DownloadCategories\Pages\EditDownloadCategory;
 use App\Filament\Resources\DownloadCategories\Pages\ListDownloadCategories;
 use App\Filament\Resources\DownloadCategories\Schemas\DownloadCategoryForm;
 use App\Filament\Resources\DownloadCategories\Tables\DownloadCategoriesTable;
@@ -65,8 +63,6 @@ class DownloadCategoryResource extends Resource
     {
         return [
             'index' => ListDownloadCategories::route('/'),
-            'create' => CreateDownloadCategory::route('/create'),
-            'edit' => EditDownloadCategory::route('/{record}/edit'),
         ];
     }
 }
