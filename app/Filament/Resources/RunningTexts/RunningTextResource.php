@@ -30,9 +30,17 @@ class RunningTextResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'content';
 
-    protected static ?string $navigationLabel = 'Running Texts';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_home');
+    }
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_running_texts');
+    }
+
+    protected static ?int $navigationSort = 3;
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([

@@ -23,7 +23,17 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 
-    protected static ?string $navigationLabel = 'Layanan';
+    public static function getNavigationGroup(): ?string
+    {
+        return null;
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_services');
+    }
+
+    protected static ?int $navigationSort = 20;
 
     public static function getLabel(): string
     {

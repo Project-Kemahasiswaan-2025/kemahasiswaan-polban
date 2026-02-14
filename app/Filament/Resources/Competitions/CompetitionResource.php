@@ -35,7 +35,17 @@ class CompetitionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 
-    protected static ?string $navigationLabel = 'Kompetisi';
+    public static function getNavigationGroup(): ?string
+    {
+        return null;
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_competitions');
+    }
+
+    protected static ?int $navigationSort = 40;
 
     public static function getLabel(): string
     {

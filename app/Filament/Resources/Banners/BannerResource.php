@@ -20,7 +20,17 @@ class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_home');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_banners');
+    }
+
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

@@ -20,8 +20,17 @@ class DownloadCategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Unduhan';
-    protected static ?string $navigationLabel = 'Kategori Unduhan';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_master_categories');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_download_categories');
+    }
+
+    protected static ?int $navigationSort = 102;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 

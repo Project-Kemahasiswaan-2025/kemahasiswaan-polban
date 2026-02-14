@@ -22,9 +22,17 @@ class PosterCategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
-    // protected static ?string $navigationParentItem = 'Poster';
-    protected static ?string $navigationLabel = 'Kategori Poster';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_master_categories');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_poster_categories');
+    }
+
+    protected static ?int $navigationSort = 101;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 

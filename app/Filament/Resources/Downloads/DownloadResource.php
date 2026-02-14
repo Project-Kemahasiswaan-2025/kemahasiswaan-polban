@@ -21,7 +21,17 @@ class DownloadResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentArrowDown;
 
-    protected static ?string $navigationLabel = 'Unduhan';
+    public static function getNavigationGroup(): ?string
+    {
+        return null;
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_downloads');
+    }
+
+    protected static ?int $navigationSort = 50;
 
     public static function getLabel(): string
     {

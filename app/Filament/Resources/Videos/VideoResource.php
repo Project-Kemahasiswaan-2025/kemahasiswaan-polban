@@ -33,7 +33,17 @@ class VideoResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPlayCircle;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_home');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_videos');
+    }
+
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $recordTitleAttribute = 'title';
 

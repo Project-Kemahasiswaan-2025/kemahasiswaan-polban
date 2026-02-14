@@ -19,6 +19,8 @@ class RunningTextConfigResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $navigationLabel = 'Running Text Config';

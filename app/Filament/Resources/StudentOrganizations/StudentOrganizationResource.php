@@ -36,7 +36,17 @@ class StudentOrganizationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static ?string $navigationLabel = 'Ormawa';
+    public static function getNavigationGroup(): ?string
+    {
+        return null;
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_student_organizations');
+    }
+
+    protected static ?int $navigationSort = 30;
 
     public static function getLabel(): string
     {

@@ -22,9 +22,17 @@ class PosterResource extends Resource
 {
     protected static ?string $model = Poster::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
-    // protected static ?string $navigationParentItem = 'Poster'; // optional
-    protected static ?string $navigationLabel = 'Poster';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('menu.nav_group_home');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_posters');
+    }
+
+    protected static ?int $navigationSort = 2;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
     public static function getEloquentQuery(): Builder
