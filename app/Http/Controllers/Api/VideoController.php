@@ -40,9 +40,6 @@ class VideoController extends Controller
         if ($categoryId) {
             $videosQuery->where('category_id', $categoryId);
         } else if ($categories->count() > 0) {
-            // Default to first category if none provided for filtered view
-            // However, for the initial "Featured" view, we might want all pinned videos?
-            // Actually, matching poster pattern: default to first category
             $videosQuery->where('category_id', $categories->first()['id']);
             $categoryId = $categories->first()['id'];
         }
