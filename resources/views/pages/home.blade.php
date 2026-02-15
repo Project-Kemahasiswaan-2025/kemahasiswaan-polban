@@ -12,7 +12,10 @@
     <!-- Featured Video Section -->
     <section class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center mb-5 fw-bold">Featured Videos</h2>
+            <!-- <h2 class="text-center mb-5 fw-bold">Featured Videos</h2> -->
+            <div id="video-tabs" class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+                <!-- Video category tabs will be loaded via AJAX -->
+            </div>
             <div class="row" id="video-container">
                 <!-- Videos will be loaded via AJAX -->
             </div>

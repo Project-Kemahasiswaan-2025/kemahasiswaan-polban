@@ -284,19 +284,22 @@ footer {
   min-height: 2.5em;
 }
 
-.poster-tab {
+.poster-tab,
+.video-tab {
   transition: all 0.3s ease;
   border-width: 2px;
   font-weight: 600;
 }
 
-.poster-tab:hover {
+.poster-tab:hover,
+.video-tab:hover {
   background-color: var(--color-primary);
   color: white;
   transform: translateY(-2px);
 }
 
-.poster-tab.active {
+.poster-tab.active,
+.video-tab.active {
   background-color: var(--color-primary);
   color: white;
   box-shadow: 0 4px 10px rgba(0, 31, 63, 0.2);

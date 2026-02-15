@@ -11,8 +11,21 @@ class VideoController extends Controller
 {
     public function index(\Illuminate\Http\Request $request): JsonResponse
     {
-        $videos = Video::where('is_active', true)
-            ->when($request->category_id, fn($query) => $query->where('category_id', $request->category_id))
+        $categoryId = $request->get('category_id');
+
+        $categories = \App\Models\Category::query()
+            ->ofType('video')
+            ->active()
+            ->orderBy('sort_order')
+            ->get()
+            ->map(function ($cat) {
+                return [
+                    'id' => $cat->id,
+                    'name' => $cat->name,
+                ];
+            });
+
+        $videosQuery = Video::where('is_active', true)
             ->where(function ($query) {
                 $query->whereNull('active_from')
                     ->orWhere('active_from', '<=', now());
@@ -22,8 +35,19 @@ class VideoController extends Controller
                     ->orWhere('active_to', '>=', now());
             })
             ->orderBy('is_pinned', 'desc')
-            ->orderBy('sort_order')
-            ->get()
+            ->orderBy('sort_order');
+
+        if ($categoryId) {
+            $videosQuery->where('category_id', $categoryId);
+        } else if ($categories->count() > 0) {
+            // Default to first category if none provided for filtered view
+            // However, for the initial "Featured" view, we might want all pinned videos?
+            // Actually, matching poster pattern: default to first category
+            $videosQuery->where('category_id', $categories->first()['id']);
+            $categoryId = $categories->first()['id'];
+        }
+
+        $videos = $videosQuery->get()
             ->map(function ($video) {
                 return [
                     'id' => $video->id,
@@ -37,7 +61,9 @@ class VideoController extends Controller
             });
 
         return response()->json([
-            'data' => $videos
+            'categories' => $categories,
+            'videos' => $videos,
+            'active_category_id' => (int) $categoryId,
         ]);
     }
 }

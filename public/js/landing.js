@@ -67,46 +67,76 @@ function renderBanners(banners) {
 }
 
 // Load Videos
-function loadVideos() {
+function loadVideos(categoryId = null) {
+    const videoContainer = $('#video-container');
+    const tabsContainer = $('#video-tabs');
+
+    videoContainer.css('opacity', '0.5');
+
     $.ajax({
         url: '/api/videos',
         method: 'GET',
+        data: { category_id: categoryId },
         success: function(response) {
-            if (response.data && response.data.length > 0) {
-                renderVideos(response.data);
+            videoContainer.css('opacity', '1');
+
+            if (response.categories) {
+                renderVideoTabs(response.categories, response.active_category_id);
+            }
+
+            if (response.videos && response.videos.length > 0) {
+                renderVideos(response.videos);
             } else {
-                $('#video-container').html('<div class="col-12 text-center"><p class="text-muted">No videos available</p></div>');
+                videoContainer.html('<div class="col-12 text-center py-5"><p class="text-muted">No videos available for this category</p></div>');
             }
         },
         error: function() {
-            $('#video-container').html('<div class="col-12 text-center"><p class="text-danger">Failed to load videos</p></div>');
+            videoContainer.css('opacity', '1');
+            videoContainer.html('<div class="col-12 text-center py-5"><p class="text-danger">Failed to load videos</p></div>');
         }
     });
+}
+
+// Render Video Tabs
+function renderVideoTabs(categories, activeId) {
+    let html = '';
+    categories.forEach(category => {
+        const activeClass = category.id === activeId ? 'active' : '';
+        html += `<button class="btn btn-outline-primary rounded-pill px-4 video-tab ${activeClass}" 
+                        onclick="loadVideos(${category.id})">
+                    Video ${category.name}
+                 </button>`;
+    });
+    $('#video-tabs').html(html);
 }
 
 // Render Videos
 function renderVideos(videos) {
     let html = '';
     
-    videos.slice(0, 3).forEach(video => {
+    videos.forEach(video => {
         const videoId = extractYouTubeId(video.video_url);
         
         html += `
-            <div class="col-md-4 fade-in">
-                <div class="ratio ratio-16x9 mb-3">
-                    ${videoId ? 
-                        `<iframe src="https://www.youtube.com/embed/${videoId}" 
-                                title="${video.title}" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                        </iframe>` : 
-                        `<div class="bg-secondary d-flex align-items-center justify-content-center">
-                            <p class="text-white">Invalid video URL</p>
-                        </div>`
-                    }
+            <div class="col-md-4 mb-4 fade-in">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div class="ratio ratio-16x9">
+                        ${videoId ? 
+                            `<iframe src="https://www.youtube.com/embed/${videoId}" 
+                                    title="${video.title}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>` : 
+                            `<div class="bg-secondary d-flex align-items-center justify-content-center">
+                                <p class="text-white">Invalid video URL</p>
+                            </div>`
+                        }
+                    </div>
+                    <div class="card-body p-3">
+                        <h5 class="card-title fs-6 fw-bold mb-0 text-dark line-clamp-2">${video.title}</h5>
+                    </div>
                 </div>
-                <h5>${video.title}</h5>
             </div>
         `;
     });
