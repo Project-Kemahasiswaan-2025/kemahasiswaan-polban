@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Video extends Model
 {
     protected $fillable = [
+        'category_id',
         'title',
         'description',
         'youtube_url',
@@ -25,7 +26,13 @@ class Video extends Model
         'is_pinned' => 'boolean',
         'active_from' => 'datetime',
         'active_to' => 'datetime',
+        'category_id' => 'integer',
     ];
+
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
     public static function extractYoutubeId(string $url): ?string
     {
         $url = trim($url);

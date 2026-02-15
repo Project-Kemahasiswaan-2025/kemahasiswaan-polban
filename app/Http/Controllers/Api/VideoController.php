@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(\Illuminate\Http\Request $request): JsonResponse
     {
         $videos = Video::where('is_active', true)
+            ->when($request->category_id, fn($query) => $query->where('category_id', $request->category_id))
             ->where(function ($query) {
                 $query->whereNull('active_from')
                     ->orWhere('active_from', '<=', now());

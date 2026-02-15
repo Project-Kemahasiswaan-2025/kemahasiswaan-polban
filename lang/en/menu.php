@@ -50,4 +50,5 @@ return [
     'nav_label_competitions' => 'Competitions',
     'nav_label_downloads' => 'Downloads',
     'nav_label_download_categories' => 'Download Categories',
+    'nav_label_video_categories' => 'Video Categories',
 ];

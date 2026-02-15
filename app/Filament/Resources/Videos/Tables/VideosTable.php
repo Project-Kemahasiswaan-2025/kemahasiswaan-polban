@@ -7,6 +7,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -46,12 +47,20 @@ class VideosTable
                     ->sortable()
                     ->placeholder('-'),
 
+                TextColumn::make('category.name')
+                    ->label('Kategori')
+                    ->sortable()
+                    ->badge(),
+
                 TextColumn::make('sort_order')
                     ->label('Urutan')
                     ->sortable(),
             ])
             ->defaultSort('is_pinned', 'desc')
             ->filters([
+                SelectFilter::make('category_id')
+                    ->label('Kategori')
+                    ->relationship('category', 'name', fn($query) => $query->where('type', 'video')),
                 TernaryFilter::make('is_active')->label('Aktif'),
                 TernaryFilter::make('is_pinned')->label('Pin'),
             ])

@@ -50,4 +50,5 @@ return [
     'nav_label_competitions' => 'Kompetisi',
     'nav_label_downloads' => 'Unduhan',
     'nav_label_download_categories' => 'Kategori Unduhan',
+    'nav_label_video_categories' => 'Kategori Video',
 ];

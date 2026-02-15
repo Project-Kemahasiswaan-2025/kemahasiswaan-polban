@@ -40,6 +40,14 @@ class VideoForm
                         ->nullable()
                         ->columnSpanFull(),
 
+                    Select::make('category_id')
+                        ->label('Kategori')
+                        ->relationship('category', 'name', fn($query) => $query->where('type', 'video'))
+                        ->required()
+                        ->searchable()
+                        ->preload()
+                        ->columnSpanFull(),
+
                     Grid::make(12)->schema([
                         TextInput::make('youtube_url')
                             ->label('YouTube URL')
