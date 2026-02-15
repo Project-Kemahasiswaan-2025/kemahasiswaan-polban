@@ -45,7 +45,7 @@ class ServiceResource extends Resource
         return 'Layanan';
     }
 
-    protected static ?string $recordTitleAttribute = 'name';
+    // protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $recordUrlAttribute = 'slug';
 

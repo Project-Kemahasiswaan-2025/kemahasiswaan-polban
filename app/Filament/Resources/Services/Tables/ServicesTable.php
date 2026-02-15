@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Services\Tables;
 
-use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -19,9 +21,8 @@ class ServicesTable
                     ->sortable()
                     ->wrap(),
 
-                IconColumn::make('is_active')
+                ToggleColumn::make('is_active')
                     ->label('Aktif')
-                    ->boolean()
                     ->sortable(),
 
                 TextColumn::make('sort_order')
@@ -29,7 +30,7 @@ class ServicesTable
                     ->sortable(),
 
                 TextColumn::make('children_count')
-                    ->label('Sub-Layanan')
+                    ->label('Tautan')
                     ->counts('children')
                     ->badge(),
 
@@ -42,6 +43,12 @@ class ServicesTable
             ->defaultSort('sort_order', 'asc')
             ->filters([
                 TernaryFilter::make('is_active')->label('Aktif'),
+            ])
+            ->actions([
+                EditAction::make(),
+            ])
+            ->bulkActions([
+                DeleteBulkAction::make(),
             ]);
     }
 }

@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
+use App\Filament\Forms\Components\BootstrapIconPicker;
 use App\Models\Service;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -19,95 +20,115 @@ class ServiceForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Utama')
+            // Row 1
+            Section::make('Informasi Layanan')
+                ->description('Metadata utama layanan, termasuk tombol aksi (CTA) bila layanan mengarah ke halaman eksternal.')
                 ->schema([
                     Grid::make(12)->schema([
-                        TextInput::make('name')
-                            ->label('Nama Layanan')
-                            ->required()
-                            ->maxLength(180)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function ($state, $set, $get) {
-                                if (filled($get('slug'))) {
-                                    return;
-                                }
-                                $set('slug', Str::slug((string) $state));
-                            })
-                            ->columnSpan(10),
+                        // KIRI
+                        Grid::make(12)
+                            ->columnSpan(6)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Nama Layanan')
+                                    ->required()
+                                    ->maxLength(180)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function ($state, $set, $get) {
+                                        if (filled($get('slug'))) {
+                                            return;
+                                        }
+                                        $set('slug', Str::slug((string) $state));
+                                    })
+                                    ->columnSpanFull(),
 
-                        TextInput::make('sort_order')
-                            ->label('Urutan')
-                            ->numeric()
-                            ->default(0)
-                            ->columnSpan(2),
-                    ]),
+                                Grid::make(12)->schema([
+                                    TextInput::make('slug')
+                                        ->label('Slug')
+                                        ->required()
+                                        ->unique(Service::class, 'slug', ignoreRecord: true)
+                                        ->columnSpan(9),
 
-                    TextInput::make('slug')
-                        ->label('Slug')
-                        ->required()
-                        ->unique(Service::class, 'slug', ignoreRecord: true),
+                                    TextInput::make('sort_order')
+                                        ->label('Urutan')
+                                        ->numeric()
+                                        ->default(0)
+                                        ->minValue(0)
+                                        ->columnSpan(3),
+                                ])->columnSpanFull(),
 
-                    Grid::make(12)->schema([
-                        Toggle::make('is_active')
-                            ->label('Aktif')
-                            ->default(true)
-                            ->columnSpan(4),
+                                BootstrapIconPicker::make('icon')
+                                    ->label('Icon')
+                                    ->icons(config('bootstrap-icons'))
+                                    ->required()
+                                    ->columnSpanFull(),
 
-                        TextInput::make('icon')
-                            ->label('Icon (Bootstrap Icon Class)')
-                            ->placeholder('bi-gear')
-                            ->columnSpan(8),
-                    ]),
+                            ]),
 
-                    TextInput::make('excerpt')
-                        ->label('Ringkasan')
-                        ->maxLength(255)
-                        ->columnSpanFull(),
+                        // KANAN
+                        Grid::make(12)
+                            ->columnSpan(6)
+                            ->schema([
+                                TextInput::make('excerpt')
+                                    ->label('Ringkasan')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
 
-                    RichEditor::make('content')
-                        ->label('Konten Halaman')
-                        ->columnSpanFull(),
-                ]),
+                                Section::make('Tombol Aksi')
+                                    ->description('Opsional. Gunakan bila halaman layanan ini butuh tombol untuk menuju URL eksternal atau aksi tertentu.')
+                                    ->schema([
+                                        Grid::make(12)->schema([
+                                            TextInput::make('cta_label')
+                                                ->label('Label Tombol')
+                                                ->columnSpan(4),
 
-            Section::make('Link Eksternal / Action')
-                ->description('Gunakan ini jika layanan ini memiliki tombol aksi langsung atau redirect ke luar.')
-                ->schema([
-                    Grid::make(12)->schema([
-                        TextInput::make('cta_label')
-                            ->label('Label Tombol')
-                            ->columnSpan(4),
-
-                        TextInput::make('cta_url')
-                            ->label('URL Aksi/Redirect')
-                            ->url()
-                            ->columnSpan(8),
+                                            TextInput::make('cta_url')
+                                                ->label('URL Aksi / Redirect')
+                                                ->url()
+                                                ->columnSpan(8),
+                                        ]),
+                                    ])
+                                    ->collapsible()
+                                    ->columnSpanFull(),
+                            ]),
                     ]),
                 ])
-                ->collapsible(),
+                ->columnSpanFull(),
 
-            Section::make('Sub-Layanan (Anak)')
-                ->description('Inputkan sub-layanan langsung di sini.')
+            // Row 2
+            Section::make('Konten Halaman')
+                ->schema([
+                    RichEditor::make('content')
+                        ->hiddenLabel()
+                        ->columnSpanFull(),
+                ])->columnSpanFull(),
+
+            // Row 3
+            Section::make('Tautan Lanjutan')
+                ->description('Daftar tautan terkait untuk melanjutkan ke halaman/portal eksternal yang masih berhubungan dengan layanan ini.')
                 ->schema([
                     Repeater::make('children')
+                        ->label('Tautan')
                         ->relationship('children')
                         ->schema([
                             Grid::make(12)->schema([
                                 TextInput::make('name')
-                                    ->label('Nama Sub-Layanan')
+                                    ->label('Judul Tautan')
                                     ->required()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn($state, $set) => $set('slug', Str::slug((string) $state)))
                                     ->columnSpan(8),
+
                                 TextInput::make('slug')
+                                    ->label('Slug')
                                     ->required()
                                     ->columnSpan(4),
                             ]),
+
                             TextInput::make('cta_url')
-                                ->label('URL Redirect / Dokumen')
-                                ->url(),
-                            Toggle::make('is_active')
-                                ->label('Aktif')
-                                ->default(true),
+                                ->label('URL Tujuan')
+                                ->url()
+                                ->required(),
                         ])
                         ->orderColumn('sort_order')
                         ->collapsible()
@@ -126,25 +147,19 @@ class ServiceForm
                                     ->label('Nama Dokumen')
                                     ->required()
                                     ->columnSpan(8),
-                                Toggle::make('is_active')
-                                    ->label('Aktif')
-                                    ->default(true)
+
+                                TextInput::make('sort_order')
+                                    ->label('Urutan')
+                                    ->numeric()
+                                    ->default(0)
                                     ->columnSpan(4),
                             ]),
+
                             FileUpload::make('file_path')
                                 ->label('File')
                                 ->required()
                                 ->disk('public')
-                                ->directory('downloads/services')
-                                ->afterStateUpdated(function ($state, $set) {
-                                    if ($state) {
-                                        // You could potentially extract file size/type here if needed
-                                    }
-                                }),
-                            TextInput::make('sort_order')
-                                ->label('Urutan')
-                                ->numeric()
-                                ->default(0),
+                                ->directory('downloads/services'),
                         ])
                         ->orderColumn('sort_order')
                         ->collapsible()

@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'bi-gear' => 'Pengaturan',
+    'bi-link-45deg' => 'Link',
+    'bi-box-arrow-up-right' => 'Eksternal',
+    'bi-file-earmark-text' => 'Dokumen',
+    'bi-people' => 'Pengguna',
+    'bi-building' => 'Institusi',
+    'bi-mortarboard' => 'Akademik',
+    'bi-award' => 'Prestasi',
+    'bi-journal-text' => 'Informasi',
+    'bi-house' => 'Beranda',
+    'bi-globe' => 'Website',
+    'bi-telephone' => 'Telepon',
+    'bi-envelope' => 'Email',
+    'bi-calendar-event' => 'Agenda',
+    'bi-megaphone' => 'Pengumuman',
+    'bi-chat-dots' => 'Diskusi',
+    'bi-shield-check' => 'Keamanan',
+    'bi-cpu' => 'Teknologi',
+    'bi-lightning-charge' => 'Cepat',
+    'bi-graph-up' => 'Statistik',
+    'bi-map' => 'Peta',
+    'bi-pin-map' => 'Lokasi',
+    'bi-cloud-download' => 'Unduh',
+    'bi-file-earmark-pdf' => 'PDF',
+];
