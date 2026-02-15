@@ -13,8 +13,12 @@ class VideoController extends Controller
     {
         $videos = Video::where('is_active', true)
             ->where(function ($query) {
-                $query->whereNull('published_at')
-                    ->orWhere('published_at', '<=', now());
+                $query->whereNull('active_from')
+                    ->orWhere('active_from', '<=', now());
+            })
+            ->where(function ($query) {
+                $query->whereNull('active_to')
+                    ->orWhere('active_to', '>=', now());
             })
             ->orderBy('is_pinned', 'desc')
             ->orderBy('sort_order')
@@ -24,7 +28,9 @@ class VideoController extends Controller
                     'id' => $video->id,
                     'title' => $video->title,
                     'video_url' => $video->youtube_url,
-                    'thumbnail' => $video->thumbnail_url ? Storage::url($video->thumbnail_url) : null,
+                    'thumbnail' => $video->thumbnail_url
+                        ? (filter_var($video->thumbnail_url, FILTER_VALIDATE_URL) ? $video->thumbnail_url : Storage::url($video->thumbnail_url))
+                        : null,
                     'is_featured' => $video->is_pinned,
                 ];
             });
