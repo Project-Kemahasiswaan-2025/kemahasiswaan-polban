@@ -370,7 +370,7 @@ function renderPosters(posters) {
                              alt="${poster.title}"
                              onerror="this.src='https://placehold.co/600x800?text=Poster+Not+Found'">
                         <div class="poster-overlay">
-                            <span class="badge bg-primary rounded-pill">${poster.published_at || ''}</span>
+                            <span class="badge bg-primary rounded-pill">${poster.created_at || ''}</span>
                         </div>
                     </div>
                     <div class="card-body p-3">

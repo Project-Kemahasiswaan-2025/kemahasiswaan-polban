@@ -28,7 +28,7 @@ class PosterController extends Controller
 
         $postersQuery = \App\Models\Poster::query()
             ->where('is_active', true)
-            ->orderBy('published_at', 'desc');
+            ->orderBy('created_at', 'desc');
 
         if ($categoryId) {
             $postersQuery->where('category_id', $categoryId);
@@ -43,7 +43,7 @@ class PosterController extends Controller
                 'id' => $poster->id,
                 'title' => $poster->title,
                 'image_url' => $poster->image_path ? Storage::url($poster->image_path) : null,
-                'published_at' => $poster->published_at ? $poster->published_at->format('d M Y') : null,
+                'created_at' => $poster->created_at ? $poster->created_at->format('d M Y') : null,
             ];
         });
 

@@ -62,19 +62,7 @@ class PosterForm
                                 ->unique(ignoreRecord: true)
                                 ->columnSpanFull(),
 
-                            Grid::make(12)->schema([
-                                DatePicker::make('published_at')
-                                    ->label('Tanggal Publish')
-                                    ->native(false)
-                                    ->displayFormat('d M Y')
-                                    ->nullable()
-                                    ->columnSpan(6),
-
-                                Toggle::make('is_active')
-                                    ->label('Aktif')
-                                    ->default(true)
-                                    ->columnSpan(6),
-                            ]),
+                            // Toggle is removed from form as requested, will use toggle column in table
                         ])->columnSpan(8),
                     ]),
                 ]),
