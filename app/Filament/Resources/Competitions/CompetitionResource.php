@@ -37,12 +37,12 @@ class CompetitionResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return null;
+        return 'Prestasi';
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('menu.nav_label_competitions');
+        return 'Katalog Kompetisi';
     }
 
     protected static ?int $navigationSort = 40;
@@ -61,161 +61,26 @@ class CompetitionResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->schema([
-            Section::make('Informasi')
-                ->schema([
+        return Schemas\CompetitionForm::configure($schema);
+    }
 
-                    Grid::make(12)->schema([
-                        TextInput::make('name')
-                            ->label('Nama')
-                            ->required()
-                            ->maxLength(180)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function ($state, $set, $get) {
-                                if (filled($get('slug'))) return;
-                                $set('slug', Str::slug((string) $state));
-                            })
-                            ->columnSpan(10),
-
-                        TextInput::make('sort_order')
-                            ->label('Order')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
-                            ->columnSpan(2),
-                    ]),
-
-                    TextInput::make('slug')
-                        ->label('Slug')
-                        ->required()
-                        ->maxLength(200)
-                        ->unique(
-                            table: Competition::class,
-                            column: 'slug',
-                            ignoreRecord: true,
-                        ),
-
-                    Grid::make(12)->schema([
-                        Toggle::make('is_active')
-                            ->label('Aktif')
-                            ->default(true)
-                            ->columnSpan(4),
-
-                        Toggle::make('is_group')
-                            ->label('Kategori')
-                            ->helperText('Aktifkan jika ini kategori (Puspresnas, BAKORMA, Mapres).')
-                            ->default(false)
-                            ->live()
-                            ->columnSpan(8),
-                    ]),
-
-                    Select::make('parent_id')
-                        ->label('Parent Kategori')
-                        ->relationship(
-                            name: 'parent',
-                            titleAttribute: 'name',
-                            modifyQueryUsing: fn($query) => $query
-                                ->whereNull('parent_id')
-                                ->where('is_group', true)
-                                ->orderBy('sort_order')
-                        )
-                        ->searchable()
-                        ->preload()
-                        ->nullable()
-                        ->disabled(fn($get) => (bool) $get('is_group'))
-                        ->helperText('Kosongkan jika ini kategori utama.'),
-
-                    FileUpload::make('cover_image')
-                        ->label('Cover (Opsional)')
-                        ->disk('public')
-                        ->directory('competitions/covers')
-                        ->image()
-                        ->imageEditor()
-                        ->nullable(),
-                ]),
-
-            Section::make('Link & Konten')
-                ->schema([
-                    Grid::make(12)->schema([
-                        TextInput::make('url')
-                            ->label('URL')
-                            ->placeholder('https://...')
-                            ->url()
-                            ->maxLength(255)
-                            ->nullable()
-                            ->columnSpan(8)
-                            ->disabled(fn($get) => (bool) $get('is_group')),
-
-                        Select::make('url_target')
-                            ->label('Target')
-                            ->options([
-                                '_blank' => 'Tab baru',
-                                '_self'  => 'Tab yang sama',
-                            ])
-                            ->default('_blank')
-                            ->columnSpan(4)
-                            ->disabled(fn($get) => (bool) $get('is_group')),
-                    ]),
-
-                    RichEditor::make('content')
-                        ->label('Konten (Opsional)')
-                        ->nullable()
-                        ->columnSpanFull(),
-                ]),
-
-        ]);
+    public static function infolist(Schema $schema): Schema
+    {
+        return Schemas\CompetitionInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                ImageColumn::make('cover_image')
-                    ->label('Cover')
-                    ->disk('public')
-                    ->square(),
+        return Tables\CompetitionsTable::configure($table)
+            ->modifyQueryUsing(function ($query) {
+                $parentId = data_get(request()->query('tableFilters', []), 'parent_id.value');
 
-                TextColumn::make('name')
-                    ->label('Nama')
-                    ->searchable()
-                    ->sortable()
-                    ->wrap(),
-
-                IconColumn::make('is_active')
-                    ->label('Aktif')
-                    ->boolean()
-                    ->sortable(),
-
-                TextColumn::make('sort_order')
-                    ->label('Order')
-                    ->sortable(),
-            ])
-            ->defaultSort('sort_order', 'asc')
-            ->filters([
-
-                SelectFilter::make('parent_id')
-                    ->label('Kategori')
-                    ->relationship(
-                        name: 'parent',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn($query) => $query
-                            ->whereNull('parent_id')
-                            ->where('is_group', true)
-                            ->orderBy('sort_order')
-                    )
-                    ->searchable()
-                    ->preload(),
-
-                TernaryFilter::make('is_group')->label('Kategori'),
-                TernaryFilter::make('is_active')->label('Aktif'),
-            ])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->bulkActions([
-                DeleteBulkAction::make(),
-            ]);
+                return $query->when(
+                    filled($parentId),
+                    fn($q) => $q->where('parent_id', (int) $parentId),
+                    fn($q) => $q->whereNull('parent_id'),
+                );
+            });
     }
 
     public static function getPages(): array
