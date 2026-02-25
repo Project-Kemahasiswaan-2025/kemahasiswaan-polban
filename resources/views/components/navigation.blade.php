@@ -63,7 +63,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ __('menu.scholarship') }}</a>
+                    <a class="nav-link {{ request()->routeIs('beasiswa.index') ? 'active' : '' }}" href="{{ route('beasiswa.index') }}">{{ __('menu.scholarship') }}</a>
                 </li>
 
                 <li class="nav-item dropdown">

@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <a href="#" class="text-decoration-none">
+                    <a href="{{ route('beasiswa.index') }}" class="text-decoration-none">
                         <div class="card quick-link-card h-100 text-center p-4 border-0 shadow-sm hover-card">
                             <i class="bi bi-bookmark-fill text-success mb-3" style="font-size: 3rem;"></i>
                             <h4 class="card-title">{{ __('menu.scholarship') }}</h4>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BeasiswaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\CompetitionController;
@@ -13,6 +14,7 @@ Route::get('/profile/{slug}', [ProfileController::class, 'show'])->name('profile
 Route::get('/ormawa', [OrmawaController::class, 'index'])->name('ormawa.index');
 Route::get('/ormawa/{slug}', [OrmawaController::class, 'show'])->name('ormawa.show');
 Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competition.index');
+Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/unduhan', [\App\Http\Controllers\DownloadController::class, 'index'])->name('download.index');
 

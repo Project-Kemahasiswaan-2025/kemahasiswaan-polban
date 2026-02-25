@@ -5,6 +5,7 @@ return [
     'profile' => 'Profil',
     'services' => 'Layanan',
     'scholarship' => 'Beasiswa',
+    'scholarships' => 'Beasiswa',
     'student_organizations' => 'Organisasi Mahasiswa',
     'achievements' => 'Prestasi dan Kompetisi',
     'documents' => 'Dokumen',

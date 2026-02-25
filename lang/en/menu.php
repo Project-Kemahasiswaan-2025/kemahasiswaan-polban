@@ -5,6 +5,7 @@ return [
     'profile' => 'Profile',
     'services' => 'Services',
     'scholarship' => 'Scholarship',
+    'scholarships' => 'Scholarships',
     'student_organizations' => 'Student Organizations',
     'achievements' => 'Achievements and Competitions',
     'documents' => 'Documents',
