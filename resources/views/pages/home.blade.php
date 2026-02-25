@@ -73,20 +73,6 @@
     </section>
 
     @push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Load banners
-            loadBanners();
-
-            // Load videos
-            loadVideos();
-
-            // Load running text
-            loadRunningText();
-
-            // Load posters
-            loadPosters();
-        });
-    </script>
+    <script src="{{ asset('js/pages/home.js') }}"></script>
     @endpush
 </x-layout.app>

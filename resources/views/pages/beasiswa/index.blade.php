@@ -97,24 +97,6 @@
     </style>
 
     @push('scripts')
-    <script>
-        $(document).ready(function() {
-            loadBeasiswa();
-
-            $('#beasiswa-filter-btn').on('click', function() {
-                loadBeasiswa();
-            });
-
-            // Trigger search on enter
-            $('#beasiswa-search, #beasiswa-jurusan').on('keypress', function(e) {
-                if (e.which == 13) loadBeasiswa();
-            });
-
-            // Auto reload on select change
-            $('#beasiswa-tipe, #beasiswa-jenis').on('change', function() {
-                loadBeasiswa();
-            });
-        });
-    </script>
+    <script src="{{ asset('js/pages/beasiswa.js') }}"></script>
     @endpush
 </x-layout.app>

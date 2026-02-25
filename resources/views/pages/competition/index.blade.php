@@ -62,16 +62,6 @@
     </style>
 
     @push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Load competitions
-            loadCompetitions();
-
-            // Category filter
-            $('#category-filter').on('change', function() {
-                loadCompetitions();
-            });
-        });
-    </script>
+    <script src="{{ asset('js/pages/competition.js') }}"></script>
     @endpush
 </x-layout.app>
