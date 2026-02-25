@@ -3,9 +3,8 @@
 namespace App\Filament\Resources\Downloads\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\MorphToSelect;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -29,9 +28,10 @@ class DownloadForm
                             ->columnSpan(4),
                     ]),
 
-                    \Filament\Forms\Components\Select::make('category_id')
+                    Select::make('category_id')
                         ->label('Kategori (Section di Landing Page)')
                         ->relationship('category', 'name', fn($query) => $query->where('type', 'download'))
+                        ->required()
                         ->searchable()
                         ->preload()
                         ->placeholder('Pilih section untuk landing page...'),
@@ -47,26 +47,7 @@ class DownloadForm
                                 // Potentially extract info if needed
                             }
                         }),
-
-                    Toggle::make('is_active')
-                        ->label('Aktif')
-                        ->default(true),
                 ]),
-
-            Section::make('Relasi / Terkait Dengan')
-                ->schema([
-                    MorphToSelect::make('downloadable')
-                        ->label('Tautkan ke Entitas')
-                        ->types([
-                            MorphToSelect\Type::make(\App\Models\Service::class)
-                                ->titleAttribute('name')
-                                ->label('Layanan'),
-                            // You can add more types here if needed
-                        ])
-                        ->searchable()
-                        ->preload(),
-                ])
-                ->collapsible(),
         ]);
     }
 }
