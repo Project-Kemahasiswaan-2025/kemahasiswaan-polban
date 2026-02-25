@@ -112,6 +112,15 @@ body {
   background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
 }
 
+.breadcrumb-item + .breadcrumb-item::before {
+  content: var(--bs-breadcrumb-divider, ">") !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--color-orange-light) !important;
+}
+
 /* Quick Links */
 .quick-link-card {
   cursor: pointer;

@@ -40,9 +40,20 @@ $(document).ready(function() {
     }
     
     function updateHeader(categorySlug) {
+        const homeLabel = document.documentElement.lang === 'id' ? 'Beranda' : 'Home';
+        const ormawaLabel = document.documentElement.lang === 'id' ? 'Organisasi Mahasiswa' : 'Student Organizations';
+        const homeUrl = '/';
+        const ormawaUrl = '/ormawa';
+
         if (!categorySlug) {
-            $('#header-title').text('Organisasi Mahasiswa');
+            $('#header-title').text(ormawaLabel);
             $('#header-lead').text('Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa');
+            
+            // Reset breadcrumb
+            $('#breadcrumb-container ol').html(`
+                <li class="breadcrumb-item"><a href="${homeUrl}" class="text-white">${homeLabel}</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">${ormawaLabel}</li>
+            `);
             return;
         }
         
@@ -50,6 +61,13 @@ $(document).ready(function() {
         if (group) {
             $('#header-title').text(group.name);
             $('#header-lead').text(group.excerpt || 'Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa');
+            
+            // Update breadcrumb
+            $('#breadcrumb-container ol').html(`
+                <li class="breadcrumb-item"><a href="${homeUrl}" class="text-white">${homeLabel}</a></li>
+                <li class="breadcrumb-item"><a href="${ormawaUrl}" class="text-white">${ormawaLabel}</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">${group.name}</li>
+            `);
         }
     }
     

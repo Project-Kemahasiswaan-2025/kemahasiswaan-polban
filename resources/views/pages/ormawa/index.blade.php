@@ -2,6 +2,12 @@
     <!-- Page Header -->
     <section class="page-header bg-primary text-white py-5" id="page-header">
         <div class="container">
+            <nav aria-label="breadcrumb" id="breadcrumb-container">
+                <ol class="breadcrumb text-white mb-3">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">{{ __('menu.home') }}</a></li>
+                    <li class="breadcrumb-item active text-white" id="breadcrumb-current" aria-current="page">{{ __('menu.student_organizations') }}</li>
+                </ol>
+            </nav>
             <h1 class="display-4 fw-bold" id="header-title">{{ __('menu.student_organizations') }}</h1>
             <p class="lead" id="header-lead">Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa</p>
         </div>
