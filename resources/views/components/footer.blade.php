@@ -14,16 +14,41 @@
                 <ul class="list-unstyled text-white-50">
                     <li class="mb-2">
                         <i class="bi bi-envelope me-2"></i>
-                        kemahasiswaan@polban.ac.id
+                        {{ $contactSettings->email }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-telephone me-2"></i>
-                        (022) 1234567
+                        {{ $contactSettings->phone }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-geo-alt me-2"></i>
-                        Jl. Gegerkalong Hilir, Bandung
+                        {{ $contactSettings->address }}
                     </li>
+                    @php
+                    $hasSocials = ($contactSettings->instagram_url && $contactSettings->instagram_url !== '#') ||
+                    ($contactSettings->facebook_url && $contactSettings->facebook_url !== '#') ||
+                    ($contactSettings->twitter_url && $contactSettings->twitter_url !== '#') ||
+                    ($contactSettings->youtube_url && $contactSettings->youtube_url !== '#');
+                    @endphp
+                    @if($hasSocials)
+                    <h5 class="fw-bold mb-3 mt-5">{{ __('contact.social_media') }}</h5>
+                    <li class="mt-3">
+                        <div class="d-flex gap-3">
+                            @if($contactSettings->instagram_url && $contactSettings->instagram_url !== '#')
+                            <a href="{{ $contactSettings->instagram_url }}" class="text-white-50" target="_blank"><i class="bi bi-instagram"></i></a>
+                            @endif
+                            @if($contactSettings->facebook_url && $contactSettings->facebook_url !== '#')
+                            <a href="{{ $contactSettings->facebook_url }}" class="text-white-50" target="_blank"><i class="bi bi-facebook"></i></a>
+                            @endif
+                            @if($contactSettings->twitter_url && $contactSettings->twitter_url !== '#')
+                            <a href="{{ $contactSettings->twitter_url }}" class="text-white-50" target="_blank"><i class="bi bi-twitter-x"></i></a>
+                            @endif
+                            @if($contactSettings->youtube_url && $contactSettings->youtube_url !== '#')
+                            <a href="{{ $contactSettings->youtube_url }}" class="text-white-50" target="_blank"><i class="bi bi-youtube"></i></a>
+                            @endif
+                        </div>
+                    </li>
+                    @endif
                 </ul>
             </div>
 

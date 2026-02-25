@@ -11,7 +11,8 @@ class ContactController extends Controller
 {
     public function index()
     {
-        return view('pages.contact.index');
+        $contactSettings = \App\Models\ContactSetting::getSettings();
+        return view('pages.contact.index', compact('contactSettings'));
     }
 
     public function store(Request $request)

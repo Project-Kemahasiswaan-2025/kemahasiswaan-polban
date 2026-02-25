@@ -22,7 +22,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-bold mb-1">{{ __('contact.address') }}</h6>
-                                <p class="text-muted small mb-0">Jl. Gegerkalong Hilir, Ciwaruga, Kec. Parongpong, Kabupaten Bandung Barat, Jawa Barat 40559</p>
+                                <p class="text-muted small mb-0">{{ $contactSettings->address }}</p>
                             </div>
                         </div>
 
@@ -32,7 +32,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-bold mb-1">{{ __('contact.email') }}</h6>
-                                <p class="text-muted small mb-0">kemahasiswaan@polban.ac.id</p>
+                                <p class="text-muted small mb-0">{{ $contactSettings->email }}</p>
                             </div>
                         </div>
 
@@ -42,19 +42,35 @@
                             </div>
                             <div>
                                 <h6 class="fw-bold mb-1">{{ __('contact.phone') }}</h6>
-                                <p class="text-muted small mb-0">(022) 2013789</p>
+                                <p class="text-muted small mb-0">{{ $contactSettings->phone }}</p>
                             </div>
                         </div>
 
+                        @php
+                        $hasSocials = ($contactSettings->instagram_url && $contactSettings->instagram_url !== '#') ||
+                        ($contactSettings->facebook_url && $contactSettings->facebook_url !== '#') ||
+                        ($contactSettings->twitter_url && $contactSettings->twitter_url !== '#') ||
+                        ($contactSettings->youtube_url && $contactSettings->youtube_url !== '#');
+                        @endphp
+                        @if($hasSocials)
                         <hr class="my-4">
 
                         <h6 class="fw-bold mb-3">{{ __('contact.social_media') }}</h6>
                         <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-instagram"></i></a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-facebook"></i></a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-twitter-x"></i></a>
-                            <a href="#" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-youtube"></i></a>
+                            @if($contactSettings->instagram_url && $contactSettings->instagram_url !== '#')
+                            <a href="{{ $contactSettings->instagram_url }}" target="_blank" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-instagram"></i></a>
+                            @endif
+                            @if($contactSettings->facebook_url && $contactSettings->facebook_url !== '#')
+                            <a href="{{ $contactSettings->facebook_url }}" target="_blank" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-facebook"></i></a>
+                            @endif
+                            @if($contactSettings->twitter_url && $contactSettings->twitter_url !== '#')
+                            <a href="{{ $contactSettings->twitter_url }}" target="_blank" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-twitter-x"></i></a>
+                            @endif
+                            @if($contactSettings->youtube_url && $contactSettings->youtube_url !== '#')
+                            <a href="{{ $contactSettings->youtube_url }}" target="_blank" class="btn btn-outline-primary rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-youtube"></i></a>
+                            @endif
                         </div>
+                        @endif
                     </div>
                 </div>
 
@@ -112,6 +128,19 @@
                     </div>
                 </div>
             </div>
+
+            @if($contactSettings->maps_url)
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card border-0 shadow-sm overflow-hidden rounded-4">
+                        <iframe
+                            src="{{ $contactSettings->maps_url }}"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </section>
 

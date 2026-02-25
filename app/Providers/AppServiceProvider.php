@@ -21,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register view composer for navigation
-        View::composer('components.navigation', \App\View\Composers\NavigationComposer::class);
+        View::composer(['components.navigation', 'components.footer'], \App\View\Composers\NavigationComposer::class);
     }
 }

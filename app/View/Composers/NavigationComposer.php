@@ -27,8 +27,11 @@ class NavigationComposer
             ->orderBy('sort_order')
             ->get(['id', 'name', 'slug']);
 
+        $contactSettings = \App\Models\ContactSetting::getSettings();
+
         $view->with('ormawaGroups', $ormawaGroups);
         $view->with('profilePages', $profilePages);
         $view->with('services', $services);
+        $view->with('contactSettings', $contactSettings);
     }
 }
