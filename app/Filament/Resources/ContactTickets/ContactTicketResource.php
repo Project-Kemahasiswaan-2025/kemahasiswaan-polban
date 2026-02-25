@@ -38,6 +38,16 @@ class ContactTicketResource extends Resource
         return 'Tiket Bantuan';
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', 'issued')->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'primary';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return Schemas\ContactTicketForm::configure($schema);
