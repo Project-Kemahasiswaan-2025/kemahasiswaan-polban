@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             RunningTextConfigSeeder::class,
             RunningTextSeeder::class,
             DownloadSeeder::class,
+            CompetitionThreadSeeder::class,
         ]);
     }
 }
