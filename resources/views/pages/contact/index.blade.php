@@ -1,4 +1,11 @@
 <x-layout.app :title="__('contact.title')">
+    <style>
+        @media (max-width: 991.98px) {
+            .sticky-top {
+                margin-bottom: 0 !important;
+            }
+        }
+    </style>
     <!-- Page Header -->
     <section class="page-header bg-primary text-white py-5">
         <div class="container text-center">
