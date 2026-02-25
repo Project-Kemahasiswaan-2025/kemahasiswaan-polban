@@ -96,7 +96,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ __('menu.contact') }}</a>
+                    <a class="nav-link {{ request()->routeIs('contact.index') ? 'active' : '' }}" href="{{ route('contact.index') }}">{{ __('menu.contact') }}</a>
                 </li>
 
                 <li class="nav-item">

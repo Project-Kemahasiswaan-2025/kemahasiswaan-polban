@@ -6,6 +6,7 @@ use App\Http\Controllers\OrmawaController;
 use App\Http\Controllers\CompetitionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,5 +18,6 @@ Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competi
 Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/unduhan', [\App\Http\Controllers\DownloadController::class, 'index'])->name('download.index');
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
