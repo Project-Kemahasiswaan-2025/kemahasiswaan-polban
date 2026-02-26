@@ -44,8 +44,6 @@ class DownloadResource extends Resource
         return 'Unduhan';
     }
 
-    protected static ?string $recordTitleAttribute = 'name';
-
     public static function form(Schema $schema): Schema
     {
         return DownloadForm::configure($schema);
