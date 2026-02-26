@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DownloadController extends Controller
 {
@@ -29,5 +30,18 @@ class DownloadController extends Controller
             ->paginate(10);
 
         return view('pages.downloads.index', compact('categories', 'downloads', 'selectedCategory'));
+    }
+
+    public function show($id): View
+    {
+        $download = \App\Models\Download::where('is_active', true)
+            ->findOrFail($id);
+
+        $categories = Category::where('type', 'download')
+            ->active()
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('pages.downloads.show', compact('download', 'categories'));
     }
 }

@@ -51,12 +51,16 @@
                             <div class="card h-100 shadow-sm border-0 transition-hover rounded-4">
                                 <div class="card-body p-4 d-flex">
                                     <div class="flex-shrink-0">
-                                        <div class="bg-light-primary p-3 rounded-4">
-                                            <i class="bi bi-file-earmark-arrow-down text-primary fs-3"></i>
-                                        </div>
+                                        <a href="{{ route('download.show', $download->id) }}" class="text-decoration-none">
+                                            <div class="bg-light-primary p-3 rounded-4 transition-hover">
+                                                <i class="bi bi-file-earmark-arrow-down text-primary fs-3"></i>
+                                            </div>
+                                        </a>
                                     </div>
                                     <div class="ms-4 flex-grow-1">
-                                        <h5 class="fw-bold mb-1 line-clamp-2">{{ $download->name }}</h5>
+                                        <a href="{{ route('download.show', $download->id) }}" class="text-decoration-none text-navy">
+                                            <h5 class="fw-bold mb-1 line-clamp-2">{{ $download->name }}</h5>
+                                        </a>
                                         <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
                                             <span><i class="bi bi-clock me-1"></i> {{ $download->updated_at->format('d M Y') }}</span>
                                             @if($download->file_size)
@@ -68,11 +72,17 @@
                                             <span class="badge bg-light text-primary border border-primary-subtle">{{ $download->category->name }}</span>
                                             @endif
                                         </div>
-                                        <a href="{{ asset('storage/' . $download->file_path) }}"
-                                            class="btn btn-primary btn-sm rounded-pill px-4"
-                                            target="_blank">
-                                            <i class="bi bi-download me-2"></i> Unduh
-                                        </a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ asset('storage/' . $download->file_path) }}"
+                                                class="btn btn-primary btn-sm rounded-pill px-4"
+                                                target="_blank" download>
+                                                <i class="bi bi-download me-2"></i> Unduh
+                                            </a>
+                                            <a href="{{ route('download.show', $download->id) }}"
+                                                class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                                                <i class="bi bi-eye me-2"></i> Detail
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

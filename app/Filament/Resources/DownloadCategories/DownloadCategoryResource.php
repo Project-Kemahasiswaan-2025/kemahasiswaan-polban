@@ -20,7 +20,7 @@ class DownloadCategoryResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('menu.nav_group_master_categories');
+        return __('menu.nav_group_downloads');
     }
 
     public static function getNavigationLabel(): string
@@ -28,7 +28,7 @@ class DownloadCategoryResource extends Resource
         return __('menu.nav_label_download_categories');
     }
 
-    protected static ?int $navigationSort = 102;
+    protected static ?int $navigationSort = 47;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 

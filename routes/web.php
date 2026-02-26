@@ -19,6 +19,7 @@ Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competi
 Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/unduhan', [DownloadController::class, 'index'])->name('download.index');
+Route::get('/unduhan/{id}', [DownloadController::class, 'show'])->name('download.show');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');

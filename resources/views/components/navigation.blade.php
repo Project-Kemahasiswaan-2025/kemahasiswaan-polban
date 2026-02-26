@@ -38,6 +38,15 @@
                         @else
                         <li><span class="dropdown-item text-muted">Belum ada halaman</span></li>
                         @endisset
+
+                        @if(isset($documentShortcuts['profile']) && $documentShortcuts['profile']->count() > 0)
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        @foreach($documentShortcuts['profile'] as $shortcut)
+                        <li><a class="dropdown-item" href="{{ $shortcut->url }}">{{ $shortcut->title }}</a></li>
+                        @endforeach
+                        @endif
                     </ul>
                 </li>
 
@@ -59,6 +68,15 @@
                         @else
                         <li><span class="dropdown-item text-muted">Belum ada layanan</span></li>
                         @endisset
+
+                        @if(isset($documentShortcuts['services']) && $documentShortcuts['services']->count() > 0)
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        @foreach($documentShortcuts['services'] as $shortcut)
+                        <li><a class="dropdown-item" href="{{ $shortcut->url }}">{{ $shortcut->title }}</a></li>
+                        @endforeach
+                        @endif
                     </ul>
                 </li>
 
@@ -78,6 +96,15 @@
                         <li><a class="dropdown-item" href="{{ route('ormawa.show', $group->slug) }}">{{ $group->name }}</a></li>
                         @endif
                         @endforeach
+
+                        @if(isset($documentShortcuts['ormawa']) && $documentShortcuts['ormawa']->count() > 0)
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        @foreach($documentShortcuts['ormawa'] as $shortcut)
+                        <li><a class="dropdown-item" href="{{ $shortcut->url }}">{{ $shortcut->title }}</a></li>
+                        @endforeach
+                        @endif
                     </ul>
                 </li>
 
@@ -87,7 +114,15 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('competition.index') }}">{{ __('menu.competitions') }}</a></li>
-                        <li><a class="dropdown-item" href="#">{{ __('menu.achievements_form') }}</a></li>
+
+                        @if(isset($documentShortcuts['achievements']) && $documentShortcuts['achievements']->count() > 0)
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        @foreach($documentShortcuts['achievements'] as $shortcut)
+                        <li><a class="dropdown-item" href="{{ $shortcut->url }}">{{ $shortcut->title }}</a></li>
+                        @endforeach
+                        @endif
                     </ul>
                 </li>
 

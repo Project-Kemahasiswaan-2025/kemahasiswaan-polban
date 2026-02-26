@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class DownloadResource extends Resource
 {
@@ -23,7 +24,7 @@ class DownloadResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return null;
+        return __('menu.nav_group_downloads');
     }
 
     public static function getNavigationLabel(): string
@@ -31,7 +32,7 @@ class DownloadResource extends Resource
         return __('menu.nav_label_downloads');
     }
 
-    protected static ?int $navigationSort = 50;
+    protected static ?int $navigationSort = 45;
 
     public static function getLabel(): string
     {
@@ -53,6 +54,12 @@ class DownloadResource extends Resource
     public static function table(Table $table): Table
     {
         return DownloadsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereNotNull('category_id');
     }
 
     public static function getPages(): array
