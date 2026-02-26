@@ -30,7 +30,7 @@ class DownloadController extends Controller
                 return $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('sort_order')
-            ->paginate(12)
+            ->paginate(10)
             ->withQueryString();
 
         return view('pages.downloads.index', compact('categories', 'downloads', 'selectedCategory'));

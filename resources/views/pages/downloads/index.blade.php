@@ -36,7 +36,7 @@
 
                 <!-- Main Content -->
                 <div class="col-lg-9">
-                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 gap-3">
                         <h2 class="fw-bold mb-0">
                             {{ $selectedCategory ? $selectedCategory->name : 'Semua Dokumen' }}
                         </h2>
@@ -46,18 +46,28 @@
                                 @if(request('category'))
                                 <input type="hidden" name="category" value="{{ request('category') }}">
                                 @endif
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3">
+                                <div class="input-group overflow-hidden rounded-pill">
+                                    <span class="input-group-text bg-white border-end-0 ps-3">
                                         <i class="bi bi-search text-muted"></i>
                                     </span>
                                     <input type="text" name="search" id="searchInput"
-                                        class="form-control border-start-0 rounded-end-pill py-2 shadow-none"
+                                        class="form-control border-start-0 py-2 shadow-none"
                                         placeholder="Cari dokumen..."
                                         value="{{ request('search') }}"
                                         autocomplete="off">
                                 </div>
                             </form>
                         </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 text-muted small">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Menampilkan {{ $downloads->firstItem() ?? 0 }} - {{ $downloads->lastItem() ?? 0 }} dari {{ $downloads->total() }} dokumen
+                        @if(request('search'))
+                        <span class="ms-2 badge bg-light text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+                            Kata kunci: "{{ request('search') }}"
+                        </span>
+                        @endif
                     </div>
 
                     <div class="row g-4">
