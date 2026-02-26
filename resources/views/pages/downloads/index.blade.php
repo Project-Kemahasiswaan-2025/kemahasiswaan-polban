@@ -36,13 +36,28 @@
 
                 <!-- Main Content -->
                 <div class="col-lg-9">
-                    <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
                         <h2 class="fw-bold mb-0">
                             {{ $selectedCategory ? $selectedCategory->name : 'Semua Dokumen' }}
                         </h2>
-                        <!-- <div class="ms-auto text-muted small">
-                            Menampilkan {{ $downloads->firstItem() ?? 0 }} - {{ $downloads->lastItem() ?? 0 }} dari {{ $downloads->total() }} dokumen
-                        </div> -->
+
+                        <div class="search-box position-relative" style="min-width: 300px;">
+                            <form action="{{ route('download.index') }}" method="GET" id="searchForm">
+                                @if(request('category'))
+                                <input type="hidden" name="category" value="{{ request('category') }}">
+                                @endif
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3">
+                                        <i class="bi bi-search text-muted"></i>
+                                    </span>
+                                    <input type="text" name="search" id="searchInput"
+                                        class="form-control border-start-0 rounded-end-pill py-2 shadow-none"
+                                        placeholder="Cari dokumen..."
+                                        value="{{ request('search') }}"
+                                        autocomplete="off">
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
                     <div class="row g-4">
@@ -89,12 +104,19 @@
                         </div>
                         @empty
                         <div class="col-12">
-                            <div class="text-center py-5 bg-white rounded-4 shadow-sm">
-                                <i class="bi bi-cloud-slash display-1 text-muted mb-4"></i>
-                                <h3>Belum Ada Dokumen</h3>
-                                <p class="text-muted">Maaf, saat ini belum ada dokumen tersedia untuk kategori ini.</p>
-                                @if($selectedCategory)
-                                <a href="{{ route('download.index') }}" class="btn btn-navy mt-3 rounded-pill px-4">Lihat Semua Dokumen</a>
+                            <div class="text-center py-5 bg-white rounded-4 shadow-sm border">
+                                <i class="bi bi-search display-1 text-muted mb-4 opacity-25"></i>
+                                <h3>{{ request('search') ? 'Dokumen Tidak Ditemukan' : 'Belum Ada Dokumen' }}</h3>
+                                <p class="text-muted">
+                                    {{ request('search')
+                                        ? 'Maaf, tidak ada dokumen yang cocok dengan kata kunci "' . request('search') . '".'
+                                        : 'Maaf, saat ini belum ada dokumen tersedia untuk kategori ini.'
+                                    }}
+                                </p>
+                                @if(request('search'))
+                                <a href="{{ route('download.index', ['category' => request('category')]) }}" class="btn btn-outline-primary rounded-pill mt-3 px-4">
+                                    Bersihkan Pencarian
+                                </a>
                                 @endif
                             </div>
                         </div>
@@ -112,7 +134,7 @@
 
     <style>
         .bg-light-primary {
-            background-color: rgba(13, 110, 253, 0.1);
+            background-color: #f0f7ff;
         }
 
         .bg-navy {
@@ -126,6 +148,7 @@
         .transition-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+            transition: all 0.3s ease;
         }
 
         .line-clamp-2 {
@@ -152,4 +175,28 @@
             }
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchForm = document.getElementById('searchForm');
+            let timeout = null;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        searchForm.submit();
+                    }, 800);
+                });
+
+                // Auto focus and move cursor to end
+                if (searchInput.value !== '') {
+                    searchInput.focus();
+                    const val = searchInput.value;
+                    searchInput.value = '';
+                    searchInput.value = val;
+                }
+            }
+        });
+    </script>
 </x-layout.app>

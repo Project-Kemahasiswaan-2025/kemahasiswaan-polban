@@ -26,8 +26,12 @@ class DownloadController extends Controller
             ->when($selectedCategory, function ($query) use ($selectedCategory) {
                 return $query->where('category_id', $selectedCategory->id);
             })
+            ->when($request->query('search'), function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            })
             ->orderBy('sort_order')
-            ->paginate(10);
+            ->paginate(12)
+            ->withQueryString();
 
         return view('pages.downloads.index', compact('categories', 'downloads', 'selectedCategory'));
     }
