@@ -40,9 +40,9 @@
                         <h2 class="fw-bold mb-0">
                             {{ $selectedCategory ? $selectedCategory->name : 'Semua Dokumen' }}
                         </h2>
-                        <div class="ms-auto text-muted small">
+                        <!-- <div class="ms-auto text-muted small">
                             Menampilkan {{ $downloads->firstItem() ?? 0 }} - {{ $downloads->lastItem() ?? 0 }} dari {{ $downloads->total() }} dokumen
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="row g-4">
