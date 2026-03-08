@@ -98,9 +98,9 @@
                                             @endif
                                         </div>
                                         <div class="d-flex gap-2">
-                                            <a href="{{ asset('storage/' . $download->file_path) }}"
+                                            <a href="{{ $download->url }}"
                                                 class="btn btn-primary btn-sm rounded-pill px-4"
-                                                target="_blank" download>
+                                                target="_blank">
                                                 <i class="bi bi-download me-2"></i> Unduh
                                             </a>
                                             <a href="{{ route('download.show', $download->id) }}"

@@ -77,9 +77,9 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <a href="{{ asset('storage/' . $download->file_path) }}"
+                                <a href="{{ $download->url }}"
                                     class="btn btn-primary btn-lg rounded-pill shadow-sm"
-                                    target="_blank" download>
+                                    target="_blank">
                                     <i class="bi bi-download me-2"></i> Unduh Sekarang
                                 </a>
                                 @if($isPdf)

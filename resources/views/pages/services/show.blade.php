@@ -110,7 +110,7 @@
                         <div class="list-group list-group-flush">
                             @foreach($service->downloads as $download)
                             <a
-                                href="{{ asset('storage/' . $download->file_path) }}"
+                                href="{{ $download->url }}"
                                 class="list-group-item list-group-item-action d-flex align-items-center py-3"
                                 target="_blank"
                                 rel="noopener">

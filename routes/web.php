@@ -21,6 +21,7 @@ Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])->name('beasisw
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/unduhan', [DownloadController::class, 'index'])->name('download.index');
 Route::get('/unduhan/{id}', [DownloadController::class, 'show'])->name('download.show');
+Route::get('/d/{hash}', [DownloadController::class, 'download'])->name('download.file');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');

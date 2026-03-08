@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Download;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class DownloadController extends Controller
@@ -38,7 +40,7 @@ class DownloadController extends Controller
 
     public function show($id): View
     {
-        $download = \App\Models\Download::where('is_active', true)
+        $download = Download::where('is_active', true)
             ->findOrFail($id);
 
         $categories = Category::where('type', 'download')
@@ -47,5 +49,27 @@ class DownloadController extends Controller
             ->get();
 
         return view('pages.downloads.show', compact('download', 'categories'));
+    }
+
+    public function download($hash)
+    {
+        $download = Download::where('is_active', true)
+            ->where('hash', $hash)
+            ->firstOrFail();
+
+        $path = $download->file_path;
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        // Get extension from storage path
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+        // Clean name (remove extension if user added it to name field)
+        $cleanName = preg_replace('/\.' . preg_quote($extension, '/') . '$/i', '', $download->name);
+        $filename = $cleanName . '.' . $extension;
+
+        return Storage::disk('public')->download($path, $filename);
     }
 }

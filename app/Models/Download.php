@@ -13,22 +13,32 @@ class Download extends Model
 
     protected static function booted()
     {
+        static::created(function ($download) {
+            if (!$download->getRawOriginal('hash')) {
+                $download->hash = substr(md5($download->id . config('app.key')), 0, 8);
+                $download->saveQuietly();
+            }
+        });
+
         static::saving(function ($download) {
             if ($download->isDirty('file_path') && $download->file_path) {
-                // Ensure we are looking at the public disk as configured in Filament
                 $path = $download->file_path;
                 if (Storage::disk('public')->exists($path)) {
                     $download->file_size = Storage::disk('public')->size($path);
-
-                    // Try to get mime type, fallback to extension
                     $mime = Storage::disk('public')->mimeType($path);
                     $download->file_type = $mime ?? pathinfo($path, PATHINFO_EXTENSION);
                 }
+            }
+
+            // Ensure hash is set on update if missing
+            if ($download->id && !$download->hash) {
+                $download->hash = substr(md5($download->id . config('app.key')), 0, 8);
             }
         });
     }
 
     protected $fillable = [
+        'hash',
         'name',
         'file_path',
         'file_type',
@@ -46,6 +56,23 @@ class Download extends Model
         'file_size' => 'integer',
         'category_id' => 'integer',
     ];
+
+    protected $appends = ['url'];
+
+    public function getUrlAttribute(): string
+    {
+        return route('download.file', $this->hash);
+    }
+
+    public function getHashAttribute(?string $value): string
+    {
+        return $value ?: substr(md5($this->id . config('app.key')), 0, 8);
+    }
+
+    public static function findByHash(string $hash): ?self
+    {
+        return self::where('hash', $hash)->first();
+    }
 
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
