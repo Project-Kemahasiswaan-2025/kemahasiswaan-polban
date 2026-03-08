@@ -29,9 +29,9 @@ class ServicesTable
                     ->label('Urutan')
                     ->sortable(),
 
-                TextColumn::make('children_count')
+                TextColumn::make('links_count')
                     ->label('Tautan')
-                    ->counts('children')
+                    ->counts('links')
                     ->badge(),
 
                 TextColumn::make('downloads_count')

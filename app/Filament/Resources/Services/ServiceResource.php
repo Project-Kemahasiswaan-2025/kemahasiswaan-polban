@@ -51,8 +51,7 @@ class ServiceResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Only show parent services in the main list
-        return parent::getEloquentQuery()->whereNull('parent_id');
+        return parent::getEloquentQuery();
     }
 
     public static function form(Schema $schema): Schema

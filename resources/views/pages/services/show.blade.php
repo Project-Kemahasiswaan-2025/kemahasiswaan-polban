@@ -70,35 +70,30 @@
 
                 <div class="col-lg-4">
                     {{-- Tautan Lanjutan --}}
-                    @if($service->children->count() > 0)
+                    @if($service->links->count() > 0)
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white py-3">
                             <h5 class="mb-0 fw-bold">Tautan Lanjutan</h5>
                         </div>
 
                         <div class="list-group list-group-flush">
-                            @foreach($service->children as $child)
+                            @foreach($service->links as $link)
                             @php
-                            $href = $child->cta_url ?: route('service.show', $child->slug);
-                            $isExternal = filled($child->cta_url);
+                            $href = $link->url;
                             @endphp
 
                             <a
                                 href="{{ $href }}"
                                 class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3"
-                                @if($isExternal) target="_blank" rel="noopener" @endif>
+                                target="_blank" rel="noopener">
                                 <div class="pe-3">
-                                    <div class="fw-bold">{{ $child->name }}</div>
-                                    @if($child->excerpt)
-                                    <small class="text-muted">{{ Str::limit($child->excerpt, 60) }}</small>
+                                    <div class="fw-bold">{{ $link->name }}</div>
+                                    @if($link->description)
+                                    <small class="text-muted">{{ Str::limit($link->description, 60) }}</small>
                                     @endif
                                 </div>
 
-                                @if($isExternal)
                                 <i class="bi bi-box-arrow-up-right text-primary"></i>
-                                @else
-                                <i class="bi bi-chevron-right text-muted"></i>
-                                @endif
                             </a>
                             @endforeach
                         </div>

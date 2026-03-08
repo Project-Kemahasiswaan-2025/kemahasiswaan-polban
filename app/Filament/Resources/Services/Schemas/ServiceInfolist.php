@@ -148,16 +148,16 @@ class ServiceInfolist
             Section::make('Tautan Lanjutan')
                 ->description('Daftar tautan terkait untuk melanjutkan ke halaman/portal eksternal yang masih berhubungan dengan layanan ini.')
                 ->collapsible()
-                ->visible(fn($record) => $record?->children?->isNotEmpty())
+                ->visible(fn($record) => $record?->links?->isNotEmpty())
                 ->schema([
-                    RepeatableEntry::make('children')
+                    RepeatableEntry::make('links')
                         ->label('Tautan')
                         ->schema([
                             TextEntry::make('name')
                                 ->label('Judul')
                                 ->weight('bold'),
 
-                            TextEntry::make('cta_url')
+                            TextEntry::make('url')
                                 ->label('URL Tujuan')
                                 ->url(fn($state) => $state, true)
                                 ->openUrlInNewTab()

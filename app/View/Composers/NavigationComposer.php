@@ -23,8 +23,7 @@ class NavigationComposer
             ->orderBy('sort_order')
             ->get(['id', 'title', 'slug']);
 
-        $services = Service::whereNull('parent_id')
-            ->where('is_active', true)
+        $services = Service::where('is_active', true)
             ->orderBy('sort_order')
             ->get(['id', 'name', 'slug']);
 

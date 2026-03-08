@@ -73,16 +73,20 @@ class ServiceSeeder extends Seeder
         ];
 
         foreach ($services as $serviceData) {
-            $children = $serviceData['children'] ?? [];
+            $links = $serviceData['children'] ?? [];
             unset($serviceData['children']);
 
             $serviceData['slug'] = Str::slug($serviceData['name']);
-            $parent = Service::create($serviceData);
+            $service = Service::create($serviceData);
 
-            foreach ($children as $childData) {
-                $childData['parent_id'] = $parent->id;
-                $childData['slug'] = Str::slug($childData['name']);
-                Service::create($childData);
+            foreach ($links as $index => $linkData) {
+                $service->links()->create([
+                    'name' => $linkData['name'],
+                    'url' => $linkData['cta_url'] ?? null,
+                    'cta_label' => $linkData['cta_label'] ?? null,
+                    'description' => $linkData['excerpt'] ?? null,
+                    'sort_order' => $index,
+                ]);
             }
         }
     }

@@ -107,28 +107,20 @@ class ServiceForm
             Section::make('Tautan Lanjutan')
                 ->description('Daftar tautan terkait untuk melanjutkan ke halaman/portal eksternal yang masih berhubungan dengan layanan ini.')
                 ->schema([
-                    Repeater::make('children')
+                    Repeater::make('links')
                         ->label('Tautan')
-                        ->relationship('children')
+                        ->relationship('links')
                         ->schema([
-                            Grid::make(12)->schema([
-                                TextInput::make('name')
-                                    ->label('Judul Tautan')
-                                    ->required()
-                                    ->live(onBlur: true)
-                                    ->afterStateUpdated(fn($state, $set) => $set('slug', Str::slug((string) $state)))
-                                    ->columnSpan(8),
-
-                                TextInput::make('slug')
-                                    ->label('Slug')
-                                    ->required()
-                                    ->columnSpan(4),
-                            ]),
-
-                            TextInput::make('cta_url')
+                            TextInput::make('name')
+                                ->label('Judul Tautan')
+                                ->required(),
+                            TextInput::make('url')
                                 ->label('URL Tujuan')
                                 ->url()
                                 ->required(),
+                            TextInput::make('description')
+                                ->label('Keterangan Singkat')
+                                ->placeholder('Opsional'),
                         ])
                         ->orderColumn('sort_order')
                         ->collapsible()

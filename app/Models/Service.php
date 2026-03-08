@@ -13,7 +13,6 @@ class Service extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'parent_id',
         'name',
         'slug',
         'icon',
@@ -30,19 +29,15 @@ class Service extends Model
         'sort_order' => 'integer',
     ];
 
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(self::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
-    }
 
     public function downloads(): MorphMany
     {
         return $this->morphMany(Download::class, 'downloadable');
+    }
+
+    public function links(): MorphMany
+    {
+        return $this->morphMany(Link::class, 'linkable')->orderBy('sort_order');
     }
 
     public function scopeActive($query)
