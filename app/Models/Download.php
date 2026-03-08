@@ -14,8 +14,8 @@ class Download extends Model
     protected static function booted()
     {
         static::created(function ($download) {
-            // Persist the deterministic hash based on ID
-            $hash = substr(md5($download->id . config('app.key')), 0, 8);
+            // Persist the unique hash based on ID
+            $hash = self::generateUniqueHash($download->id);
             $download->updateQuietly(['hash' => $hash]);
         });
 
@@ -32,9 +32,22 @@ class Download extends Model
 
             // Ensure hash is set for existing records if missing
             if ($download->id && !$download->getRawOriginal('hash')) {
-                $download->hash = substr(md5($download->id . config('app.key')), 0, 8);
+                $download->hash = self::generateUniqueHash($download->id);
             }
         });
+    }
+
+    public static function generateUniqueHash($id): string
+    {
+        $hash = substr(md5($id . config('app.key')), 0, 8);
+        $originalHash = $hash;
+        $counter = 1;
+
+        while (self::where('hash', $hash)->where('id', '!=', $id)->exists()) {
+            $hash = substr(md5($originalHash . $counter++), 0, 8);
+        }
+
+        return $hash;
     }
 
     protected $fillable = [
@@ -66,7 +79,15 @@ class Download extends Model
 
     public function getHashAttribute(?string $value): string
     {
-        return $value ?: substr(md5($this->id . config('app.key')), 0, 8);
+        if ($value) {
+            return $value;
+        }
+
+        if ($this->id) {
+            return substr(md5($this->id . config('app.key')), 0, 8);
+        }
+
+        return '';
     }
 
     public static function findByHash(string $hash): ?self
