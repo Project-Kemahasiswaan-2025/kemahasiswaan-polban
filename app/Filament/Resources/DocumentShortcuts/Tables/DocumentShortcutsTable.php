@@ -4,6 +4,7 @@ namespace App\Filament\Resources\DocumentShortcuts\Tables;
 
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -43,17 +44,16 @@ class DocumentShortcutsTable
                     ->label('Urutan')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('menu')
+                    ->label('Menu Utama')
+                    ->options([
+                        'profile' => 'Profil',
+                        'services' => 'Layanan',
+                        'ormawa' => 'Ormawa',
+                        'achievements' => 'Prestasi',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),
