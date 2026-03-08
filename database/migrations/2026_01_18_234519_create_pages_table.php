@@ -14,10 +14,6 @@ return new class extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('language_id')
-                ->nullable()
-                ->constrained('languages')
-                ->nullOnDelete();
 
             $table->string('section', 50)->index(); // profile, services, dll
 

@@ -29,11 +29,11 @@ class LanguageSeeder extends Seeder
             ],
         ];
 
-        foreach ($languages as $language) {
-            Language::updateOrCreate(
-                ['code' => $language['code']],
-                $language
-            );
-        }
+        // foreach ($languages as $language) {
+        //     Language::updateOrCreate(
+        //         ['code' => $language['code']],
+        //         $language
+        //     );
+        // }
     }
 }

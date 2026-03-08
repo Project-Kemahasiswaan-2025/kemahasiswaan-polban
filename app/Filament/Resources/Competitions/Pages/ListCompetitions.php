@@ -13,7 +13,10 @@ class ListCompetitions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->url(fn(): string => CompetitionResource::getUrl('create', [
+                    'parent_id' => request()->query('parent_id'),
+                ])),
         ];
     }
 }

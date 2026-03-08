@@ -10,7 +10,6 @@ class Page extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'language_id',
         'section',
         'title',
         'slug',
@@ -25,11 +24,6 @@ class Page extends Model
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
-
-    public function language()
-    {
-        return $this->belongsTo(Language::class);
-    }
 
     public function scopeActive($query)
     {

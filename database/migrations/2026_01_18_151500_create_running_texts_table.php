@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('running_texts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('language_id')->constrained('languages')->cascadeOnDelete();
             $table->text('content');
             $table->integer('duration_seconds')->default(8);
             $table->boolean('is_active')->default(true);
             $table->integer('sort_order')->default(0);
             $table->timestamps();
 
-            $table->index(['language_id', 'is_active', 'sort_order']);
+            $table->index(['is_active', 'sort_order']);
         });
     }
 

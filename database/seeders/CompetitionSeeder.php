@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Competition;
-use App\Models\Language;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -11,11 +10,9 @@ class CompetitionSeeder extends Seeder
 {
     public function run(): void
     {
-        $indonesian = Language::where('code', 'id')->first();
-        
         // Create categories first
         $puspresnas = Competition::updateOrCreate(
-            ['language_id' => $indonesian->id, 'slug' => 'puspresnas'],
+            ['slug' => 'puspresnas'],
             [
                 'name' => 'Puspresnas BPTI',
                 'is_group' => true,
@@ -23,9 +20,9 @@ class CompetitionSeeder extends Seeder
                 'sort_order' => 1,
             ]
         );
-        
+
         $bakorma = Competition::updateOrCreate(
-            ['language_id' => $indonesian->id, 'slug' => 'bakorma'],
+            ['slug' => 'bakorma'],
             [
                 'name' => 'BAKORMA',
                 'is_group' => true,
@@ -33,7 +30,7 @@ class CompetitionSeeder extends Seeder
                 'sort_order' => 2,
             ]
         );
-        
+
         // Puspresnas competitions
         $pusprenasCompetitions = [
             'NUDC KDMI',
@@ -47,11 +44,10 @@ class CompetitionSeeder extends Seeder
             'Porseni',
             'KRTI',
         ];
-        
+
         foreach ($pusprenasCompetitions as $index => $comp) {
             Competition::updateOrCreate(
                 [
-                    'language_id' => $indonesian->id,
                     'slug' => Str::slug($comp)
                 ],
                 [
@@ -66,7 +62,7 @@ class CompetitionSeeder extends Seeder
                 ]
             );
         }
-        
+
         // BAKORMA competitions
         $bakormaCompetitions = [
             'National Polytechnic English Olympics (NPEO)',
@@ -79,11 +75,10 @@ class CompetitionSeeder extends Seeder
             'Polytechnic Creative Festival (PC Fest)',
             'Agricultural Innovation Technology Competition (AITEC)',
         ];
-        
+
         foreach ($bakormaCompetitions as $index => $comp) {
             Competition::updateOrCreate(
                 [
-                    'language_id' => $indonesian->id,
                     'slug' => Str::slug($comp)
                 ],
                 [

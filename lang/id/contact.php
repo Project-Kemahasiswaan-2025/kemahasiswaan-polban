@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title' => 'Kontak & Bantuan',
+    'subtitle' => 'Punya pertanyaan atau kendala? Kami siap membantu.',
+    'info_title' => 'Informasi Kontak',
+    'address' => 'Alamat',
+    'email' => 'Email',
+    'phone' => 'Telepon',
+    'social_media' => 'Media Sosial',
+    'form_title' => 'Kirim Pesan Bantuan',
+    'form_subtitle' => 'Silakan isi formulir di bawah ini, admin kami akan segera menindaklanjuti.',
+    'name_label' => 'Nama Lengkap',
+    'name_placeholder' => 'Masukkan nama',
+    'email_label' => 'Email',
+    'email_placeholder' => 'Masukkan email',
+    'phone_label' => 'Nomor Telepon / WA (Opsional)',
+    'phone_placeholder' => 'Contoh: 08123456789',
+    'subject_label' => 'Subjek',
+    'subject_placeholder' => 'Contoh: Kendala Login',
+    'message_label' => 'Pesan',
+    'message_placeholder' => 'Tuliskan pesan atau kendala Anda secara detail...',
+    'submit_btn' => 'Kirim Pesan Bantuan',
+    'sending' => 'Mengirim...',
+    'success_title' => 'Berhasil!',
+    'error_title' => 'Oops!',
+    'system_error' => 'Terjadi kesalahan sistem.',
+];

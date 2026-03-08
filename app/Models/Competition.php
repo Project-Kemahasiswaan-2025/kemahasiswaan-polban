@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Competition extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
-        'language_id',
         'parent_id',
         'name',
         'slug',
@@ -26,11 +27,6 @@ class Competition extends Model
         'sort_order' => 'integer',
     ];
 
-    public function language()
-    {
-        return $this->belongsTo(Language::class);
-    }
-
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -39,5 +35,24 @@ class Competition extends Model
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Competition $record) {
+            if ($record->isForceDeleting()) {
+                $record->children()->withTrashed()->get()->each(fn($c) => $c->forceDelete());
+            } else {
+                // Rename slug to allow re-use of the original slug
+                $record->slug .= '-deleted-' . now()->timestamp;
+                $record->save();
+
+                $record->children()->get()->each(fn($c) => $c->delete());
+            }
+        });
+
+        static::restoring(function (Competition $record) {
+            $record->children()->withTrashed()->get()->each->restore();
+        });
     }
 }

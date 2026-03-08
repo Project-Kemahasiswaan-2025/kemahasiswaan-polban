@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Language;
 use App\Models\StudentOrganization;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -11,8 +10,6 @@ class StudentOrganizationSeeder extends Seeder
 {
     public function run(): void
     {
-        $indonesian = Language::where('code', 'id')->first();
-        
         // Create root categories
         $roots = [
             ['name' => 'MPM', 'slug' => 'mpm', 'sort_order' => 10, 'is_group' => false],
@@ -25,7 +22,6 @@ class StudentOrganizationSeeder extends Seeder
             StudentOrganization::updateOrCreate(
                 ['slug' => $r['slug']],
                 [
-                    'language_id' => $indonesian->id,
                     'parent_id' => null,
                     'name' => $r['name'],
                     'sort_order' => $r['sort_order'],
@@ -34,11 +30,11 @@ class StudentOrganizationSeeder extends Seeder
                 ]
             );
         }
-        
+
         // Get parent categories
         $hmjParent = StudentOrganization::where('slug', 'hmj')->first();
         $ukmParent = StudentOrganization::where('slug', 'ukm')->first();
-        
+
         // HMJ organizations
         $hmjList = [
             'HMJ Teknik Refrigasi dan Tata Udara',
@@ -52,11 +48,10 @@ class StudentOrganizationSeeder extends Seeder
             'HMJ Teknik Mesin',
             'HMJ Teknik Kimia',
         ];
-        
+
         foreach ($hmjList as $index => $hmj) {
             StudentOrganization::updateOrCreate(
                 [
-                    'language_id' => $indonesian->id,
                     'slug' => Str::slug($hmj)
                 ],
                 [
@@ -69,7 +64,7 @@ class StudentOrganizationSeeder extends Seeder
                 ]
             );
         }
-        
+
         // UKM organizations
         $ukmList = [
             'UKM Otomotif',
@@ -97,11 +92,10 @@ class StudentOrganizationSeeder extends Seeder
             'UKM Flag Football',
             'UKM Bulu Tangkis',
         ];
-        
+
         foreach ($ukmList as $index => $ukm) {
             StudentOrganization::updateOrCreate(
                 [
-                    'language_id' => $indonesian->id,
                     'slug' => Str::slug($ukm)
                 ],
                 [

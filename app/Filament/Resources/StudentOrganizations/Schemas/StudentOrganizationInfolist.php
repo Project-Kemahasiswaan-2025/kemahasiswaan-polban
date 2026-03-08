@@ -5,46 +5,77 @@ namespace App\Filament\Resources\StudentOrganizations\Schemas;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\TextSize;
 
 class StudentOrganizationInfolist
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextEntry::make('parent.name')
-                    ->label('Parent')
-                    ->placeholder('-'),
-                TextEntry::make('name'),
-                TextEntry::make('slug'),
-                TextEntry::make('node_type'),
-                TextEntry::make('category')
-                    ->placeholder('-'),
-                TextEntry::make('excerpt')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
-                TextEntry::make('content')
-                    ->placeholder('-')
-                    ->columnSpanFull(),
-                ImageEntry::make('cover_image')
-                    ->placeholder('-'),
-                TextEntry::make('logo')
-                    ->placeholder('-'),
-                TextEntry::make('cta_label')
-                    ->placeholder('-'),
-                TextEntry::make('cta_url')
-                    ->placeholder('-'),
-                IconEntry::make('is_active')
-                    ->boolean(),
-                TextEntry::make('sort_order')
-                    ->numeric(),
-                TextEntry::make('created_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime()
-                    ->placeholder('-'),
-            ]);
+        return $schema->schema([
+            Section::make('Informasi Organisasi')
+                ->schema([
+                    Grid::make(12)->schema([
+                        Section::make('Logo & Identitas')
+                            ->columnSpan(4)
+                            ->schema([
+                                ImageEntry::make('logo')
+                                    ->hiddenLabel()
+                                    ->disk('public')
+                                    ->height(120)
+                                    ->alignCenter(),
+
+                                TextEntry::make('name')
+                                    ->hiddenLabel()
+                                    ->weight('bold')
+                                    ->size(TextSize::Large)
+                                    ->alignCenter(),
+                            ]),
+
+                        Section::make('Detail Metadata')
+                            ->columnSpan(8)
+                            ->schema([
+                                Grid::make(2)->schema([
+                                    TextEntry::make('slug')->label('Slug'),
+                                    TextEntry::make('parent.name')
+                                        ->label('Kategori / Parent')
+                                        ->placeholder('Top Level / Mandiri')
+                                        ->badge(),
+
+                                    IconEntry::make('is_group')
+                                        ->label('Grup Organisasi')
+                                        ->boolean(),
+
+                                    IconEntry::make('is_active')
+                                        ->label('Status Aktif')
+                                        ->boolean(),
+
+                                    TextEntry::make('sort_order')->label('Urutan Tampil'),
+                                ]),
+
+                            ]),
+                    ]),
+                ]),
+
+            Section::make('Visual & Konten')
+                ->schema([
+                    ImageEntry::make('cover_image')
+                        ->label('Cover Image')
+                        ->disk('public')
+                        ->width('100%')
+                        ->height(300)
+                        ->visible(fn($record) => filled($record->cover_image)),
+
+                    Section::make('Konten / Deskripsi')
+                        ->schema([
+                            TextEntry::make('content')
+                                ->hiddenLabel()
+                                ->html()
+                                ->placeholder('Tidak ada konten deskripsi.'),
+                        ]),
+                ]),
+        ]);
     }
 }

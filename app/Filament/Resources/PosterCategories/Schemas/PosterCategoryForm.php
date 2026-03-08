@@ -15,44 +15,42 @@ class PosterCategoryForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Kategori Poster')
-                ->schema([
-                    Hidden::make('type')
-                        ->default('poster')
-                        ->dehydrated()
-                        ->required(),
+            Hidden::make('type')
+                ->default('poster')
+                ->dehydrated()
+                ->required(),
 
-                    Grid::make(12)->schema([
-                        TextInput::make('name')
-                            ->label('Nama')
-                            ->required()
-                            ->maxLength(120)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function ($state, $set, $get) {
-                                if (filled($get('slug'))) return;
-                                $set('slug', Str::slug((string) $state));
-                            })
-                            ->columnSpan(8),
+            TextInput::make('name')
+                ->label('Nama')
+                ->required()
+                ->maxLength(120)
+                ->live(onBlur: true)
+                ->afterStateUpdated(function ($state, $set, $get) {
+                    if (filled($get('slug'))) return;
+                    $set('slug', \Illuminate\Support\Str::slug((string) $state));
+                })
+                ->columnSpanFull(),
 
-                        TextInput::make('sort_order')
-                            ->label('Order')
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0)
-                            ->columnSpan(2),
+            Grid::make(12)->schema([
+                TextInput::make('slug')
+                    ->label('Slug')
+                    ->required()
+                    ->maxLength(150)
+                    ->unique(
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn($rule) =>
+                        $rule->where('type', 'poster')
+                    )
+                    ->columnSpan(9),
 
-                        Toggle::make('is_active')
-                            ->label('Aktif')
-                            ->default(true)
-                            ->columnSpan(2),
-                    ]),
+                TextInput::make('sort_order')
+                    ->label('Order')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->columnSpan(3),
+            ])->columnSpanFull(),
 
-                    TextInput::make('slug')
-                        ->label('Slug')
-                        ->required()
-                        ->maxLength(150)
-                        ->unique(ignoreRecord: true, modifyRuleUsing: fn($rule) => $rule->where('type', 'poster')),
-                ]),
         ]);
     }
 }

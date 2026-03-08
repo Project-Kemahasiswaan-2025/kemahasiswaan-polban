@@ -12,18 +12,6 @@ class RunningTextController extends Controller
 {
     public function index(): JsonResponse
     {
-        // Get active language from session or default
-        $activeLanguageId = Session::get('active_language_id');
-        
-        if (!$activeLanguageId) {
-            // Fallback to default language
-            $defaultLanguage = \App\Models\Language::active()->default()->first();
-            if (!$defaultLanguage) {
-                $defaultLanguage = \App\Models\Language::active()->first();
-            }
-            $activeLanguageId = $defaultLanguage?->id;
-        }
-
         // Get config (use first record or create default)
         $config = RunningTextConfig::first();
         if (!$config) {
@@ -34,9 +22,8 @@ class RunningTextController extends Controller
             ]);
         }
 
-        // Get active running texts for the active language
-        $runningTexts = RunningText::where('language_id', $activeLanguageId)
-            ->where('is_active', true)
+        // Get active running texts
+        $runningTexts = RunningText::where('is_active', true)
             ->orderBy('sort_order')
             ->get()
             ->map(function ($text) {

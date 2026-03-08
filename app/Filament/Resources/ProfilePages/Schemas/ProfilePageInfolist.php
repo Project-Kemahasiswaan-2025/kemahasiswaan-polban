@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ProfilePages\Schemas;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
@@ -14,58 +15,88 @@ class ProfilePageInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Informasi')
-                ->columns(2)
-                ->schema([
-                    TextEntry::make('title')
-                        ->label('Title'),
+            Grid::make(12)->schema([
+                Section::make('Informasi')
+                    ->columnSpan(7)
+                    ->columns(2)
+                    ->schema([
+                        TextEntry::make('title')->label('Title'),
+                        TextEntry::make('slug')->label('Slug'),
+                        TextEntry::make('sort_order')->label('Order'),
 
-                    TextEntry::make('slug')
-                        ->label('Slug'),
+                        IconEntry::make('is_active')
+                            ->label('Aktif')
+                            ->boolean(),
+                    ]),
 
-                    TextEntry::make('language.name')
-                        ->label('Bahasa')
-                        ->placeholder('Default'),
+                Section::make('Dokumen / Media')
+                    ->columnSpan(5)
+                    ->schema([
+                        ImageEntry::make('document_path')
+                            ->label('Preview')
+                            ->disk('public')
+                            ->visible(
+                                fn($record) => filled($record?->document_path)
+                                    && ! Str::endsWith(strtolower($record->document_path), '.pdf')
+                            )
+                            ->height(240),
 
-                    TextEntry::make('sort_order')
-                        ->label('Order'),
+                        TextEntry::make('document_path')
+                            ->label('PDF')
+                            ->visible(
+                                fn($record) => filled($record?->document_path)
+                                    && Str::endsWith(strtolower($record->document_path), '.pdf')
+                            )
+                            ->state(fn($record) => basename((string) $record->document_path))
+                            ->url(fn($record) => asset('storage/' . $record->document_path), true)
+                            ->badge(),
 
-                    IconEntry::make('is_active')
-                        ->label('Aktif')
-                        ->boolean(),
-                ]),
+                        TextEntry::make('document_path')
+                            ->label('Dokumen')
+                            ->placeholder('Tidak ada')
+                            ->visible(fn($record) => blank($record?->document_path)),
+                    ]),
 
-            Section::make('Dokumen / Media')
-                ->schema([
-                    // Preview untuk image saja
-                    ImageEntry::make('document_path')
-                        ->label('Preview')
-                        ->disk('public')
-                        ->visible(fn($record) => filled($record?->document_path) && ! Str::endsWith(strtolower($record->document_path), '.pdf'))
-                        ->height(240),
+                Section::make('Konten')
+                    ->columnSpanFull()
+                    ->visible(function ($record): bool {
+                        $raw = (string) ($record?->content ?? '');
+                        $text = trim(preg_replace('/\xc2\xa0|&nbsp;/', ' ', strip_tags($raw))); // treat &nbsp; as empty
+                        return $text !== '';
+                    })
+                    ->schema([
+                        TextEntry::make('content')
+                            ->hiddenLabel()
+                            ->html()
+                            ->formatStateUsing(function ($state) {
+                                $html = (string) ($state ?? '');
 
-                    // Link untuk PDF
-                    TextEntry::make('document_path')
-                        ->label('PDF')
-                        ->visible(fn($record) => filled($record?->document_path) && Str::endsWith(strtolower($record->document_path), '.pdf'))
-                        ->state(fn($record) => basename((string) $record->document_path))
-                        ->url(fn($record) => asset('storage/' . $record->document_path), true)
-                        ->badge(),
+                                $html = preg_replace_callback(
+                                    '/<img\b[^>]*>/i',
+                                    static function ($m) {
+                                        $tag = $m[0];
 
-                    // Fallback kalau kosong
-                    TextEntry::make('document_path')
-                        ->label('Dokumen')
-                        ->placeholder('Tidak ada')
-                        ->visible(fn($record) => blank($record?->document_path)),
-                ]),
+                                        if (preg_match('/\sstyle=("|\')(.*?)\1/i', $tag, $sm)) {
+                                            $quote = $sm[1];
+                                            $style = rtrim($sm[2], '; ') . '; display:block; margin-left:auto; margin-right:auto;';
+                                            return preg_replace('/\sstyle=("|\')(.*?)\1/i', ' style=' . $quote . $style . $quote, $tag, 1);
+                                        }
 
-            Section::make('Konten')
-                ->schema([
-                    TextEntry::make('content')
-                        ->label('Konten')
-                        ->html()
-                        ->placeholder('Tidak ada konten.'),
-                ]),
+                                        return preg_replace(
+                                            '/<img\b/i',
+                                            '<img style="display:block;margin-left:auto;margin-right:auto;"',
+                                            $tag,
+                                            1
+                                        );
+                                    },
+                                    $html
+                                );
+
+                                return $html;
+                            })
+                            ->placeholder('Tidak ada konten.'),
+                    ]),
+            ])->columnSpanFull(),
         ]);
     }
 }

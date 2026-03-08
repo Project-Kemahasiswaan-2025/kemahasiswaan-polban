@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\Videos\Tables;
 
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class VideosTable
@@ -13,18 +17,58 @@ class VideosTable
     {
         return $table
             ->columns([
-                //
+                ImageColumn::make('thumbnail_url')
+                    ->label('Thumb')
+                    ->square()
+                    ->disk(null),
+
+                TextColumn::make('title')
+                    ->label('Judul')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+
+                ToggleColumn::make('is_active')
+                    ->label('Aktif')
+                    ->sortable(),
+
+                ToggleColumn::make('is_pinned')
+                    ->label('Pin')
+                    ->sortable(),
+
+                TextColumn::make('active_from')
+                    ->label('Mulai')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+
+                TextColumn::make('active_to')
+                    ->label('Sampai')
+                    ->dateTime('d M Y H:i')
+                    ->sortable()
+                    ->placeholder('-'),
+
+                TextColumn::make('category.name')
+                    ->label('Kategori')
+                    ->sortable()
+                    ->badge(),
+
+                TextColumn::make('sort_order')
+                    ->label('Urutan')
+                    ->sortable(),
             ])
+            ->defaultSort('is_pinned', 'desc')
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                    ->label('Kategori')
+                    ->relationship('category', 'name', fn($query) => $query->where('type', 'video')),
+                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_pinned')->label('Pin'),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->bulkActions([
+                DeleteBulkAction::make(),
             ]);
     }
 }

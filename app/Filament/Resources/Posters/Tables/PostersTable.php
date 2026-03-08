@@ -35,17 +35,11 @@ class PostersTable
                     ->sortable()
                     ->placeholder('-'),
 
-                TextColumn::make('published_at')
-                    ->label('Publish')
-                    ->date('d M Y')
-                    ->sortable()
-                    ->placeholder('-'),
-
                 ToggleColumn::make('is_active')
                     ->label('Aktif')
                     ->sortable(),
             ])
-            ->defaultSort('published_at', 'desc')
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('category_id')
                     ->label('Kategori')

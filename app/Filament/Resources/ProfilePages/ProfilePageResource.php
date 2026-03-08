@@ -22,7 +22,17 @@ class ProfilePageResource extends Resource
 {
     protected static ?string $model = Page::class;
 
-    protected static ?string $navigationLabel = 'Profile Pages';
+    public static function getNavigationGroup(): ?string
+    {
+        return null;
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('menu.nav_label_profile_pages');
+    }
+
+    protected static ?int $navigationSort = 10;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedIdentification;
 

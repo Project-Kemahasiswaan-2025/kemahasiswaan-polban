@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RunningText extends Model
 {
     protected $fillable = [
-        'language_id',
         'content',
         'duration_seconds',
         'is_active',
@@ -18,9 +17,4 @@ class RunningText extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
-    public function language(): BelongsTo
-    {
-        return $this->belongsTo(Language::class);
-    }
 }

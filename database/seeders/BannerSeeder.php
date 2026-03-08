@@ -3,18 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Banner;
-use App\Models\Language;
 use Illuminate\Database\Seeder;
 
 class BannerSeeder extends Seeder
 {
     public function run(): void
     {
-        $indonesian = Language::where('code', 'id')->first();
-
         $banners = [
             [
-                'language_id' => $indonesian->id,
                 'title' => 'Selamat Datang di Kemahasiswaan Polban',
                 'image_path' => 'https://placehold.co/1200x500/001f3f/ffffff?text=Kemahasiswaan+Polban',
                 'url' => null,
@@ -26,7 +22,6 @@ class BannerSeeder extends Seeder
                 'active_to' => null,
             ],
             [
-                'language_id' => $indonesian->id,
                 'title' => 'Bergabung dengan Organisasi Mahasiswa',
                 'image_path' => 'https://placehold.co/1200x500/ff6b35/ffffff?text=Organisasi+Mahasiswa',
                 'url' => route('ormawa.index'),
@@ -38,7 +33,6 @@ class BannerSeeder extends Seeder
                 'active_to' => null,
             ],
             [
-                'language_id' => $indonesian->id,
                 'title' => 'Ikuti Kompetisi Mahasiswa',
                 'image_path' => 'https://placehold.co/1200x500/0d47a1/ffffff?text=Kompetisi+Mahasiswa',
                 'url' => route('competition.index'),

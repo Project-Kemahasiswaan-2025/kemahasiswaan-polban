@@ -11,7 +11,6 @@ class Banner extends Model
     use HasPublishWindow;
 
     protected $fillable = [
-        'language_id',
         'title',
         'image_path',
         'url',
@@ -29,9 +28,4 @@ class Banner extends Model
         'active_from' => 'datetime',
         'active_to' => 'datetime',
     ];
-
-    public function language(): BelongsTo
-    {
-        return $this->belongsTo(Language::class);
-    }
 }

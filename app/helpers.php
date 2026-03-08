@@ -1,40 +1,23 @@
 <?php
 
-use App\Models\Language;
-
-if (! function_exists('activeLanguage')) {
+if (!function_exists('format_date')) {
     /**
-     * Get the current active language from session or default
+     * Format date using Carbon with localization support.
+     *
+     * @param string|null $date
+     * @param string $format
+     * @return string
      */
-    function activeLanguage(): ?Language
+    function format_date($date, $format = 'd F Y')
     {
-        $languageId = session('active_language_id');
-
-        if ($languageId) {
-            $language = Language::find($languageId);
-            if ($language && $language->is_active) {
-                return $language;
-            }
+        if (!$date) {
+            return '-';
         }
 
-        // Return default language if session not set or language not found
-        return Language::active()->default()->first() ?? Language::active()->first();
-    }
-}
-
-if (! function_exists('setActiveLanguage')) {
-    /**
-     * Set the active language in session
-     */
-    function setActiveLanguage(int|Language $language): void
-    {
-        $languageId = $language instanceof Language ? $language->id : $language;
-        session(['active_language_id' => $languageId]);
-
-        // Also set app locale
-        $lang = Language::find($languageId);
-        if ($lang) {
-            app()->setLocale($lang->code);
+        try {
+            return \Carbon\Carbon::parse($date)->translatedFormat($format);
+        } catch (\Exception $e) {
+            return $date;
         }
     }
 }

@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->boolean('is_group')->default(false);
             $table->string('name', 180);
-            $table->string('slug', 200)->unique();
+            $table->string('slug', 200);
 
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);
@@ -30,13 +30,9 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('cover_image')->nullable();
 
-            // disiapkan tapi belum dipakai input (tetap ada)
             $table->text('excerpt')->nullable();
 
             $table->longText('content')->nullable();
-
-            $table->string('cta_label', 60)->nullable();
-            $table->string('cta_url', 255)->nullable();
 
             $table->timestamps();
 

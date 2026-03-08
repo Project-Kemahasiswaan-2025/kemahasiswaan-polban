@@ -3,18 +3,48 @@
 namespace Database\Seeders;
 
 use App\Models\Video;
-use App\Models\Language;
 use Illuminate\Database\Seeder;
 
 class VideoSeeder extends Seeder
 {
     public function run(): void
     {
-        $indonesian = Language::where('code', 'id')->first();
-        
+        // Video Categories
+        $categories = [
+            [
+                'name' => 'Profil & Fasilitas',
+                'slug' => 'profil-fasilitas',
+                'type' => 'video',
+                'is_active' => true,
+                'sort_order' => 1,
+            ],
+            [
+                'name' => 'Kegiatan Mahasiswa',
+                'slug' => 'kegiatan-mahasiswa',
+                'type' => 'video',
+                'is_active' => true,
+                'sort_order' => 2,
+            ],
+            [
+                'name' => 'Tutorial & Panduan',
+                'slug' => 'tutorial-panduan',
+                'type' => 'video',
+                'is_active' => true,
+                'sort_order' => 3,
+            ],
+        ];
+
+        $categoryModels = [];
+        foreach ($categories as $cat) {
+            $categoryModels[$cat['slug']] = \App\Models\Category::updateOrCreate(
+                ['slug' => $cat['slug'], 'type' => 'video'],
+                $cat
+            );
+        }
+
         $videos = [
             [
-                'language_id' => $indonesian->id,
+                'category_id' => $categoryModels['profil-fasilitas']->id,
                 'title' => 'Profil Kemahasiswaan Polban',
                 'description' => 'Video profil Direktorat Kemahasiswaan dan Alumni Polban',
                 'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -22,31 +52,31 @@ class VideoSeeder extends Seeder
                 'thumbnail_url' => null,
                 'is_active' => true,
                 'is_pinned' => true,
-                'published_at' => now(),
+                'active_from' => now(),
                 'sort_order' => 1,
             ],
             [
-                'language_id' => $indonesian->id,
-                'title' => 'Kegiatan Mahasiswa Polban',
-                'description' => 'Berbagai kegiatan mahasiswa di Polban',
+                'category_id' => $categoryModels['kegiatan-mahasiswa']->id,
+                'title' => 'Malam Inagurasi 2024',
+                'description' => 'Keseruan malam inagurasi mahasiswa baru Polban 2024',
                 'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                 'youtube_id' => 'dQw4w9WgXcQ',
                 'thumbnail_url' => null,
                 'is_active' => true,
                 'is_pinned' => false,
-                'published_at' => now(),
+                'active_from' => now(),
                 'sort_order' => 2,
             ],
             [
-                'language_id' => $indonesian->id,
-                'title' => 'Prestasi Mahasiswa Polban',
-                'description' => 'Pencapaian dan prestasi mahasiswa Polban',
+                'category_id' => $categoryModels['tutorial-panduan']->id,
+                'title' => 'Panduan KRS Online',
+                'description' => 'Langkah-langkah pengisian KRS online bagi mahasiswa',
                 'youtube_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                 'youtube_id' => 'dQw4w9WgXcQ',
                 'thumbnail_url' => null,
                 'is_active' => true,
                 'is_pinned' => false,
-                'published_at' => now(),
+                'active_from' => now(),
                 'sort_order' => 3,
             ],
         ];

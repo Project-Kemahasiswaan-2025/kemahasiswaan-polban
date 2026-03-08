@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title' => 'Contact & Help',
+    'subtitle' => 'Have questions or issues? We are ready to help.',
+    'info_title' => 'Contact Information',
+    'address' => 'Address',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'social_media' => 'Social Media',
+    'form_title' => 'Send Help Message',
+    'form_subtitle' => 'Please fill out the form below, our admin will follow up shortly.',
+    'name_label' => 'Full Name',
+    'name_placeholder' => 'Enter name',
+    'email_label' => 'Email',
+    'email_placeholder' => 'Enter email',
+    'phone_label' => 'Phone Number / WA (Optional)',
+    'phone_placeholder' => 'Example: 08123456789',
+    'subject_label' => 'Subject',
+    'subject_placeholder' => 'Example: Login Issue',
+    'message_label' => 'Message',
+    'message_placeholder' => 'Write your message or issue in detail...',
+    'submit_btn' => 'Send Help Message',
+    'sending' => 'Sending...',
+    'success_title' => 'Success!',
+    'error_title' => 'Oops!',
+    'system_error' => 'A system error occurred.',
+];

@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentOrganization extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
-        'language_id',
         'parent_id',
         'is_group',
         'name',
@@ -39,8 +40,23 @@ class StudentOrganization extends Model
         return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
     }
 
-    public function language(): BelongsTo
+    protected static function booted(): void
     {
-        return $this->belongsTo(Language::class);
+        static::deleting(function (StudentOrganization $record) {
+            // Cascade to children: handle both soft and force delete
+            if ($record->isForceDeleting()) {
+                $record->children()->withTrashed()->get()->each(fn($c) => $c->forceDelete());
+            } else {
+                // Rename slug to allow re-use of the original slug
+                $record->slug .= '-deleted-' . now()->timestamp;
+                $record->save();
+
+                $record->children()->get()->each(fn($c) => $c->delete());
+            }
+        });
+
+        static::restoring(function (StudentOrganization $record) {
+            $record->children()->withTrashed()->get()->each->restore();
+        });
     }
 }

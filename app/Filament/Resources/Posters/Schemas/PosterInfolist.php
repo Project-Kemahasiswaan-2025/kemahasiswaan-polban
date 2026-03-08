@@ -22,7 +22,7 @@ class PosterInfolist
 
                     TextEntry::make('title')->label('Judul'),
                     TextEntry::make('category.name')->label('Kategori')->placeholder('-'),
-                    TextEntry::make('published_at')->label('Publish')->date('d M Y')->placeholder('-'),
+                    TextEntry::make('created_at')->label('Dibuat')->date('d M Y')->placeholder('-'),
                     IconEntry::make('is_active')->label('Aktif')->boolean(),
                 ]),
         ]);

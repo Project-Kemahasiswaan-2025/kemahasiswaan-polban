@@ -20,15 +20,18 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@polban.ac.id',
             'password' => bcrypt('password'),
         ]);
-        
+
         $this->call([
             LanguageSeeder::class,
+            ServiceSeeder::class,
             BannerSeeder::class,
             VideoSeeder::class,
             StudentOrganizationSeeder::class,
             CompetitionSeeder::class,
             RunningTextConfigSeeder::class,
             RunningTextSeeder::class,
+            DownloadSeeder::class,
+            CompetitionThreadSeeder::class,
         ]);
     }
 }

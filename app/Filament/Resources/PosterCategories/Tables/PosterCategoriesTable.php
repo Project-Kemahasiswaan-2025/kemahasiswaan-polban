@@ -40,6 +40,7 @@ class PosterCategoriesTable
                 TrashedFilter::make(),
             ])->actions([
                 EditAction::make()
+                    ->modalWidth('md')
             ])->bulkActions([
                 DeleteBulkAction::make(),
             ]);

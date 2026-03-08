@@ -15,13 +15,11 @@ class Poster extends Model
         'slug',
         'image_path',
         'excerpt',
-        'published_at',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'published_at' => 'date',
     ];
 
     public function category()

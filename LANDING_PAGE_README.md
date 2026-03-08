@@ -1,27 +1,21 @@
 # Landing Page Kemahasiswaan Polban - Implementation Guide
 
 ## Overview
-Implemented a modern, responsive landing page for Direktorat Kemahasiswaan dan Alumni Politeknik Negeri Bandung with multi-language support and dynamic content loading via API.
+Implemented a modern, responsive landing page for Direktorat Kemahasiswaan dan Alumni Politeknik Negeri Bandung with dynamic content loading via API.
 
 ## Features
 
-### 1. Multi-Language Support
-- **Supported Languages**: Indonesian (ID) and English (EN)
-- **Language Switcher**: Located in navigation bar
-- **Implementation**: Laravel localization with session-based language preference
-- **Default Language**: Indonesian
-
-### 2. Responsive Design
+### 1. Responsive Design
 - **Framework**: Bootstrap 5.3
 - **Custom CSS**: CSS variables for theme customization
 - **Mobile-First**: Fully responsive across all devices
 
-### 3. Color Scheme
+### 2. Color Scheme
 - **Primary**: Navy Blue (#001f3f)
 - **Secondary**: Orange (#ff6b35)
 - **Implementation**: CSS variables in `/public/css/landing.css`
 
-### 4. Pages
+### 3. Pages
 
 #### Home Page (`/`)
 - Banner carousel slider
@@ -164,12 +158,10 @@ database/
 │   ├── 2025_12_14_090747_create_banners_table.php
 │   ├── 2025_12_24_002813_create_videos_table.php
 │   ├── 2025_12_25_230101_create_student_organizations_table.php
-│   ├── 2025_12_26_132840_create_languages_table.php
-│   ├── 2025_12_26_132943_add_language_id_to_content_tables.php
-│   └── 2025_12_26_225221_create_competitions_table.php
+│   ├── 2025_12_26_225221_create_competitions_table.php
+│   └── 2026_02_07_000000_remove_language_feature.php
 └── seeders/
     ├── DatabaseSeeder.php
-    ├── LanguageSeeder.php
     ├── BannerSeeder.php
     ├── VideoSeeder.php
     ├── StudentOrganizationSeeder.php
@@ -198,7 +190,6 @@ resources/
     │   │   └── app.blade.php
     │   ├── navigation.blade.php
     │   ├── footer.blade.php
-    │   ├── language-switcher.blade.php
     │   ├── banner-slider.blade.php
     │   ├── video-player.blade.php
     │   ├── ormawa-card.blade.php
@@ -247,7 +238,6 @@ Route::get('/competitions', [CompetitionController::class, 'index']);
 5. **video-player.blade.php** - YouTube video embed component
 6. **ormawa-card.blade.php** - Card for displaying organizations
 7. **competition-card.blade.php** - Card for displaying competitions
-8. **language-switcher.blade.php** - Language toggle (ID/EN)
 9. **search-box.blade.php** - Search component with AJAX
 10. **external-link.blade.php** - Icon for external links
 
@@ -300,7 +290,6 @@ php artisan migrate:fresh --seed
 
 This will:
 1. Create all required tables
-2. Seed languages (Indonesian & English)
 3. Seed sample banners (3 items)
 4. Seed sample videos (3 items)
 5. Seed student organizations (38 items: MPM, BEM, 10 HMJ, 24 UKM)
@@ -336,11 +325,6 @@ Edit `/public/css/landing.css` and modify the CSS variables:
   --color-orange: #your-secondary-color;
 }
 ```
-
-### Add New Language
-1. Create new language in database via LanguageSeeder
-2. Add translation files in `lang/{code}/`
-3. Language switcher will automatically show new language
 
 ### Add New Menu Item
 Edit `resources/views/components/navigation.blade.php` and add your menu item with proper translation keys in `lang/{code}/menu.php`.
