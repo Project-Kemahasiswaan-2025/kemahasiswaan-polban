@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class StudentOrganization extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'parent_id',
         'is_group',
@@ -36,5 +38,21 @@ class StudentOrganization extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (StudentOrganization $record) {
+            // Cascade to children: handle both soft and force delete
+            if ($record->isForceDeleting()) {
+                $record->children()->withTrashed()->get()->each(fn($c) => $c->forceDelete());
+            } else {
+                $record->children()->get()->each(fn($c) => $c->delete());
+            }
+        });
+
+        static::restoring(function (StudentOrganization $record) {
+            $record->children()->withTrashed()->get()->each->restore();
+        });
     }
 }

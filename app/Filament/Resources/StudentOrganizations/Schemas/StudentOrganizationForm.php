@@ -32,14 +32,14 @@ class StudentOrganizationForm
                                 }
                                 $set('slug', Str::slug((string) $state));
                             })
-                            ->columnSpan(10),
+                            ->columnSpan(9),
 
                         TextInput::make('sort_order')
                             ->label('Order')
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
-                            ->columnSpan(2),
+                            ->columnSpan(3),
                     ]),
 
                     TextInput::make('slug')
@@ -59,8 +59,13 @@ class StudentOrganizationForm
                             ->helperText('Untuk kategori (HMJ/UKM).')
                             ->default(false)
                             ->live()
+                            ->hidden(fn($get) => (bool) $get('child_mode_enabled') || filled($get('parent_id')))
                             ->columnSpan(8),
                     ]),
+
+                    \Filament\Forms\Components\Hidden::make('child_mode_enabled')
+                        ->afterStateHydrated(fn($set, $state) => $set('child_mode_enabled', $state ?? filled(request()->query('parent_id'))))
+                        ->dehydrated(false),
 
                     Select::make('parent_id')
                         ->label('Kategori')
@@ -75,7 +80,14 @@ class StudentOrganizationForm
                         ->searchable()
                         ->preload()
                         ->nullable()
-                        ->disabled(fn($get) => (bool) $get('is_group')),
+                        ->default(fn() => request()->query('parent_id'))
+                        ->hidden(fn($get) => (bool) $get('is_group'))
+                        ->disabled(fn($get) => (bool) $get('child_mode_enabled'))
+                        ->dehydrated(),
+
+                    \Filament\Forms\Components\Hidden::make('parent_id')
+                        ->default(fn() => request()->query('parent_id'))
+                        ->visible(fn($get) => (bool) $get('child_mode_enabled')),
 
                     Grid::make(12)->schema([
                         FileUpload::make('logo')

@@ -11,6 +11,19 @@ class EditStudentOrganization extends EditRecord
 {
     protected static string $resource = StudentOrganizationResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        $parentId = $this->record->parent_id;
+
+        return $this->getResource()::getUrl('index', [
+            'tableFilters' => [
+                'parent_id' => [
+                    'value' => $parentId,
+                ],
+            ],
+        ]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [

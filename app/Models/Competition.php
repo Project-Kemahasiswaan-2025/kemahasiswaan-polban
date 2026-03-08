@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Competition extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'parent_id',
         'name',
@@ -33,5 +35,20 @@ class Competition extends Model
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Competition $record) {
+            if ($record->isForceDeleting()) {
+                $record->children()->withTrashed()->get()->each(fn($c) => $c->forceDelete());
+            } else {
+                $record->children()->get()->each(fn($c) => $c->delete());
+            }
+        });
+
+        static::restoring(function (Competition $record) {
+            $record->children()->withTrashed()->get()->each->restore();
+        });
     }
 }

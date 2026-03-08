@@ -5,6 +5,7 @@ namespace App\Filament\Resources\StudentOrganizations\Tables;
 use App\Models\StudentOrganization;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -20,8 +21,16 @@ class StudentOrganizationsTable
 {
     public static function configure(Table $table): Table
     {
-        $hasParentIdFilter = static fn(): bool =>
-        filled(data_get(request()->query('tableFilters', []), 'parent_id.value'));
+        $hasParentIdFilter = static function (): bool {
+            $request = request();
+            return filled($request->query('parent_id'))
+                || filled(data_get($request->query('tableFilters', []), 'parent_id.value'))
+                || filled(data_get($request->query('tableFilters', []), 'parent_id_state.value'))
+                || filled(data_get($request->all(), 'tableFilters.parent_id_state.value'))
+                || filled(data_get($request->all(), 'tableFilters.parent_id.value'))
+                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id_state.value'))
+                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id.value'));
+        };
 
         return $table
             ->columns([
@@ -54,6 +63,7 @@ class StudentOrganizationsTable
             ->filters([
                 SelectFilter::make('parent_id')
                     ->label('Kategori')
+                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
                     ->relationship(
                         name: 'parent',
                         titleAttribute: 'name',
@@ -64,6 +74,12 @@ class StudentOrganizationsTable
                     )
                     ->searchable()
                     ->preload(),
+
+                // Hidden filter to persist state during Livewire updates
+                SelectFilter::make('parent_id_state')
+                    ->hidden()
+                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
+                    ->query(fn($query) => $query),
 
                 TernaryFilter::make('is_group')->label('Hanya Group'),
                 TernaryFilter::make('is_active')->label('Aktif'),
@@ -78,12 +94,20 @@ class StudentOrganizationsTable
                             'parent_id' => [
                                 'value' => $record->id,
                             ],
+                            'parent_id_state' => [
+                                'value' => $record->id,
+                            ],
                         ],
                     ]))
                     ->visible(fn(StudentOrganization $record): bool => (bool) $record->is_group),
 
                 // ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->url(fn(StudentOrganization $record): string => \App\Filament\Resources\StudentOrganizations\StudentOrganizationResource::getUrl('edit', [
+                        'record' => $record,
+                        'parent_id' => $record->parent_id,
+                    ])),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

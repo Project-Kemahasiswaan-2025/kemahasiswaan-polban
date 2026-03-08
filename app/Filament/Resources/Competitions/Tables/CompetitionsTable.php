@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Competitions\Tables;
 use App\Models\Competition;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -20,8 +21,16 @@ class CompetitionsTable
 {
     public static function configure(Table $table): Table
     {
-        $hasParentIdFilter = static fn(): bool =>
-        filled(data_get(request()->query('tableFilters', []), 'parent_id.value'));
+        $hasParentIdFilter = static function (): bool {
+            $request = request();
+            return filled($request->query('parent_id'))
+                || filled(data_get($request->query('tableFilters', []), 'parent_id.value'))
+                || filled(data_get($request->query('tableFilters', []), 'parent_id_state.value'))
+                || filled(data_get($request->all(), 'tableFilters.parent_id_state.value'))
+                || filled(data_get($request->all(), 'tableFilters.parent_id.value'))
+                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id_state.value'))
+                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id.value'));
+        };
 
         return $table
             ->columns([
@@ -54,6 +63,7 @@ class CompetitionsTable
             ->filters([
                 SelectFilter::make('parent_id')
                     ->label('Induk Kategori')
+                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
                     ->relationship(
                         name: 'parent',
                         titleAttribute: 'name',
@@ -64,6 +74,12 @@ class CompetitionsTable
                     )
                     ->searchable()
                     ->preload(),
+
+                // Hidden filter to persist state
+                SelectFilter::make('parent_id_state')
+                    ->hidden()
+                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
+                    ->query(fn($query) => $query),
 
                 TernaryFilter::make('is_group')->label('Hanya Kategori'),
                 TernaryFilter::make('is_active')->label('Aktif'),
@@ -78,11 +94,19 @@ class CompetitionsTable
                             'parent_id' => [
                                 'value' => $record->id,
                             ],
+                            'parent_id_state' => [
+                                'value' => $record->id,
+                            ],
                         ],
                     ]))
                     ->visible(fn(Competition $record): bool => (bool) $record->is_group),
 
-                EditAction::make(),
+                EditAction::make()
+                    ->url(fn(Competition $record): string => \App\Filament\Resources\Competitions\CompetitionResource::getUrl('edit', [
+                        'record' => $record,
+                        'parent_id' => $record->parent_id,
+                    ])),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
