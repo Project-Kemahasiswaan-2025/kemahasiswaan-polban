@@ -26,7 +26,7 @@
     <section class="page-header bg-primary text-white py-5">
         <div class="container">
             <h1 class="display-4 fw-bold">{{ __('menu.scholarships') ?? 'Beasiswa' }}</h1>
-            <p class="lead">Informasi Beasiswa untuk Mahasiswa Polban</p>
+            <p class="lead">{{ __('landing.beasiswa.subtitle') }}</p>
         </div>
     </section>
 
@@ -36,40 +36,40 @@
             <div class="card border-0 shadow-sm p-3">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label small fw-bold">Cari Beasiswa</label>
+                        <label class="form-label small fw-bold">{{ __('landing.beasiswa.search_label') }}</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                            <input type="text" class="form-control border-start-0" id="beasiswa-search" placeholder="Nama beasiswa...">
+                            <input type="text" class="form-control border-start-0" id="beasiswa-search" placeholder="{{ __('landing.beasiswa.search_placeholder') }}">
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label small fw-bold">Jurusan</label>
-                        <input type="text" class="form-control" id="beasiswa-jurusan" placeholder="Filter jurusan...">
+                        <label class="form-label small fw-bold">{{ __('landing.beasiswa.major_label') }}</label>
+                        <input type="text" class="form-control" id="beasiswa-jurusan" placeholder="{{ __('landing.beasiswa.major_placeholder') }}">
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label small fw-bold">Tipe Beasiswa</label>
+                        <label class="form-label small fw-bold">{{ __('landing.beasiswa.type_label') }}</label>
                         <select class="form-select" id="beasiswa-tipe">
-                            <option value="">Semua</option>
+                            <option value="">{{ __('app.all') }}</option>
                             <option value="kipk">KIP-K</option>
                             <option value="internal">Internal</option>
                             <option value="eksternal">Eksternal</option>
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label small fw-bold">Jenis Beasiswa</label>
+                        <label class="form-label small fw-bold">{{ __('landing.beasiswa.kind_label') }}</label>
                         <select class="form-select" id="beasiswa-jenis">
-                            <option value="">Semua</option>
+                            <option value="">{{ __('app.all') }}</option>
                             <option value="full">Full</option>
                             <option value="half">Half</option>
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label small fw-bold">Status Beasiswa</label>
+                        <label class="form-label small fw-bold">{{ __('landing.beasiswa.status_label') }}</label>
                         <select class="form-select" id="beasiswa-status">
-                            <option value="">Semua</option>
-                            <option value="berjalan">Berjalan</option>
-                            <option value="akan-datang">Akan Datang</option>
-                            <option value="selesai">Selesai</option>
+                            <option value="">{{ __('app.all') }}</option>
+                            <option value="berjalan">{{ __('landing.beasiswa.status_ongoing') }}</option>
+                            <option value="akan-datang">{{ __('landing.beasiswa.status_upcoming') }}</option>
+                            <option value="selesai">{{ __('landing.beasiswa.status_ended') }}</option>
                         </select>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
         <div class="container">
             <div id="beasiswa-loading" class="text-center py-5 d-none">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden">{{ __('app.loading') }}</span>
                 </div>
             </div>
 
@@ -97,7 +97,7 @@
 
             <div id="beasiswa-no-results" class="text-center py-5 d-none">
                 <i class="bi bi-search display-1 text-muted mb-4 d-block"></i>
-                <p class="text-muted fs-4">Tidak ada beasiswa ditemukan</p>
+                <p class="text-muted fs-4">{{ __('landing.beasiswa.no_results') }}</p>
             </div>
         </div>
     </section>
@@ -109,7 +109,7 @@
                 <div class="row g-0">
                     <!-- Image Section -->
                     <div class="col-md-3 bg-light d-flex align-items-center justify-content-center overflow-hidden position-relative" style="min-height: 180px;">
-                        <img src="" class="beasiswa-poster img-fluid w-100 h-100 d-none" style="object-fit: cover;" alt="Scholarship Poster">
+                        <img src="" class="beasiswa-poster img-fluid w-100 h-100 d-none" style="object-fit: cover;" alt="{{ __('landing.beasiswa.poster_alt') }}">
                         <div class="beasiswa-poster-fallback w-100 h-100 bg-secondary d-flex align-items-center justify-content-center text-white">
                             <i class="bi bi-mortarboard" style="font-size: 3.5rem;"></i>
                         </div>
@@ -144,9 +144,9 @@
                             <!-- Action -->
                             <div class="mt-auto pt-3 border-top d-flex justify-content-end gap-2">
                                 <a href="" target="_blank" class="beasiswa-register-link btn btn-primary px-4 rounded-pill fw-bold d-none">
-                                    <i class="bi bi-pencil-square me-2"></i>Daftar Sekarang
+                                    <i class="bi bi-pencil-square me-2"></i>{{ __('landing.beasiswa.register_now') }}
                                 </a>
-                                <a href="" class="beasiswa-detail-link btn btn-outline-primary px-4 rounded-pill fw-bold">Lihat Detail</a>
+                                <a href="" class="beasiswa-detail-link btn btn-outline-primary px-4 rounded-pill fw-bold">{{ __('landing.beasiswa.view_detail') }}</a>
                             </div>
                         </div>
                     </div>

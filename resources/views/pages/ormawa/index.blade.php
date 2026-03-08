@@ -9,7 +9,7 @@
                 </ol>
             </nav>
             <h1 class="display-4 fw-bold" id="header-title">{{ __('menu.student_organizations') }}</h1>
-            <p class="lead" id="header-lead">Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa</p>
+            <p class="lead" id="header-lead">{{ __('landing.ormawa.subtitle') }}</p>
         </div>
     </section>
 
