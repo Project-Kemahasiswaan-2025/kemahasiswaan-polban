@@ -24,7 +24,7 @@ class StatsOverview extends BaseWidget
                 ->description(__('filament.widgets.stats.downloads_description'))
                 ->descriptionIcon('heroicon-m-document-arrow-down')
                 ->color('info'),
-            Stat::make(__('filament.widgets.stats.active_services'), Service::where('is_active', true)->where('parent_id', null)->count())
+            Stat::make(__('filament.widgets.stats.active_services'), Service::where('is_active', true)->count())
                 ->description(__('filament.widgets.stats.services_description'))
                 ->descriptionIcon('heroicon-m-wrench-screwdriver')
                 ->color('warning'),
