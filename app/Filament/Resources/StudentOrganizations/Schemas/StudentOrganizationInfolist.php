@@ -55,15 +55,6 @@ class StudentOrganizationInfolist
                                     TextEntry::make('sort_order')->label('Urutan Tampil'),
                                 ]),
 
-                                Section::make('Call To Action')
-                                    ->visible(fn($record) => filled($record->cta_url))
-                                    ->schema([
-                                        TextEntry::make('cta_label')->label('Label Tombol'),
-                                        TextEntry::make('cta_url')
-                                            ->label('URL Tujuan')
-                                            ->url(fn($state) => $state, true)
-                                            ->badge(),
-                                    ]),
                             ]),
                     ]),
                 ]),

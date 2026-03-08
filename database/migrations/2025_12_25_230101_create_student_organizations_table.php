@@ -30,13 +30,9 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('cover_image')->nullable();
 
-            // disiapkan tapi belum dipakai input (tetap ada)
             $table->text('excerpt')->nullable();
 
             $table->longText('content')->nullable();
-
-            $table->string('cta_label', 60)->nullable();
-            $table->string('cta_url', 255)->nullable();
 
             $table->timestamps();
 

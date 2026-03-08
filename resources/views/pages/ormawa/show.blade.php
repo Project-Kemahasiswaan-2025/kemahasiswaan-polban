@@ -52,14 +52,6 @@
                             <p class="text-muted">Informasi detail untuk {{ $organization->name }} akan segera tersedia.</p>
                             @endif
 
-                            @if($organization->cta_url && $organization->cta_label)
-                            <div class="mt-4">
-                                <a href="{{ $organization->cta_url }}" class="btn btn-primary" target="_blank">
-                                    {{ $organization->cta_label }}
-                                    <i class="bi bi-box-arrow-up-right ms-1"></i>
-                                </a>
-                            </div>
-                            @endif
                         </div>
                     </div>
                 </div>
