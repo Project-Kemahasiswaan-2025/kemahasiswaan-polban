@@ -134,8 +134,8 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-5 d-flex justify-content-center">
-                        {{ $downloads->links() }}
+                    <div class="mt-5 d-flex justify-content-center justify-content-md-end">
+                        {{ $downloads->links('vendor.pagination.bootstrap-5-clean') }}
                     </div>
                 </div>
             </div>
