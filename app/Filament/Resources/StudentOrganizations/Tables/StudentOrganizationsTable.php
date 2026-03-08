@@ -4,16 +4,12 @@ namespace App\Filament\Resources\StudentOrganizations\Tables;
 
 use App\Models\StudentOrganization;
 use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -23,13 +19,20 @@ class StudentOrganizationsTable
     {
         $hasParentIdFilter = static function (): bool {
             $request = request();
-            return filled($request->query('parent_id'))
-                || filled(data_get($request->query('tableFilters', []), 'parent_id.value'))
-                || filled(data_get($request->query('tableFilters', []), 'parent_id_state.value'))
-                || filled(data_get($request->all(), 'tableFilters.parent_id_state.value'))
-                || filled(data_get($request->all(), 'tableFilters.parent_id.value'))
-                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id_state.value'))
-                || filled(data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id.value'));
+            $parentId = $request->query('parent_id');
+
+            if (!filled($parentId) && $request->isMethod('post')) {
+                $referer = $request->header('referer');
+                if ($referer) {
+                    $urlQuery = parse_url($referer, PHP_URL_QUERY);
+                    if ($urlQuery) {
+                        parse_str($urlQuery, $queryParams);
+                        $parentId = $queryParams['parent_id'] ?? null;
+                    }
+                }
+            }
+
+            return filled($parentId);
         };
 
         return $table
@@ -61,26 +64,6 @@ class StudentOrganizationsTable
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                SelectFilter::make('parent_id')
-                    ->label('Kategori')
-                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
-                    ->relationship(
-                        name: 'parent',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn($query) => $query
-                            ->whereNull('parent_id')
-                            ->where('is_group', true)
-                            ->orderBy('sort_order')
-                    )
-                    ->searchable()
-                    ->preload(),
-
-                // Hidden filter to persist state during Livewire updates
-                SelectFilter::make('parent_id_state')
-                    ->hidden()
-                    ->default(fn() => request()->query('parent_id') ?? data_get(request()->query('tableFilters', []), 'parent_id.value') ?? data_get(request()->all(), 'tableFilters.parent_id.value'))
-                    ->query(fn($query) => $query),
-
                 TernaryFilter::make('is_group')->label('Hanya Group'),
                 TernaryFilter::make('is_active')->label('Aktif'),
             ])
@@ -90,14 +73,7 @@ class StudentOrganizationsTable
                     ->icon('heroicon-o-view-columns')
                     ->color('info')
                     ->url(fn(StudentOrganization $record): string => \App\Filament\Resources\StudentOrganizations\StudentOrganizationResource::getUrl('index', [
-                        'tableFilters' => [
-                            'parent_id' => [
-                                'value' => $record->id,
-                            ],
-                            'parent_id_state' => [
-                                'value' => $record->id,
-                            ],
-                        ],
+                        'parent_id' => $record->id,
                     ]))
                     ->visible(fn(StudentOrganization $record): bool => (bool) $record->is_group),
 
@@ -108,11 +84,6 @@ class StudentOrganizationsTable
                         'parent_id' => $record->parent_id,
                     ])),
                 DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

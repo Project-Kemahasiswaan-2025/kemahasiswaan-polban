@@ -23,11 +23,7 @@ class CreateStudentOrganization extends CreateRecord
         $parentId = $this->record->parent_id;
 
         return $this->getResource()::getUrl('index', [
-            'tableFilters' => [
-                'parent_id' => [
-                    'value' => $parentId,
-                ],
-            ],
+            'parent_id' => $parentId,
         ]);
     }
 }

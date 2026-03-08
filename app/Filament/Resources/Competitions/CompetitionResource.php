@@ -75,18 +75,7 @@ class CompetitionResource extends Resource
                     return;
                 }
 
-                $parentId = $request->query('parent_id')
-                    ?? data_get($request->query('tableFilters', []), 'parent_id.value')
-                    ?? data_get($request->query('tableFilters', []), 'parent_id_state.value')
-                    ?? data_get($request->all(), 'tableFilters.parent_id_state.value')
-                    ?? data_get($request->all(), 'tableFilters.parent_id.value')
-                    ?? data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id_state.value')
-                    ?? data_get($request->all(), 'components.0.snapshot.memo.data.tableFilters.parent_id.value')
-                    ?? data_get($request->all(), 'components.0.updates.tableFilters.parent_id_state.value')
-                    ?? data_get($request->all(), 'components.0.updates.tableFilters.parent_id.value')
-                    ?? data_get($request->all(), 'components.0.calls.0.params.0.tableFilters.parent_id_state.value')
-                    ?? data_get($request->all(), 'components.0.calls.0.params.0.tableFilters.parent_id.value')
-                    ?? data_get($request->all(), 'components.0.snapshot.memo.data.record');
+                $parentId = $request->query('parent_id');
 
                 if (!filled($parentId) && $request->isMethod('post')) {
                     $referer = $request->header('referer');
@@ -94,9 +83,7 @@ class CompetitionResource extends Resource
                         $urlQuery = parse_url($referer, PHP_URL_QUERY);
                         if ($urlQuery) {
                             parse_str($urlQuery, $queryParams);
-                            $parentId = $queryParams['parent_id']
-                                ?? data_get($queryParams, 'tableFilters.parent_id.value')
-                                ?? data_get($queryParams, 'tableFilters.parent_id_state.value');
+                            $parentId = $queryParams['parent_id'] ?? null;
                         }
                     }
                 }

@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->boolean('is_group')->default(false);
             $table->string('name', 180);
-            $table->string('slug', 200)->unique();
+            $table->string('slug', 200);
 
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_active')->default(true);

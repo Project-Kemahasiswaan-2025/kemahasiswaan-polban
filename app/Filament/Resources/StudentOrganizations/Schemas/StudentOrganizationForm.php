@@ -46,7 +46,12 @@ class StudentOrganizationForm
                         ->label('Slug')
                         ->required()
                         ->maxLength(200)
-                        ->unique(ignoreRecord: true),
+                        ->unique(
+                            ignoreRecord: true,
+                            modifyRuleUsing: fn(\Illuminate\Validation\Rules\Unique $rule, $get) => $rule
+                                ->where('parent_id', $get('parent_id'))
+                                ->whereNull('deleted_at')
+                        ),
 
                     Grid::make(12)->schema([
                         Toggle::make('is_active')

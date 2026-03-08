@@ -14,8 +14,8 @@ class ListStudentOrganizations extends ListRecords
     {
         return [
             CreateAction::make()
-                ->url(fn (): string => StudentOrganizationResource::getUrl('create', [
-                    'parent_id' => data_get(request()->query('tableFilters', []), 'parent_id.value'),
+                ->url(fn(): string => StudentOrganizationResource::getUrl('create', [
+                    'parent_id' => request()->query('parent_id'),
                 ])),
         ];
     }

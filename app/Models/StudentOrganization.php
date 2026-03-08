@@ -47,6 +47,10 @@ class StudentOrganization extends Model
             if ($record->isForceDeleting()) {
                 $record->children()->withTrashed()->get()->each(fn($c) => $c->forceDelete());
             } else {
+                // Rename slug to allow re-use of the original slug
+                $record->slug .= '-deleted-' . now()->timestamp;
+                $record->save();
+
                 $record->children()->get()->each(fn($c) => $c->delete());
             }
         });

@@ -20,7 +20,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             $table->string('name', 180);
-            $table->string('slug', 200)->unique();
+            $table->string('slug', 200);
 
             $table->boolean('is_group')->default(false); // kategori vs item
             $table->boolean('is_active')->default(true);

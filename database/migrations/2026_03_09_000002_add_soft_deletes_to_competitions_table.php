@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::table('competitions', function (Blueprint $table) {
             $table->softDeletes();
+            $table->unique(['parent_id', 'slug', 'deleted_at']);
         });
     }
 
     public function down(): void
     {
         Schema::table('competitions', function (Blueprint $table) {
+            $table->dropUnique(['parent_id', 'slug', 'deleted_at']);
             $table->dropSoftDeletes();
         });
     }

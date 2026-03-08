@@ -15,7 +15,7 @@ class ListCompetitions extends ListRecords
         return [
             CreateAction::make()
                 ->url(fn(): string => CompetitionResource::getUrl('create', [
-                    'parent_id' => data_get(request()->query('tableFilters', []), 'parent_id.value'),
+                    'parent_id' => request()->query('parent_id'),
                 ])),
         ];
     }
