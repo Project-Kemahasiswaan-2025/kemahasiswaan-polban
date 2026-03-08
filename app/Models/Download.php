@@ -14,13 +14,13 @@ class Download extends Model
     protected static function booted()
     {
         static::created(function ($download) {
-            if (!$download->getRawOriginal('hash')) {
-                $download->hash = substr(md5($download->id . config('app.key')), 0, 8);
-                $download->saveQuietly();
-            }
+            // Persist the deterministic hash based on ID
+            $hash = substr(md5($download->id . config('app.key')), 0, 8);
+            $download->updateQuietly(['hash' => $hash]);
         });
 
         static::saving(function ($download) {
+            // Handle metadata
             if ($download->isDirty('file_path') && $download->file_path) {
                 $path = $download->file_path;
                 if (Storage::disk('public')->exists($path)) {
@@ -30,8 +30,8 @@ class Download extends Model
                 }
             }
 
-            // Ensure hash is set on update if missing
-            if ($download->id && !$download->hash) {
+            // Ensure hash is set for existing records if missing
+            if ($download->id && !$download->getRawOriginal('hash')) {
                 $download->hash = substr(md5($download->id . config('app.key')), 0, 8);
             }
         });

@@ -138,6 +138,7 @@ class ServiceForm
                                 TextInput::make('name')
                                     ->label('Nama Dokumen')
                                     ->required()
+                                    ->live(onBlur: true)
                                     ->columnSpan(8),
 
                                 TextInput::make('sort_order')
@@ -151,7 +152,17 @@ class ServiceForm
                                 ->label('File')
                                 ->required()
                                 ->disk('public')
-                                ->directory('downloads/services'),
+                                ->directory('downloads/services')
+                                ->live()
+                                ->afterStateUpdated(function ($state, $set, $get) {
+                                    if (!$get('name') && $state) {
+                                        $file = is_array($state) ? array_first($state) : $state;
+                                        if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                                            $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                                            $set('name', (string) str($filename)->replace(['-', '_'], ' ')->title());
+                                        }
+                                    }
+                                }),
                         ])
                         ->orderColumn('sort_order')
                         ->collapsible()
