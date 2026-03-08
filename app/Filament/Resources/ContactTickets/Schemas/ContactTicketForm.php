@@ -14,35 +14,35 @@ class ContactTicketForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Tiket')
-                ->description('Data yang dikirimkan oleh pengguna.')
+            Section::make(__('filament.sections.ticket_info'))
+                ->description(__('filament.sections.ticket_info_desc'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('ticket_code')
-                        ->label('Kode Tiket')
+                        ->label(__('filament.fields.ticket_code'))
                         ->disabled()
                         ->dehydrated(false),
                     TextInput::make('name')
-                        ->label('Nama Pengirim')
+                        ->label(__('filament.fields.sender_name'))
                         ->disabled(),
                     TextInput::make('email')
-                        ->label('Email')
+                        ->label(__('filament.fields.email'))
                         ->disabled(),
                     TextInput::make('phone')
-                        ->label('Nomor Telepon / WA')
+                        ->label(__('filament.fields.phone_wa'))
                         ->disabled(),
                     TextInput::make('subject')
-                        ->label('Subjek')
+                        ->label(__('filament.fields.subject'))
                         ->disabled()
                         ->columnSpanFull(),
                     Textarea::make('message')
-                        ->label('Isi Pesan')
+                        ->label(__('filament.fields.message_body'))
                         ->disabled()
                         ->columnSpanFull(),
                 ]),
 
-            Section::make('Tindak Lanjut Admin')
-                ->description('Kelola status dan catatan untuk tiket ini.')
+            Section::make(__('filament.sections.admin_followup'))
+                ->description(__('filament.sections.admin_followup_desc'))
                 ->schema([
                     Select::make('status')
                         ->options([
@@ -53,8 +53,8 @@ class ContactTicketForm
                         ->required()
                         ->native(false),
                     Textarea::make('admin_note')
-                        ->label('Catatan Internal')
-                        ->placeholder('Tuliskan catatan tindak lanjut di sini...')
+                        ->label(__('filament.fields.admin_note'))
+                        ->placeholder(__('filament.fields.admin_note_placeholder'))
                         ->columnSpanFull(),
                 ]),
         ]);

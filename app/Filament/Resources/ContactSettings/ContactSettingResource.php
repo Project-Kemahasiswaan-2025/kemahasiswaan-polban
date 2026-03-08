@@ -17,40 +17,46 @@ class ContactSettingResource extends Resource
 {
     protected static ?string $model = ContactSetting::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Layanan & Bantuan';
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAtSymbol;
 
-    protected static ?string $navigationLabel = 'Kontak & Sosmed';
-
     protected static ?int $navigationSort = 60;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament.resources.contact_setting.nav_group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament.resources.contact_setting.nav_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Kontak')
-                ->description('Konfigurasi alamat, email, dan nomor telepon resmi')
+            Section::make(__('filament.sections.contact_info'))
+                ->description(__('filament.sections.contact_info_desc'))
                 ->schema([
                     Textarea::make('address')
-                        ->label('Alamat Lengkap')
+                        ->label(__('filament.fields.address'))
                         ->required()
                         ->rows(3)
                         ->columnSpanFull(),
 
                     Grid::make(2)->schema([
                         TextInput::make('email')
-                            ->label('Email Resmi')
+                            ->label(__('filament.fields.official_email'))
                             ->email()
                             ->required(),
 
                         TextInput::make('phone')
-                            ->label('Nomor Telepon')
+                            ->label(__('filament.fields.phone'))
                             ->required(),
                     ]),
                 ]),
 
-            Section::make('Media Sosial & Maps')
-                ->description('Tautan media sosial dan Google Maps embed URL')
+            Section::make(__('filament.sections.social_media'))
+                ->description(__('filament.sections.social_media_desc'))
                 ->schema([
                     Grid::make(2)->schema([
                         TextInput::make('instagram_url')
@@ -76,7 +82,7 @@ class ContactSettingResource extends Resource
 
                     Textarea::make('maps_url')
                         ->label('Google Maps Embed URL')
-                        ->helperText('Masukkan URL src dari iframe Google Maps')
+                        ->helperText(__('filament.fields.maps_url_helper'))
                         ->rows(3)
                         ->columnSpanFull(),
                 ]),

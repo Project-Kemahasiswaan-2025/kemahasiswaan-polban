@@ -18,12 +18,12 @@ class CompetitionForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Utama')
-                ->description('Metadata dasar untuk katalog kompetisi.')
+            Section::make(__('filament.sections.main_info'))
+                ->description(__('filament.sections.main_info_desc'))
                 ->schema([
                     Grid::make(12)->schema([
                         TextInput::make('name')
-                            ->label('Nama Kompetisi / Kategori')
+                            ->label(__('filament.fields.competition_name'))
                             ->required()
                             ->maxLength(180)
                             ->live(onBlur: true)
@@ -34,7 +34,7 @@ class CompetitionForm
                             ->columnSpan(9),
 
                         TextInput::make('sort_order')
-                            ->label('Urutan')
+                            ->label(__('filament.fields.sort_order'))
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
@@ -56,13 +56,13 @@ class CompetitionForm
 
                     Grid::make(12)->schema([
                         Toggle::make('is_active')
-                            ->label('Aktif')
+                            ->label(__('filament.fields.is_active'))
                             ->default(true)
                             ->columnSpan(4),
 
                         Toggle::make('is_group')
-                            ->label('Grup / Kategori')
-                            ->helperText('Aktifkan jika ini adalah pengelompokan (seperti Puspresnas, Bakorma, dll).')
+                            ->label(__('filament.fields.is_group'))
+                            ->helperText(__('filament.fields.is_group_helper'))
                             ->default(false)
                             ->live()
                             ->hidden(fn($get) => (bool) $get('child_mode_enabled') || filled($get('parent_id')))
@@ -74,7 +74,7 @@ class CompetitionForm
                         ->dehydrated(false),
 
                     Select::make('parent_id')
-                        ->label('Induk Kategori')
+                        ->label(__('filament.fields.parent_category'))
                         ->relationship(
                             name: 'parent',
                             titleAttribute: 'name',
@@ -90,14 +90,14 @@ class CompetitionForm
                         ->hidden(fn($get) => (bool) $get('is_group'))
                         ->disabled(fn($get) => (bool) $get('child_mode_enabled'))
                         ->dehydrated()
-                        ->helperText('Kosongkan jika ini adalah kategori tingkat atas.'),
+                        ->helperText(__('filament.fields.parent_category_helper')),
 
                     \Filament\Forms\Components\Hidden::make('parent_id')
                         ->default(fn() => request()->query('parent_id'))
                         ->visible(fn($get) => (bool) $get('child_mode_enabled')),
 
                     FileUpload::make('cover_image')
-                        ->label('Gambar Sampul (Opsional)')
+                        ->label(__('filament.fields.cover_image'))
                         ->disk('public')
                         ->directory('competitions/covers')
                         ->image()
@@ -105,12 +105,12 @@ class CompetitionForm
                         ->nullable(),
                 ]),
 
-            Section::make('Tautan & Deskripsi')
-                ->description('Informasi tambahan jika kompetisi memiliki halaman luar atau detail khusus.')
+            Section::make(__('filament.sections.links_description'))
+                ->description(__('filament.sections.links_description_desc'))
                 ->schema([
                     Grid::make(12)->schema([
                         TextInput::make('url')
-                            ->label('URL Eksternal')
+                            ->label(__('filament.fields.external_url'))
                             ->placeholder('https://...')
                             ->url()
                             ->maxLength(255)
@@ -119,10 +119,10 @@ class CompetitionForm
                             ->disabled(fn($get) => (bool) $get('is_group')),
 
                         Select::make('url_target')
-                            ->label('Target Link')
+                            ->label(__('filament.fields.url_target_link'))
                             ->options([
-                                '_blank' => 'Tab Baru',
-                                '_self'  => 'Tab Sama',
+                                '_blank' => __('filament.options.tab_new_alt'),
+                                '_self'  => __('filament.options.tab_same_alt'),
                             ])
                             ->default('_blank')
                             ->columnSpan(4)
@@ -130,7 +130,7 @@ class CompetitionForm
                     ]),
 
                     RichEditor::make('content')
-                        ->label('Detail Konten')
+                        ->label(__('filament.sections.detail_content'))
                         ->nullable()
                         ->columnSpanFull(),
                 ])

@@ -26,24 +26,24 @@ class CompetitionResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Prestasi';
+        return __('filament.resources.competition.nav_group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Katalog Kompetisi';
+        return __('filament.resources.competition.nav_label');
     }
 
     protected static ?int $navigationSort = 40;
 
     public static function getLabel(): string
     {
-        return 'Kompetisi';
+        return __('filament.resources.competition.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Kompetisi';
+        return __('filament.resources.competition.plural_label');
     }
 
     protected static ?string $recordTitleAttribute = 'name';

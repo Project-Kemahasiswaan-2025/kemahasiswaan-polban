@@ -16,7 +16,7 @@ class ProfilePageInfolist
     {
         return $schema->components([
             Grid::make(12)->schema([
-                Section::make('Informasi')
+                Section::make(__('filament.sections.information'))
                     ->columnSpan(7)
                     ->columns(2)
                     ->schema([
@@ -25,15 +25,15 @@ class ProfilePageInfolist
                         TextEntry::make('sort_order')->label('Order'),
 
                         IconEntry::make('is_active')
-                            ->label('Aktif')
+                            ->label(__('filament.fields.is_active'))
                             ->boolean(),
                     ]),
 
-                Section::make('Dokumen / Media')
+                Section::make(__('filament.sections.document_media'))
                     ->columnSpan(5)
                     ->schema([
                         ImageEntry::make('document_path')
-                            ->label('Preview')
+                            ->label(__('filament.fields.document_preview'))
                             ->disk('public')
                             ->visible(
                                 fn($record) => filled($record?->document_path)
@@ -42,7 +42,7 @@ class ProfilePageInfolist
                             ->height(240),
 
                         TextEntry::make('document_path')
-                            ->label('PDF')
+                            ->label(__('filament.fields.pdf'))
                             ->visible(
                                 fn($record) => filled($record?->document_path)
                                     && Str::endsWith(strtolower($record->document_path), '.pdf')
@@ -57,7 +57,7 @@ class ProfilePageInfolist
                             ->visible(fn($record) => blank($record?->document_path)),
                     ]),
 
-                Section::make('Konten')
+                Section::make(__('filament.sections.content'))
                     ->columnSpanFull()
                     ->visible(function ($record): bool {
                         $raw = (string) ($record?->content ?? '');
@@ -94,7 +94,7 @@ class ProfilePageInfolist
 
                                 return $html;
                             })
-                            ->placeholder('Tidak ada konten.'),
+                            ->placeholder(__('filament.placeholders.no_content')),
                     ]),
             ])->columnSpanFull(),
         ]);

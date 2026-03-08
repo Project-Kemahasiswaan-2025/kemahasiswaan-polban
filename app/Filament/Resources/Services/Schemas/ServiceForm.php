@@ -21,8 +21,8 @@ class ServiceForm
     {
         return $schema->schema([
             // Row 1
-            Section::make('Informasi Layanan')
-                ->description('Metadata utama layanan, termasuk tombol aksi (CTA) bila layanan mengarah ke halaman eksternal.')
+            Section::make(__('filament.sections.service_info'))
+                ->description(__('filament.sections.service_info_desc'))
                 ->schema([
                     Grid::make(12)->schema([
                         // KIRI
@@ -30,7 +30,7 @@ class ServiceForm
                             ->columnSpan(6)
                             ->schema([
                                 TextInput::make('name')
-                                    ->label('Nama Layanan')
+                                    ->label(__('filament.fields.service_name'))
                                     ->required()
                                     ->maxLength(180)
                                     ->live(onBlur: true)
@@ -50,7 +50,7 @@ class ServiceForm
                                         ->columnSpan(9),
 
                                     TextInput::make('sort_order')
-                                        ->label('Urutan')
+                                        ->label(__('filament.fields.sort_order'))
                                         ->numeric()
                                         ->default(0)
                                         ->minValue(0)
@@ -70,20 +70,20 @@ class ServiceForm
                             ->columnSpan(6)
                             ->schema([
                                 TextInput::make('excerpt')
-                                    ->label('Ringkasan')
+                                    ->label(__('filament.fields.summary'))
                                     ->maxLength(255)
                                     ->columnSpanFull(),
 
-                                Section::make('Tombol Aksi')
-                                    ->description('Opsional. Gunakan bila halaman layanan ini butuh tombol untuk menuju URL eksternal atau aksi tertentu.')
+                                Section::make(__('filament.sections.action_button'))
+                                    ->description(__('filament.sections.action_button_desc'))
                                     ->schema([
                                         Grid::make(12)->schema([
                                             TextInput::make('cta_label')
-                                                ->label('Label Tombol')
+                                                ->label(__('filament.fields.cta_label'))
                                                 ->columnSpan(4),
 
                                             TextInput::make('cta_url')
-                                                ->label('URL Aksi / Redirect')
+                                                ->label(__('filament.fields.cta_url'))
                                                 ->url()
                                                 ->columnSpan(8),
                                         ]),
@@ -96,7 +96,7 @@ class ServiceForm
                 ->columnSpanFull(),
 
             // Row 2
-            Section::make('Konten Halaman')
+            Section::make(__('filament.sections.page_content'))
                 ->schema([
                     RichEditor::make('content')
                         ->hiddenLabel()
@@ -104,23 +104,23 @@ class ServiceForm
                 ])->columnSpanFull(),
 
             // Row 3
-            Section::make('Tautan Lanjutan')
-                ->description('Daftar tautan terkait untuk melanjutkan ke halaman/portal eksternal yang masih berhubungan dengan layanan ini.')
+            Section::make(__('filament.sections.advanced_links'))
+                ->description(__('filament.sections.advanced_links_desc'))
                 ->schema([
                     Repeater::make('links')
-                        ->label('Tautan')
+                        ->label(__('filament.fields.links'))
                         ->relationship('links')
                         ->schema([
                             TextInput::make('name')
-                                ->label('Judul Tautan')
+                                ->label(__('filament.fields.link_title'))
                                 ->required(),
                             TextInput::make('url')
-                                ->label('URL Tujuan')
+                                ->label(__('filament.fields.link_url'))
                                 ->url()
                                 ->required(),
                             TextInput::make('description')
-                                ->label('Keterangan Singkat')
-                                ->placeholder('Opsional'),
+                                ->label(__('filament.fields.link_description'))
+                                ->placeholder(__('filament.fields.link_description_placeholder')),
                         ])
                         ->orderColumn('sort_order')
                         ->collapsible()
@@ -128,21 +128,21 @@ class ServiceForm
                 ])
                 ->collapsible(),
 
-            Section::make('Dokumen & Unduhan')
-                ->description('Kelola dokumen yang dapat diunduh pada halaman layanan ini.')
+            Section::make(__('filament.sections.documents_downloads'))
+                ->description(__('filament.sections.documents_downloads_form_desc'))
                 ->schema([
                     Repeater::make('downloads')
                         ->relationship('downloads')
                         ->schema([
                             Grid::make(12)->schema([
                                 TextInput::make('name')
-                                    ->label('Nama Dokumen')
+                                    ->label(__('filament.fields.document_name'))
                                     ->required()
                                     ->live(onBlur: true)
                                     ->columnSpan(8),
 
                                 TextInput::make('sort_order')
-                                    ->label('Urutan')
+                                    ->label(__('filament.fields.sort_order'))
                                     ->numeric()
                                     ->default(0)
                                     ->columnSpan(4),

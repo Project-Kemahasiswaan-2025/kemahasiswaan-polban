@@ -13,7 +13,7 @@ class VideoCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable()
                     ->sortable(),
 
@@ -23,11 +23,11 @@ class VideoCategoriesTable
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 TextColumn::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->sortable(),
             ])
             ->defaultSort('sort_order', 'asc');

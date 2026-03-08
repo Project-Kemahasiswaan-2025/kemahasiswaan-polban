@@ -21,7 +21,7 @@ class PosterCategoryForm
                 ->required(),
 
             TextInput::make('name')
-                ->label('Nama')
+                ->label(__('filament.fields.name'))
                 ->required()
                 ->maxLength(120)
                 ->live(onBlur: true)

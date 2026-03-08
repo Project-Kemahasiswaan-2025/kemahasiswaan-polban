@@ -25,17 +25,17 @@ class CompetitionThreadForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Tabs::make('Thread Kompetisi')
+            Tabs::make(__('filament.tabs.thread_competition'))
                 ->tabs([
-                    Tabs\Tab::make('Informasi Umum')
+                    Tabs\Tab::make(__('filament.tabs.general_info'))
                         ->icon('heroicon-o-identification')
                         ->schema(static::identityTab()),
 
-                    Tabs\Tab::make('Visual')
+                    Tabs\Tab::make(__('filament.tabs.visual'))
                         ->icon('heroicon-o-photo')
                         ->schema(static::visualTab()),
 
-                    Tabs\Tab::make('Link & Timeline')
+                    Tabs\Tab::make(__('filament.tabs.link_timeline'))
                         ->icon('heroicon-o-calendar-days')
                         ->schema(static::linkTimelineTab()),
                 ])
@@ -51,7 +51,7 @@ class CompetitionThreadForm
         return [
             Grid::make(12)->schema([
                 Select::make('competition_id')
-                    ->label('Item Katalog')
+                    ->label(__('filament.fields.catalog_item'))
                     ->relationship(
                         name: 'competition',
                         titleAttribute: 'name',
@@ -70,12 +70,12 @@ class CompetitionThreadForm
                     ->columnSpan(8),
 
                 Select::make('status')
-                    ->label('Status')
+                    ->label(__('filament.fields.status'))
                     ->options([
-                        'draft'               => 'Draft',
-                        'ongoing'             => 'Sedang Berlangsung',
-                        'registration_closed' => 'Pendaftaran Ditutup',
-                        'completed'           => 'Selesai',
+                        'draft'               => __('filament.options.draft'),
+                        'ongoing'             => __('filament.options.ongoing'),
+                        'registration_closed' => __('filament.options.registration_closed'),
+                        'completed'           => __('filament.options.completed'),
                     ])
                     ->default('draft')
                     ->required()
@@ -84,7 +84,7 @@ class CompetitionThreadForm
 
             Grid::make(2)->schema([
                 TextInput::make('title')
-                    ->label('Judul Pengumuman')
+                    ->label(__('filament.fields.announcement_title'))
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn($state, $set, $get) => $set('slug', Str::slug((string) $state)))
@@ -97,14 +97,14 @@ class CompetitionThreadForm
             ]),
 
             RichEditor::make('content')
-                ->label('Detail Deskripsi Lomba')
+                ->label(__('filament.sections.detail_content'))
                 ->columnSpanFull(),
 
-            Section::make('Pengumuman Hasil (Juara)')
-                ->description('Opsional. Isi jika lomba sudah selesai dan ada pengumuman pemenang.')
+            Section::make(__('filament.sections.competition_winners'))
+                ->description(__('filament.sections.competition_winners_desc'))
                 ->schema([
                     RichEditor::make('announcement_content')
-                        ->label('Konten Pengumuman')
+                        ->label(__('filament.fields.announcement_content'))
                         ->columnSpanFull(),
                 ])
                 ->collapsible()
@@ -118,7 +118,7 @@ class CompetitionThreadForm
     {
         return [
             Select::make('poster_id')
-                ->label('Pilih Poster dari Galeri')
+                ->label(__('filament.fields.poster_from_gallery'))
                 ->relationship(
                     name: 'poster',
                     titleAttribute: 'title',
@@ -128,10 +128,10 @@ class CompetitionThreadForm
                 ->preload()
                 ->nullable()
                 ->live()
-                ->helperText('Opsional. Pilih poster yang sudah ada di galeri sebagai visual thread.'),
+                ->helperText(__('filament.fields.poster_from_gallery_helper')),
 
             Placeholder::make('poster_preview')
-                ->label('Preview Poster')
+                ->label(__('filament.fields.poster_preview'))
                 ->content(function ($get) {
                     $posterId = $get('poster_id');
                     if (! $posterId) return null;
@@ -149,8 +149,8 @@ class CompetitionThreadForm
                 ->visible(fn($get) => filled($get('poster_id'))),
 
             FileUpload::make('custom_image')
-                ->label('Atau Upload Gambar')
-                ->helperText('Gambar ini hanya dipakai untuk thread ini, tidak masuk ke galeri poster.')
+                ->label(__('filament.fields.custom_image'))
+                ->helperText(__('filament.fields.custom_image_helper'))
                 ->disk('public')
                 ->directory('competition-threads/images')
                 ->image()
@@ -163,11 +163,11 @@ class CompetitionThreadForm
     protected static function linkTimelineTab(): array
     {
         return [
-            Section::make('Link')
-                ->description('Disarankan untuk mengisi setidaknya satu link sebagai CTA utama.')
+            Section::make(__('filament.sections.links_simple'))
+                ->description(__('filament.sections.links_simple_desc'))
                 ->schema([
                     TextInput::make('post_url')
-                        ->label('Link Postingan / Info Lengkap')
+                        ->label(__('filament.fields.post_url'))
                         ->placeholder('https://...')
                         ->url()
                         ->maxLength(500)
@@ -176,14 +176,14 @@ class CompetitionThreadForm
 
                     Grid::make(2)->schema([
                         TextInput::make('registration_url')
-                            ->label('Link Pendaftaran')
+                            ->label(__('filament.fields.registration_url'))
                             ->placeholder('https://...')
                             ->url()
                             ->maxLength(500)
                             ->nullable(),
 
                         TextInput::make('guidebook_url')
-                            ->label('Link Guidebook / Juknis')
+                            ->label(__('filament.fields.guidebook_url'))
                             ->placeholder('https://...')
                             ->url()
                             ->maxLength(500)
@@ -192,45 +192,45 @@ class CompetitionThreadForm
 
                     Grid::make(2)->schema([
                         TextInput::make('contact_info')
-                            ->label('Kontak (WA / Email)')
+                            ->label(__('filament.fields.contact_info'))
                             ->placeholder('08xxxxxxxxxx / email@example.com')
                             ->maxLength(255)
                             ->nullable(),
 
                         TextInput::make('location')
-                            ->label('Lokasi')
+                            ->label(__('filament.fields.location'))
                             ->placeholder('Gedung A, Kampus Utama')
                             ->maxLength(255)
                             ->nullable(),
                     ]),
                 ]),
 
-            Section::make('Jadwal')
-                ->description('Isi periode pendaftaran dan tahapan penting lainnya.')
+            Section::make(__('filament.sections.schedule'))
+                ->description(__('filament.sections.schedule_desc'))
                 ->schema([
                     Grid::make(2)->schema([
                         DatePicker::make('registration_start')
-                            ->label('Pendaftaran Dibuka')
+                            ->label(__('filament.fields.registration_start'))
                             ->native(false),
 
                         DatePicker::make('registration_end')
-                            ->label('Pendaftaran Ditutup')
+                            ->label(__('filament.fields.registration_end'))
                             ->native(false),
                     ]),
 
                     Repeater::make('timelines')
-                        ->label('Timeline Tahapan')
+                        ->label(__('filament.fields.timeline_repeater'))
                         ->relationship()
                         ->schema([
                             TextInput::make('label')
-                                ->label('Nama Tahapan')
+                                ->label(__('filament.fields.timeline_label'))
                                 ->required(),
                             DatePicker::make('date')
-                                ->label('Tanggal')
+                                ->label(__('filament.fields.date'))
                                 ->native(false)
                                 ->required(),
                             TextInput::make('sort_order')
-                                ->label('Urutan')
+                                ->label(__('filament.fields.sort_order'))
                                 ->numeric()
                                 ->default(0),
                         ])
@@ -241,7 +241,7 @@ class CompetitionThreadForm
                         ->itemLabel(fn(array $state): ?string => $state['label'] ?? null)
                         ->collapsible()
                         ->collapsed()
-                        ->addActionLabel('Tambah Tahapan'),
+                        ->addActionLabel(__('filament.actions.add_timeline')),
                 ]),
         ];
     }

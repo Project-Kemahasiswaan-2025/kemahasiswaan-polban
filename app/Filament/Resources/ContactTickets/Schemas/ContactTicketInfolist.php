@@ -12,21 +12,21 @@ class ContactTicketInfolist
     {
         return $schema->schema([
             TextEntry::make('ticket_code')
-                ->label('Kode Tiket'),
+                ->label(__('filament.fields.ticket_code')),
             TextEntry::make('name')
-                ->label('Nama Pengirim'),
+                ->label(__('filament.fields.sender_name')),
             TextEntry::make('email')
-                ->label('Email'),
+                ->label(__('filament.fields.email')),
             TextEntry::make('phone')
-                ->label('Nomor Telepon / WA')
+                ->label(__('filament.fields.phone_wa'))
                 ->placeholder('-'),
             TextEntry::make('subject')
-                ->label('Subjek'),
+                ->label(__('filament.fields.subject')),
             TextEntry::make('message')
-                ->label('Isi Pesan')
+                ->label(__('filament.fields.message_body'))
                 ->columnSpanFull(),
             TextEntry::make('status')
-                ->label('Status')
+                ->label(__('filament.fields.status'))
                 ->badge()
                 ->color(fn(string $state): string => match ($state) {
                     ContactTicket::STATUS_ISSUED => 'danger',
@@ -36,15 +36,15 @@ class ContactTicketInfolist
                 })
                 ->formatStateUsing(fn(string $state): string => ucfirst(str_replace('_', ' ', (string) $state))),
             TextEntry::make('admin_note')
-                ->label('Catatan Internal')
+                ->label(__('filament.fields.admin_note'))
                 ->placeholder('-')
                 ->columnSpanFull(),
             TextEntry::make('created_at')
-                ->label('Tgl Kirim')
+                ->label(__('filament.fields.sent_at'))
                 ->dateTime()
                 ->placeholder('-'),
             TextEntry::make('updated_at')
-                ->label('Tgl Update')
+                ->label(__('filament.fields.updated_at_label'))
                 ->dateTime()
                 ->placeholder('-'),
         ]);

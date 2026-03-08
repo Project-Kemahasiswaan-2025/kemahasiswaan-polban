@@ -17,19 +17,25 @@ class RunningTextConfigResource extends Resource
 {
     protected static ?string $model = RunningTextConfig::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Beranda';
-
     protected static bool $shouldRegisterNavigation = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
-    protected static ?string $navigationLabel = 'Running Text Config';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament.resources.running_text_config.nav_group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament.resources.running_text_config.nav_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Running Text Configuration')
-                ->description('Configure the global settings for the running text ticker')
+            Section::make(__('filament.sections.running_text_config'))
+                ->description(__('filament.sections.running_text_config_desc'))
                 ->schema([
                     Grid::make(2)->schema([
                         TextInput::make('icon_text')

@@ -20,6 +20,6 @@ class ListPosterCategories extends ListRecords
 
     public function getTitle(): string
     {
-        return 'Kategori Poster';
+        return __('filament.pages.poster_categories');
     }
 }

@@ -15,10 +15,10 @@ class StudentOrganizationInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Organisasi')
+            Section::make(__('filament.sections.org_info'))
                 ->schema([
                     Grid::make(12)->schema([
-                        Section::make('Logo & Identitas')
+                        Section::make(__('filament.sections.logo_identity'))
                             ->columnSpan(4)
                             ->schema([
                                 ImageEntry::make('logo')
@@ -34,32 +34,32 @@ class StudentOrganizationInfolist
                                     ->alignCenter(),
                             ]),
 
-                        Section::make('Detail Metadata')
+                        Section::make(__('filament.sections.detail_metadata'))
                             ->columnSpan(8)
                             ->schema([
                                 Grid::make(2)->schema([
                                     TextEntry::make('slug')->label('Slug'),
                                     TextEntry::make('parent.name')
-                                        ->label('Kategori / Parent')
-                                        ->placeholder('Top Level / Mandiri')
+                                        ->label(__('filament.fields.category'))
+                                        ->placeholder(__('filament.placeholders.top_level_independent'))
                                         ->badge(),
 
                                     IconEntry::make('is_group')
-                                        ->label('Grup Organisasi')
+                                        ->label(__('filament.fields.is_group'))
                                         ->boolean(),
 
                                     IconEntry::make('is_active')
-                                        ->label('Status Aktif')
+                                        ->label(__('filament.fields.is_active'))
                                         ->boolean(),
 
-                                    TextEntry::make('sort_order')->label('Urutan Tampil'),
+                                    TextEntry::make('sort_order')->label(__('filament.fields.sort_order')),
                                 ]),
 
                             ]),
                     ]),
                 ]),
 
-            Section::make('Visual & Konten')
+            Section::make(__('filament.sections.visual_content'))
                 ->schema([
                     ImageEntry::make('cover_image')
                         ->label('Cover Image')
@@ -68,12 +68,12 @@ class StudentOrganizationInfolist
                         ->height(300)
                         ->visible(fn($record) => filled($record->cover_image)),
 
-                    Section::make('Konten / Deskripsi')
+                    Section::make(__('filament.sections.content_description'))
                         ->schema([
                             TextEntry::make('content')
                                 ->hiddenLabel()
                                 ->html()
-                                ->placeholder('Tidak ada konten deskripsi.'),
+                                ->placeholder(__('filament.placeholders.no_content_desc')),
                         ]),
                 ]),
         ]);

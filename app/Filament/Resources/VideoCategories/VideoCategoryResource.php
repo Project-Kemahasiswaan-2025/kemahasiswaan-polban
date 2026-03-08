@@ -41,12 +41,12 @@ class VideoCategoryResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Kategori Video';
+        return __('filament.resources.video_category.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Kategori Video';
+        return __('filament.resources.video_category.plural_label');
     }
 
     public static function form(Schema $schema): Schema

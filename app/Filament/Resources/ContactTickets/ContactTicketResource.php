@@ -20,22 +20,22 @@ class ContactTicketResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Tiket';
+        return __('filament.resources.contact_ticket.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Tiket';
+        return __('filament.resources.contact_ticket.plural_label');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Layanan & Bantuan';
+        return __('filament.resources.contact_ticket.nav_group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Tiket Bantuan';
+        return __('filament.resources.contact_ticket.nav_label');
     }
 
     public static function getNavigationBadge(): ?string

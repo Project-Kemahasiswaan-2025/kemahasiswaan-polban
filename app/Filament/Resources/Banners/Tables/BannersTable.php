@@ -21,41 +21,41 @@ class BannersTable
         return $table
             ->columns([
                 ImageColumn::make('image_path')
-                    ->label('Gambar')
+                    ->label(__('filament.fields.image'))
                     ->disk('public'),
 
                 TextColumn::make('title')
-                    ->label('Judul')
+                    ->label(__('filament.fields.title'))
                     ->searchable()
                     ->sortable(),
 
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 ToggleColumn::make('is_pinned')
-                    ->label('Pin')
+                    ->label(__('filament.fields.is_pinned'))
                     ->sortable(),
 
                 TextColumn::make('active_from')
-                    ->label('Mulai')
+                    ->label(__('filament.fields.active_from_short'))
                     ->dateTime('d M Y H:i')
                     ->sortable(),
 
                 TextColumn::make('active_to')
-                    ->label('Sampai')
+                    ->label(__('filament.fields.active_to_short'))
                     ->dateTime('d M Y H:i')
                     ->sortable(),
 
                 TextColumn::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->sortable(),
             ])
             ->defaultSort('is_pinned', 'desc')
             ->filters([
-                TernaryFilter::make('is_active')->label('Aktif'),
-                TernaryFilter::make('is_pinned')->label('Pin'),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
+                TernaryFilter::make('is_pinned')->label(__('filament.fields.is_pinned')),
             ])
             ->actions([
                 EditAction::make(),

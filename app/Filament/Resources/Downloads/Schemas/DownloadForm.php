@@ -14,31 +14,31 @@ class DownloadForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Dokumen')
+            Section::make(__('filament.sections.document_info'))
                 ->schema([
                     Grid::make(12)->schema([
                         TextInput::make('name')
-                            ->label('Nama Dokumen')
+                            ->label(__('filament.fields.document_name'))
                             ->required()
                             ->live(onBlur: true)
                             ->columnSpan(8),
                         TextInput::make('sort_order')
-                            ->label('Urutan')
+                            ->label(__('filament.fields.sort_order'))
                             ->numeric()
                             ->default(0)
                             ->columnSpan(4),
                     ]),
 
                     Select::make('category_id')
-                        ->label('Kategori (Section di Landing Page)')
+                        ->label(__('filament.fields.category_landing_page'))
                         ->relationship('category', 'name', fn($query) => $query->where('type', 'download'))
                         ->required()
                         ->searchable()
                         ->preload()
-                        ->placeholder('Pilih section untuk landing page...'),
+                        ->placeholder(__('filament.placeholders.category_select')),
 
                     FileUpload::make('file_path')
-                        ->label('File Dokumen')
+                        ->label(__('filament.fields.document_file'))
                         ->required()
                         ->disk('public')
                         ->directory('downloads/general')

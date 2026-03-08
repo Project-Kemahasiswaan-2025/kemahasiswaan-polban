@@ -17,19 +17,19 @@ class DocumentShortcutForm
             ->components([
                 Select::make('menu')
                     ->options([
-                        'profile' => 'Dropdown Profil',
-                        'services' => 'Dropdown Layanan',
-                        'ormawa' => 'Dropdown Ormawa',
-                        'achievements' => 'Dropdown Prestasi',
+                        'profile' => __('filament.options.dropdown_profile'),
+                        'services' => __('filament.options.dropdown_services'),
+                        'ormawa' => __('filament.options.dropdown_ormawa'),
+                        'achievements' => __('filament.options.dropdown_achievements'),
                     ])
                     ->required()
                     ->native(false),
                 TextInput::make('title')
-                    ->label('Nama Sub Menu')
+                    ->label(__('filament.fields.submenu_name'))
                     ->required()
                     ->maxLength(255),
                 Select::make('category_id')
-                    ->label('Kategori Unduhan')
+                    ->label(__('filament.fields.download_category'))
                     ->relationship(
                         name: 'category',
                         titleAttribute: 'name',
@@ -40,9 +40,9 @@ class DocumentShortcutForm
                     ->live()
                     ->afterStateUpdated(fn(Set $set) => $set('download_id', null))
                     ->nullable()
-                    ->helperText('Halaman unduhan akan difilter berdasarkan kategori ini. Jika kosong, akan menampilkan seluruhan.'),
+                    ->helperText(__('filament.fields.category_id_helper')),
                 Select::make('download_id')
-                    ->label('Pilih Dokumen (Opsional)')
+                    ->label(__('filament.fields.download_optional'))
                     ->relationship(
                         name: 'download',
                         titleAttribute: 'name',
@@ -54,9 +54,9 @@ class DocumentShortcutForm
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->helperText('Jika dipilih, link akan langsung menuju ke detail dokumen. Jika kosong, akan menuju list kategori.'),
+                    ->helperText(__('filament.fields.download_id_helper')),
                 TextInput::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->numeric()
                     ->default(0),
             ]);

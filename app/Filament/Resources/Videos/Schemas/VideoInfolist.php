@@ -35,7 +35,7 @@ class VideoInfolist
 HTML;
                         }),
 
-                    TextEntry::make('title')->label('Judul'),
+                    TextEntry::make('title')->label(__('filament.fields.title')),
                     TextEntry::make('youtube_url')->label('YouTube URL')->url(fn ($record) => $record->youtube_url)->openUrlInNewTab(),
                 ]),
         ]);

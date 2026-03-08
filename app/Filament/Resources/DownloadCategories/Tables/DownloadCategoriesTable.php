@@ -16,7 +16,7 @@ class DownloadCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama Section')
+                    ->label(__('filament.fields.section_name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
@@ -32,7 +32,7 @@ class DownloadCategoriesTable
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
             ])
             ->defaultSort('sort_order', 'asc')

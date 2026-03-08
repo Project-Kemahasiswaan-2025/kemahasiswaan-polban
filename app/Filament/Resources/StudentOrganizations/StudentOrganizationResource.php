@@ -38,12 +38,12 @@ class StudentOrganizationResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Ormawa';
+        return __('filament.resources.student_organization.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Ormawa';
+        return __('filament.resources.student_organization.plural_label');
     }
 
     protected static ?string $recordTitleAttribute = 'name';

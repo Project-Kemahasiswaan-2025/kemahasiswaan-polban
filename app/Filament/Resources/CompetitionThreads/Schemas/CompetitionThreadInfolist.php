@@ -16,10 +16,10 @@ class CompetitionThreadInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Informasi Thread')
+            Section::make(__('filament.sections.thread_info'))
                 ->schema([
                     Grid::make(12)->schema([
-                        Section::make('Visual')
+                        Section::make(__('filament.sections.visual'))
                             ->columnSpan(4)
                             ->schema([
                                 ImageEntry::make('custom_image')
@@ -33,23 +33,23 @@ class CompetitionThreadInfolist
                                     ->visible(fn($record) => $record?->visual_type === 'poster'),
                             ]),
 
-                        Section::make('Metadata')
+                        Section::make(__('filament.sections.metadata'))
                             ->columnSpan(8)
                             ->schema([
                                 TextEntry::make('title')
-                                    ->label('Judul')
+                                    ->label(__('filament.fields.title'))
                                     ->weight('bold')
                                     ->size(TextSize::Large),
 
                                 Grid::make(2)->schema([
                                     TextEntry::make('competition.name')
-                                        ->label('Katalog')
+                                        ->label(__('filament.fields.catalog_item'))
                                         ->badge(),
 
                                     TextEntry::make('slug'),
 
                                     IconEntry::make('is_active')
-                                        ->label('Aktif')
+                                        ->label(__('filament.fields.is_active'))
                                         ->boolean(),
 
                                     IconEntry::make('is_featured')
@@ -60,35 +60,35 @@ class CompetitionThreadInfolist
                     ]),
                 ]),
 
-            Section::make('Jadwal & Timeline')
+            Section::make(__('filament.sections.schedule_timeline'))
                 ->schema([
                     Grid::make(2)->schema([
                         TextEntry::make('registration_start')
-                            ->label('Pendaftaran Dibuka')
+                            ->label(__('filament.fields.registration_start'))
                             ->date(),
 
                         TextEntry::make('registration_end')
-                            ->label('Pendaftaran Ditutup')
+                            ->label(__('filament.fields.registration_end'))
                             ->date()
                             ->color(fn($record) => $record?->registration_end && $record->registration_end->isPast() ? 'danger' : 'success'),
                     ]),
 
                     RepeatableEntry::make('timeline')
                         ->schema([
-                            TextEntry::make('label')->label('Tahapan'),
-                            TextEntry::make('date')->label('Tanggal')->date(),
+                            TextEntry::make('label')->label(__('filament.fields.timeline_label')),
+                            TextEntry::make('date')->label(__('filament.fields.date'))->date(),
                         ])
                         ->columns(2),
                 ]),
 
-            Section::make('Detail Konten')
+            Section::make(__('filament.sections.detail_content'))
                 ->schema([
                     TextEntry::make('content')
                         ->hiddenLabel()
                         ->html(),
                 ]),
 
-            Section::make('Pengumuman Hasil')
+            Section::make(__('filament.sections.announcement_result'))
                 ->visible(fn($record) => filled($record?->announcement_content))
                 ->schema([
                     TextEntry::make('announcement_content')

@@ -39,7 +39,7 @@ class ProfilePagesTable
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
             ])
             ->defaultSort('sort_order', 'asc')

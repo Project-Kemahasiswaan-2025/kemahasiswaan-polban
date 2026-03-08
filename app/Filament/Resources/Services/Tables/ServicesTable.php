@@ -16,33 +16,33 @@ class ServicesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 TextColumn::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->sortable(),
 
                 TextColumn::make('links_count')
-                    ->label('Tautan')
+                    ->label(__('filament.fields.links'))
                     ->counts('links')
                     ->badge(),
 
                 TextColumn::make('downloads_count')
-                    ->label('Dokumen')
+                    ->label(__('filament.fields.document'))
                     ->counts('downloads')
                     ->badge()
                     ->color('info'),
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
             ])
             ->actions([
                 EditAction::make(),

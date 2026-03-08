@@ -18,41 +18,41 @@ class DocumentShortcutsTable
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('menu')
-                    ->label('Menu Utama')
+                    ->label(__('filament.fields.main_menu'))
                     ->badge()
                     ->color('info')
                     ->formatStateUsing(fn(string $state): string => match ($state) {
-                        'profile' => 'Profil',
-                        'services' => 'Layanan',
-                        'ormawa' => 'Ormawa',
-                        'achievements' => 'Prestasi',
+                        'profile' => __('filament.options.profile'),
+                        'services' => __('filament.options.services'),
+                        'ormawa' => __('filament.options.ormawa'),
+                        'achievements' => __('filament.options.achievements'),
                         default => $state,
                     }),
                 TextColumn::make('title')
-                    ->label('Label Sub Menu')
+                    ->label(__('filament.fields.submenu_label'))
                     ->searchable(),
                 TextColumn::make('category.name')
-                    ->label('Kategori')
+                    ->label(__('filament.fields.category'))
                     ->searchable(),
                 TextColumn::make('download.name')
-                    ->label('Dokumen')
-                    ->placeholder('Seluruh Kategori')
+                    ->label(__('filament.fields.document'))
+                    ->placeholder(__('filament.placeholders.all_categories'))
                     ->searchable(),
                 ToggleColumn::make('is_active')
-                    ->label('Aktif'),
+                    ->label(__('filament.fields.is_active')),
                 TextColumn::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->numeric()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('menu')
-                    ->label('Menu Utama')
+                    ->label(__('filament.fields.main_menu'))
                     ->options([
-                        'profile' => 'Profil',
-                        'services' => 'Layanan',
-                        'ormawa' => 'Ormawa',
-                        'achievements' => 'Prestasi',
+                        'profile' => __('filament.options.profile'),
+                        'services' => __('filament.options.services'),
+                        'ormawa' => __('filament.options.ormawa'),
+                        'achievements' => __('filament.options.achievements'),
                     ]),
             ])
             ->recordActions([

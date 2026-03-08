@@ -21,7 +21,7 @@ class DownloadCategoryForm
                 ->required(),
 
             TextInput::make('name')
-                ->label('Nama Section')
+                ->label(__('filament.fields.section_name'))
                 ->required()
                 ->maxLength(120)
                 ->live(onBlur: true)

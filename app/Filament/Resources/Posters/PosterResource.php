@@ -43,12 +43,12 @@ class PosterResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Poster';
+        return __('filament.resources.poster.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Poster';
+        return __('filament.resources.poster.plural_label');
     }
 
     protected static ?string $recordTitleAttribute = 'title';

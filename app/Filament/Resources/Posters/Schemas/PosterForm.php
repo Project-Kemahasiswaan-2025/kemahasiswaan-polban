@@ -18,11 +18,11 @@ class PosterForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Poster')
+            Section::make(__('filament.sections.poster'))
                 ->schema([
                     Grid::make(12)->schema([
                         FileUpload::make('image_path')
-                            ->label('File Poster')
+                            ->label(__('filament.fields.poster_file'))
                             ->disk('public')
                             ->directory('posters')
                             ->image()
@@ -31,7 +31,7 @@ class PosterForm
 
                         Grid::make(12)->schema([
                             Select::make('category_id')
-                                ->label('Kategori')
+                                ->label(__('filament.fields.category'))
                                 ->options(
                                     Category::query()
                                         ->where('type', 'poster')
@@ -45,7 +45,7 @@ class PosterForm
                                 ->columnSpanFull(),
 
                             TextInput::make('title')
-                                ->label('Judul Poster')
+                                ->label(__('filament.fields.poster_title'))
                                 ->required()
                                 ->maxLength(180)
                                 ->live(onBlur: true)

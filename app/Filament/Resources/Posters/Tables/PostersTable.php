@@ -19,30 +19,30 @@ class PostersTable
         return $table
             ->columns([
                 ImageColumn::make('image_path')
-                    ->label('Poster')
+                    ->label(__('filament.sections.poster'))
                     ->disk('public')
                     ->square(),
 
                 TextColumn::make('title')
-                    ->label('Judul')
+                    ->label(__('filament.fields.title'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 TextColumn::make('category.name')
-                    ->label('Kategori')
+                    ->label(__('filament.fields.category'))
                     ->badge()
                     ->sortable()
                     ->placeholder('-'),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('category_id')
-                    ->label('Kategori')
+                    ->label(__('filament.fields.category'))
                     ->options(
                         Category::query()
                             ->where('type', 'poster')

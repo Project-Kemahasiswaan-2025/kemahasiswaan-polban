@@ -33,24 +33,24 @@ class CompetitionThreadsTable
                     ->visible(fn($record) => $record?->visual_type === 'poster'),
 
                 TextColumn::make('title')
-                    ->label('Judul')
+                    ->label(__('filament.fields.title'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 TextColumn::make('competition.name')
-                    ->label('Katalog')
+                    ->label(__('filament.fields.catalog_item'))
                     ->sortable()
                     ->badge(),
 
                 TextColumn::make('registration_end')
-                    ->label('Batas Daftar')
+                    ->label(__('filament.fields.deadline'))
                     ->date()
                     ->sortable()
                     ->color(fn($state) => $state && $state->isPast() ? 'danger' : 'success'),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif'),
+                    ->label(__('filament.fields.is_active')),
 
                 ToggleColumn::make('is_featured')
                     ->label('Feature'),
@@ -58,10 +58,10 @@ class CompetitionThreadsTable
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('competition_id')
-                    ->label('Lomba')
+                    ->label(__('filament.filters.competition'))
                     ->relationship('competition', 'name'),
 
-                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
                 TernaryFilter::make('is_featured')->label('Featured'),
             ])
             ->actions([
