@@ -1,9 +1,9 @@
-$(document).ready(function() {
     loadBanners();
     loadVideos();
     loadPosters();
+    loadLatestCompetition();
+    loadLatestScholarships();
     loadRunningText();
-});
 
 // Load Banners
 function loadBanners() {
@@ -199,12 +199,18 @@ function loadPosters(categoryId = null) {
         success: function(response) {
             posterContainer.css('opacity', '1');
             
-            if (response.categories) {
+            if (response.categories && response.categories.length > 0) {
                 renderPosterTabs(response.categories, response.active_category_id);
+                $('#poster-tabs').show();
+            } else {
+                $('#poster-tabs').hide();
             }
 
             if (response.posters && response.posters.length > 0) {
                 renderPosters(response.posters);
+                $('#poster-section').show();
+            } else if (!categoryId && (!response.categories || response.categories.length === 0)) {
+                $('#poster-section').hide();
             } else {
                 posterContainer.html('<div class="col-12 text-center py-5"><p class="text-muted">No posters available for this category</p></div>');
             }
@@ -255,4 +261,228 @@ function renderPosters(posters) {
         `;
     });
     $('#poster-container').html(html);
+}
+
+// Load Latest Competition
+function loadLatestCompetition() {
+    $.ajax({
+        url: '/api/competitions',
+        method: 'GET',
+        data: { page: 1 },
+        success: function(response) {
+            if (response.data && response.data.length > 0) {
+                renderLatestCompetition(response.data[0]);
+                $('#latest-competition-section').fadeIn();
+            } else {
+                $('#latest-competition-section').hide();
+            }
+        },
+        error: function() {
+            $('#latest-competition-section').hide();
+        }
+    });
+}
+
+// Render Latest Competition
+function renderLatestCompetition(comp) {
+    let statusClass = 'bg-secondary';
+    let statusLabel = comp.status ? comp.status.charAt(0).toUpperCase() + comp.status.slice(1) : 'Unknown';
+    
+    if (comp.status === 'ongoing') {
+        statusClass = 'bg-primary';
+        statusLabel = 'Sedang Berlangsung';
+    } else if (comp.status === 'registration_closed') {
+        statusClass = 'bg-danger';
+        statusLabel = 'Pendaftaran Ditutup';
+    } else if (comp.status === 'completed') {
+        statusClass = 'bg-info text-dark';
+        statusLabel = 'Selesai';
+    }
+
+    const imageHtml = comp.image_url 
+        ? `<img src="${comp.image_url}" class="featured-comp-image" alt="${comp.title}">`
+        : `<div class="featured-comp-placeholder"><i class="bi bi-trophy text-white-50"></i></div>`;
+
+    const html = `
+        <div class="featured-comp-card fade-in">
+            <div class="row g-0">
+                <div class="col-lg-4 p-0">
+                    <div class="featured-comp-image-wrapper h-100">
+                        ${imageHtml}
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="featured-comp-body p-4 p-md-5 h-100 d-flex flex-column">
+                        <div class="d-flex flex-wrap justify-content-between align-items-start mb-3 gap-2">
+                            <div>
+                                <span class="badge ${statusClass} rounded-pill px-3 mb-2 me-1">${statusLabel}</span>
+                                <span class="badge bg-light text-dark border rounded-pill px-3 mb-2">${comp.category_name}</span>
+                            </div>
+                            ${comp.registration_range ? `
+                            <div class="text-muted small fw-semibold">
+                                <i class="bi bi-calendar-event me-2 text-primary"></i>Registrasi: ${comp.registration_range}
+                            </div>` : ''}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h2 class="featured-comp-title mb-2 fw-bold text-dark">${comp.title}</h2>
+                            <h4 class="text-primary fw-bold mb-0 fs-5">${comp.competition_name}</h4>
+                        </div>
+                        
+                        <div class="featured-comp-text text-muted mb-4 text-justify line-clamp-3">
+                            ${comp.content || ''}
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                ${comp.location ? `
+                                <div class="d-flex align-items-start mb-2">
+                                    <div class="icon-circle-mini bg-primary text-white me-2 mt-1"><i class="bi bi-geo-alt"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block lh-1 mb-1">Lokasi</small>
+                                        <span class="small fw-semibold text-dark">${comp.location}</span>
+                                    </div>
+                                </div>` : ''}
+                                
+                                ${comp.contact_info ? `
+                                <div class="d-flex align-items-start">
+                                    <div class="icon-circle-mini bg-orange text-white me-2 mt-1"><i class="bi bi-person-badge"></i></div>
+                                    <div>
+                                        <small class="text-muted d-block lh-1 mb-1">Kontak Persona</small>
+                                        <span class="small fw-semibold text-dark">${comp.contact_info}</span>
+                                    </div>
+                                </div>` : ''}
+                            </div>
+                            <div class="col-md-6">
+                                ${comp.timelines && comp.timelines.length > 0 ? `
+                                <div class="timeline-simple-home">
+                                    ${comp.timelines.slice(0, 2).map(t => `
+                                        <div class="timeline-item d-flex mb-2 pb-2 border-bottom border-light">
+                                            <span class="fw-semibold small" style="min-width: 100px;">${t.date || '-'}</span>
+                                            <span class="small text-muted">${t.label}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto pt-3 border-top d-flex flex-wrap gap-2">
+                            ${comp.post_url ? `
+                            <a href="${comp.post_url}" target="_blank" class="btn btn-primary px-4 rounded-pill">
+                                <i class="bi bi-info-circle me-2"></i>Detail Info
+                            </a>` : ''}
+                            
+                            ${comp.registration_url ? `
+                            <a href="${comp.registration_url}" target="_blank" class="btn btn-success px-4 rounded-pill text-white">
+                                <i class="bi bi-pencil-square me-2"></i>Link Pendaftaran
+                            </a>` : ''}
+                            
+                            ${comp.guidebook_url ? `
+                            <a href="${comp.guidebook_url}" target="_blank" class="btn btn-outline-info px-4 rounded-pill">
+                                <i class="bi bi-file-earmark-pdf me-2"></i>Guidebook / Juknis
+                            </a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    $('#latest-competition-container').html(html);
+}
+
+// Load Latest Scholarships
+function loadLatestScholarships() {
+    let allScholarships = [];
+    
+    // Fetch Berjalan Status First
+    $.ajax({
+        url: '/api/beasiswa',
+        method: 'GET',
+        data: { status: 'berjalan' },
+        success: function(response) {
+            if (response.data && response.data.data) {
+                allScholarships = response.data.data;
+            }
+            
+            // If less than 3, fetch "akan-datang"
+            if (allScholarships.length < 3) {
+                $.ajax({
+                    url: '/api/beasiswa',
+                    method: 'GET',
+                    data: { status: 'akan-datang' },
+                    success: function(upcomingResponse) {
+                        if (upcomingResponse.data && upcomingResponse.data.data) {
+                            allScholarships = allScholarships.concat(upcomingResponse.data.data);
+                        }
+                        
+                        if (allScholarships.length > 0) {
+                            renderLatestScholarships(allScholarships.slice(0, 3));
+                            $('#latest-scholarship-section').fadeIn();
+                        } else {
+                            $('#latest-scholarship-section').hide();
+                        }
+                    },
+                    error: function() {
+                        if (allScholarships.length > 0) {
+                            renderLatestScholarships(allScholarships.slice(0, 3));
+                            $('#latest-scholarship-section').fadeIn();
+                        } else {
+                            $('#latest-scholarship-section').hide();
+                        }
+                    }
+                });
+            } else {
+                renderLatestScholarships(allScholarships.slice(0, 3));
+                $('#latest-scholarship-section').fadeIn();
+            }
+        },
+        error: function() {
+            $('#latest-scholarship-section').hide();
+        }
+    });
+}
+
+// Render Latest Scholarships
+function renderLatestScholarships(scholarships) {
+    let html = '';
+    const today = new Date().setHours(0, 0, 0, 0);
+
+    scholarships.forEach(s => {
+        // Use tanggal_berakhir as per beasiswa.js
+        const deadlineDate = s.tanggal_berakhir ? new Date(s.tanggal_berakhir) : null;
+        const deadlineStr = deadlineDate ? deadlineDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+        
+        // Status checks
+        let isPast = deadlineDate && deadlineDate.getTime() < today;
+        let colorClass = isPast ? 'text-muted' : 'text-danger';
+
+        html += `
+            <div class="col-lg-4 col-md-6 fade-in mb-4">
+                <div class="card h-100 border-0 shadow-sm scholarship-mini-card">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="scholarship-icon-wrapper">
+                                <i class="bi bi-mortarboard text-white"></i>
+                            </div>
+                            <span class="badge bg-light text-primary border rounded-pill px-3">${s.tipe_beasiswa || 'Umum'}</span>
+                        </div>
+                        <h5 class="card-title fw-bold text-dark mb-2 line-clamp-2" style="min-height: 2.8em;">${s.nama_beasiswa}</h5>
+                        <div class="d-flex align-items-center gap-2 text-muted small mb-4">
+                            <i class="bi bi-building"></i> <span>${s.sumber || 'Polban'}</span>
+                        </div>
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                            <div class="${colorClass} small fw-bold">
+                                <i class="bi bi-clock me-1"></i> s.d ${deadlineStr}
+                            </div>
+                            <a href="/beasiswa/${s.id}" class="btn btn-link link-primary p-0 text-decoration-none fw-bold">
+                                Detail <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    $('#latest-scholarship-container').html(html);
 }
