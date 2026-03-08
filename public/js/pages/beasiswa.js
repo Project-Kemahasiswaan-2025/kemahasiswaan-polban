@@ -4,26 +4,48 @@ let beasiswaCurrentPage = 1;
 $(document).ready(function() {
     loadBeasiswa();
 
-    $('#beasiswa-filter-btn').on('click', function() {
+    // Auto reload on filter change
+    $('#beasiswa-tipe, #beasiswa-jenis, #beasiswa-status').on('change', function() {
         loadBeasiswa();
     });
 
-    // Trigger search on enter
-    $('#beasiswa-search, #beasiswa-jurusan').on('keypress', function(e) {
-        if (e.which == 13) loadBeasiswa();
-    });
-
-    // Auto reload on select change
-    $('#beasiswa-tipe, #beasiswa-jenis').on('change', function() {
+    // Auto trigger on input with debounce
+    $('#beasiswa-search, #beasiswa-jurusan').on('input', debounce(function() {
         loadBeasiswa();
-    });
+    }, 500));
 });
+
+// Debounce helper
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// Helper to format date in JS
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    } catch (e) {
+        return dateString;
+    }
+}
 
 // Load beasiswa
 function loadBeasiswa(page = 1) {
     const search = $('#beasiswa-search').val();
     const tipe = $('#beasiswa-tipe').val();
     const jenis = $('#beasiswa-jenis').val();
+    const status = $('#beasiswa-status').val();
     const jurusan = $('#beasiswa-jurusan').val();
     
     beasiswaCurrentPage = page;
@@ -40,6 +62,7 @@ function loadBeasiswa(page = 1) {
             search: search,
             tipe_beasiswa: tipe,
             jenis_beasiswa: jenis,
+            status: status,
             jurusan: jurusan,
             page: page
         },
@@ -53,113 +76,93 @@ function loadBeasiswa(page = 1) {
                 $('#beasiswa-no-results').removeClass('d-none');
             }
         },
-        error: function() {
+        error: function(xhr) {
             $('#beasiswa-loading').addClass('d-none');
-            $('#beasiswa-container').html('<div class="col-12 text-center"><p class="text-danger">Failed to load scholarships</p></div>');
+            const message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Gagal mengambil data beasiswa';
+            $('#beasiswa-container').html(`<div class="col-12 text-center py-5"><i class="bi bi-exclamation-triangle display-1 text-warning mb-4 d-block"></i><p class="text-muted fw-bold">${message}</p></div>`);
         }
     });
 }
 
 // Render beasiswa
 function renderBeasiswa(beasiswas, baseUrl = null) {
-    let html = '';
+    const container = $('#beasiswa-container');
+    container.empty();
     
-    beasiswas.forEach(b => {
-        let poster = b.poster_beasiswa && b.poster_beasiswa.length > 0 ? b.poster_beasiswa[0].link_poster : null;
-        const link = b.link_beasiswa ? b.link_beasiswa.link_beasiswa : '#';
+    // Get template
+    const template = document.getElementById('beasiswa-card-template');
+    if (!template) {
+        console.error('Template list beasiswa tidak ditemukan!');
+        return;
+    }
 
+    const today = new Date().setHours(0, 0, 0, 0);
+
+    beasiswas.forEach(b => {
+        // Clone template content
+        const clone = template.content.cloneNode(true);
+        const $card = $(clone);
+
+        // Poster handling
+        let poster = b.poster_beasiswa && b.poster_beasiswa.length > 0 ? b.poster_beasiswa[0].link_poster : null;
         if (poster && !poster.startsWith('http')) {
             const apiBase = baseUrl || window.location.origin;
             poster = `${apiBase.replace(/\/$/, '')}/storage/posters/${poster}`;
         }
+
+        const $posterImg = $card.find('.beasiswa-poster');
+        const $posterFallback = $card.find('.beasiswa-poster-fallback');
         
-        const desc = b.deskripsi ? b.deskripsi : '';
+        if (poster) {
+            $posterImg.attr('src', poster).removeClass('d-none');
+            $posterFallback.addClass('d-none');
+            $posterImg.on('error', function() {
+                $(this).addClass('d-none');
+                $posterFallback.removeClass('d-none');
+            });
+        } else {
+            $posterImg.addClass('d-none');
+            $posterFallback.removeClass('d-none');
+        }
+
+        // Status Badge
+        let statusClass = 'bg-primary';
+        let statusLabel = b.status_beasiswa || 'Berjalan';
+        if (statusLabel === 'berjalan') statusClass = 'bg-success';
+        else if (statusLabel === 'akan-datang') statusClass = 'bg-warning text-dark';
+        else if (statusLabel === 'selesai') statusClass = 'bg-gray-dark';
         
-        const benefitsHtml = b.benefit_beasiswa && b.benefit_beasiswa.length > 0 
-            ? `<div class="mt-3">
-                <h6 class="fw-bold small mb-2"><i class="bi bi-gift text-primary me-2"></i>Benefit</h6>
-                <ul class="list-unstyled mb-0">
-                    ${b.benefit_beasiswa.map(item => `<li class="small text-muted mb-1">• ${item.benefit}</li>`).join('')}
-                </ul>
-               </div>`
-            : '';
+        $card.find('.beasiswa-status-badge')
+            .addClass(statusClass)
+            .text(statusLabel.charAt(0).toUpperCase() + statusLabel.slice(1).replace('-', ' '));
 
-        const conditionsHtml = b.syarat_beasiswa && b.syarat_beasiswa.length > 0 
-            ? `<div class="mt-3">
-                <h6 class="fw-bold small mb-2"><i class="bi bi-check-circle text-success me-2"></i>Syarat</h6>
-                <ul class="list-unstyled mb-0">
-                    ${b.syarat_beasiswa.map(item => `<li class="small text-muted mb-1">• ${item.syarat}</li>`).join('')}
-                </ul>
-               </div>`
-            : '';
+        // Tipe & Jenis Badges
+        $card.find('.beasiswa-tipe-badge').text(b.tipe_beasiswa ? b.tipe_beasiswa.toUpperCase() : '-');
+        $card.find('.beasiswa-jenis-badge').text(b.jenis_beasiswa ? b.jenis_beasiswa.toUpperCase() : '-');
 
-        const dateFormatted = b.updated_at ? new Date(b.updated_at).toLocaleDateString('id-ID', {
-            day: 'numeric', month: 'long', year: 'numeric'
-        }) : '-';
+        // Content
+        $card.find('.beasiswa-title').text(b.nama_beasiswa);
+        $card.find('.beasiswa-sumber').text(b.sumber || '-');
+        $card.find('.beasiswa-deadline').text(formatDate(b.tanggal_berakhir));
         
-        html += `
-            <div class="col-12 fade-in mb-4">
-                <div class="card h-100 shadow-sm beasiswa-card border-0 overflow-hidden">
-                    <div class="row g-0">
-                        <div class="col-lg-4">
-                            <div class="h-100 bg-light d-flex align-items-center justify-content-center overflow-hidden" style="min-height: 350px;">
-                                ${poster ? 
-                                    `<img src="${poster}" alt="${b.nama_beasiswa}" class="img-fluid w-100 h-100" style="object-fit: cover;" 
-                                     onerror="this.parentElement.innerHTML='<div class=\\'h-100 w-100 bg-secondary d-flex align-items-center justify-content-center\\'><i class=\\'bi bi-mortarboard text-white\\' style=\\'font-size: 6rem;\\'></i></div>'">` :
-                                    `<div class="h-100 w-100 bg-secondary d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-mortarboard text-white" style="font-size: 6rem;"></i>
-                                     </div>`
-                                }
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="card-body p-4">
-                                <div class="d-flex flex-wrap justify-content-between align-items-start mb-3 gap-2">
-                                    <div>
-                                        <span class="badge bg-primary rounded-pill px-3 me-1">${b.tipe_beasiswa.toUpperCase()}</span>
-                                        <span class="badge bg-info text-dark rounded-pill px-3">${b.jenis_beasiswa.toUpperCase()}</span>
-                                    </div>
-                                    <div class="text-muted small">
-                                        <i class="bi bi-clock-history me-1"></i>Terakhir diupdate: ${dateFormatted}
-                                    </div>
-                                </div>
-                                
-                                <h3 class="card-title fw-bold text-dark mb-2">${b.nama_beasiswa}</h3>
-                                <p class="text-primary fw-bold mb-3"><i class="bi bi-building me-2"></i>${b.sumber || '-'}</p>
-                                
-                                <div class="card-text text-muted mb-4 text-justify">
-                                    ${desc}
-                                </div>
+        const desc = b.deskripsi ? (b.deskripsi.length > 150 ? b.deskripsi.substring(0, 150) + '...' : b.deskripsi) : 'Tidak ada deskripsi';
+        $card.find('.beasiswa-description').text(desc);
 
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        ${benefitsHtml}
-                                        <div class="mt-3">
-                                            <h6 class="fw-bold small mb-2"><i class="bi bi-people text-info me-2"></i>Kuota</h6>
-                                            <p class="small text-muted mb-0">${b.kuota || '-'} Mahasiswa</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        ${conditionsHtml}
-                                        <div class="mt-3">
-                                            <h6 class="fw-bold small mb-2"><i class="bi bi-calendar-event text-danger me-2"></i>Batas Akhir</h6>
-                                            <p class="small text-muted mb-0">${b.tanggal_berakhir || '-'}</p>
-                                        </div>
-                                    </div>
-                                </div>
+        // Registration Button Logic
+        const deadline = b.tanggal_berakhir ? new Date(b.tanggal_berakhir) : null;
+        const isClosed = statusLabel === 'selesai' || (deadline && deadline.getTime() < today);
+        const regUrl = b.link_beasiswa ? b.link_beasiswa.link_beasiswa : null;
 
-                                <div class="mt-4 pt-3 border-top">
-                                    <a href="${link}" target="_blank" class="btn btn-primary px-5 rounded-pill fw-bold">Daftar Sekarang</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+        if (!isClosed && regUrl) {
+            $card.find('.beasiswa-register-link').attr('href', regUrl).removeClass('d-none');
+        }
+
+        // Link Detail
+        $card.find('.beasiswa-detail-link').attr('href', `/beasiswa/${b.id}`);
+
+        // Append to container
+        container.append($card);
     });
-    
-    $('#beasiswa-container').html(html);
 }
 
 // Render Pagination for beasiswa

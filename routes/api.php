@@ -18,5 +18,7 @@ Route::get('/competitions', [CompetitionController::class, 'index']);
 Route::get('/running-texts', [RunningTextController::class, 'index']);
 Route::get('/posters', [PosterController::class, 'index']);
 Route::get('/beasiswa', [BeasiswaController::class, 'index']);
+Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show']);
+Route::get('/beasiswa/{id}/penerima', [BeasiswaController::class, 'penerima']);
 
 Route::post('/contact-tickets', [ContactController::class, 'store']);

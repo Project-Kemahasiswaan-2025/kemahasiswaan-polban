@@ -17,6 +17,7 @@ Route::get('/ormawa', [OrmawaController::class, 'index'])->name('ormawa.index');
 Route::get('/ormawa/{slug}', [OrmawaController::class, 'show'])->name('ormawa.show');
 Route::get('/kompetisi', [CompetitionController::class, 'index'])->name('competition.index');
 Route::get('/beasiswa', [BeasiswaController::class, 'index'])->name('beasiswa.index');
+Route::get('/beasiswa/{id}', [BeasiswaController::class, 'show'])->name('beasiswa.show');
 Route::get('/layanan/{slug}', [ServiceController::class, 'show'])->name('service.show');
 Route::get('/unduhan', [DownloadController::class, 'index'])->name('download.index');
 Route::get('/unduhan/{id}', [DownloadController::class, 'show'])->name('download.show');

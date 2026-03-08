@@ -13,8 +13,9 @@ class BeasiswaController extends Controller
     public function index(Request $request)
     {
         $apiUrl = config('beasiswa.api_url');
+        $useMock = config('app.debug');
 
-        if ($apiUrl) {
+        if ($apiUrl && !$useMock) {
             try {
                 $response = Http::get($apiUrl, $request->all());
                 if ($response->successful()) {
@@ -26,9 +27,9 @@ class BeasiswaController extends Controller
             }
         }
 
-        // Fallback to mock data
+        // Fallback to mock data (only in debug/development mode)
         $mockDataPath = 'mock_beasiswa.json';
-        if (Storage::disk('public')->exists($mockDataPath)) {
+        if ($useMock && Storage::disk('public')->exists($mockDataPath)) {
             $data = json_decode(Storage::disk('public')->get($mockDataPath), true);
 
             // Basic filtering for mock data
@@ -51,8 +52,9 @@ class BeasiswaController extends Controller
                     $items = $items->where('jenis_beasiswa', $request->jenis_beasiswa);
                 }
 
-                // Jurusan filter (if applicable in mock data, currently not direct field but based on request)
-                // Assuming "jurusan" might be a future field or partially handled.
+                if ($request->has('status') && $request->status != '') {
+                    $items = $items->where('status_beasiswa', $request->status);
+                }
 
                 $data['data']['data'] = $items->values()->all();
                 $data['data']['total'] = count($data['data']['data']);
@@ -64,8 +66,80 @@ class BeasiswaController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => 'No data found',
+            'message' => 'Gagal mengambil data beasiswa',
+            'data' => [
+                'data' => [],
+                'total' => 0
+            ]
+        ]);
+    }
+
+    public function show($id)
+    {
+        $apiUrl = config('beasiswa.api_url');
+        $useMock = config('app.debug');
+
+        if ($apiUrl && !$useMock) {
+            try {
+                $response = Http::get($apiUrl . '/' . $id);
+                if ($response->successful()) {
+                    return $response->json();
+                }
+                if ($response->status() == 404) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Beasiswa tidak ditemukan',
+                        'data' => null
+                    ], 404);
+                }
+                Log::error("Beasiswa Detail API error: " . $response->status());
+            } catch (\Exception $e) {
+                Log::error("Beasiswa Detail API exception: " . $e->getMessage());
+            }
+        }
+
+        // Fallback to mock data
+        $mockDataPath = 'mock_beasiswa_detail.json';
+        if ($useMock && Storage::disk('public')->exists($mockDataPath)) {
+            $data = json_decode(Storage::disk('public')->get($mockDataPath), true);
+            return response()->json($data);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal mengambil detail beasiswa',
             'data' => null
-        ], 404);
+        ], 500);
+    }
+
+    public function penerima($id)
+    {
+        $apiUrl = config('beasiswa.api_url');
+        $useMock = config('app.debug');
+
+        if ($apiUrl && !$useMock) {
+            try {
+                $response = Http::get($apiUrl . '/' . $id . '/penerima');
+                if ($response->successful()) {
+                    return $response->json();
+                }
+                Log::error("Beasiswa Penerima API error: " . $response->status());
+            } catch (\Exception $e) {
+                Log::error("Beasiswa Penerima API exception: " . $e->getMessage());
+            }
+        }
+
+        // Fallback to mock data
+        $mockDataPath = 'mock_beasiswa_penerima.json';
+        if ($useMock && Storage::disk('public')->exists($mockDataPath)) {
+            $data = json_decode(Storage::disk('public')->get($mockDataPath), true);
+            return response()->json($data);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal mengambil data penerima beasiswa',
+            'data' => null
+        ], 500);
     }
 }

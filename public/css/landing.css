@@ -155,6 +155,10 @@ body {
   background-color: var(--color-primary) !important;
 }
 
+.bg-gray-dark {
+  background-color: var(--color-gray-dark) !important;
+}
+
 .text-secondary {
   color: var(--color-secondary) !important;
 }
