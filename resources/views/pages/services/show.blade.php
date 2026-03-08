@@ -40,16 +40,16 @@
                                 {!! $service->content !!}
                             </div>
                             @else
-                            <p class="text-muted mb-0">Detail untuk layanan ini sedang kami lengkapi.</p>
+                            <p class="text-muted mb-0">{{ __('landing.services.no_content') }}</p>
                             @endif
 
                             @if($service->cta_url && $service->cta_label)
                             <div class="mt-4 p-4 rounded border bg-light">
                                 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                                     <div>
-                                        <div class="fw-bold fs-5 mb-1">Lanjut ke Layanan</div>
+                                        <div class="fw-bold fs-5 mb-1">{{ __('landing.services.proceed_to_service') }}</div>
                                         <div class="text-muted">
-                                            Layanan ini diakses melalui halaman eksternal. Klik tombol untuk membuka di tab baru.
+                                            {{ __('landing.services.external_notice') }}
                                         </div>
                                     </div>
 
@@ -73,7 +73,7 @@
                     @if($service->links->count() > 0)
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white py-3">
-                            <h5 class="mb-0 fw-bold">Tautan Lanjutan</h5>
+                            <h5 class="mb-0 fw-bold">{{ __('landing.services.further_links') }}</h5>
                         </div>
 
                         <div class="list-group list-group-flush">
@@ -104,7 +104,7 @@
                     @if($service->downloads->count() > 0)
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white py-3">
-                            <h5 class="mb-0 fw-bold">Dokumen & Unduhan</h5>
+                            <h5 class="mb-0 fw-bold">{{ __('landing.services.documents_downloads') }}</h5>
                         </div>
 
                         <div class="list-group list-group-flush">
@@ -132,11 +132,11 @@
                     <div class="card bg-navy text-white border-0 shadow-sm">
                         <div class="card-body p-4 text-center">
                             <i class="bi bi-headset mb-3" style="font-size: 3rem;"></i>
-                            <h5 class="card-title fw-bold">Butuh Bantuan?</h5>
+                            <h5 class="card-title fw-bold">{{ __('landing.services.need_help') }}</h5>
                             <p class="card-text opacity-75 mb-3">
-                                Hubungi unit terkait untuk informasi lebih lanjut tentang layanan ini.
+                                {{ __('landing.services.contact_unit_info') }}
                             </p>
-                            <a href="#" class="btn btn-outline-light w-100">Hubungi Kami</a>
+                            <a href="#" class="btn btn-outline-light w-100">{{ __('landing.services.contact_us') }}</a>
                         </div>
                     </div>
                 </div>

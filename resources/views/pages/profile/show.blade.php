@@ -42,7 +42,7 @@
                             @if(!$page->document_path)
                             <div class="text-center py-5">
                                 <i class="bi bi-file-earmark-text text-muted mb-3" style="font-size: 3rem; display: block;"></i>
-                                <p class="text-muted lead">Konten untuk halaman ini belum tersedia.</p>
+                                <p class="text-muted lead">{{ __('landing.profile.no_content') }}</p>
                             </div>
                             @endif
                             @endif

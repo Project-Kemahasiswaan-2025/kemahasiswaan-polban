@@ -41,12 +41,12 @@ class DownloadCategoryResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Kategori Unduhan';
+        return __('filament.resources.download_category.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Kategori Unduhan';
+        return __('filament.resources.download_category.plural_label');
     }
 
     public static function form(Schema $schema): Schema

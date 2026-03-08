@@ -37,12 +37,12 @@ class ServiceResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Layanan';
+        return __('filament.resources.service.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Layanan';
+        return __('filament.resources.service.plural_label');
     }
 
     // protected static ?string $recordTitleAttribute = 'name';

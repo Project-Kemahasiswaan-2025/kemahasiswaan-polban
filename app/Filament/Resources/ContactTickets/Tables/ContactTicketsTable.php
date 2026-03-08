@@ -18,19 +18,19 @@ class ContactTicketsTable
             ->recordTitleAttribute('ticket_code')
             ->columns([
                 TextColumn::make('ticket_code')
-                    ->label('Kode')
+                    ->label(__('filament.fields.code'))
                     ->searchable()
                     ->copyable()
                     ->sortable(),
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable(),
                 TextColumn::make('subject')
-                    ->label('Subjek')
+                    ->label(__('filament.fields.subject'))
                     ->limit(30)
                     ->searchable(),
                 \Filament\Tables\Columns\SelectColumn::make('status')
-                    ->label('Status')
+                    ->label(__('filament.fields.status'))
                     ->options([
                         ContactTicket::STATUS_ISSUED => 'Issued',
                         ContactTicket::STATUS_FOLLOW_UP => 'Follow Up',
@@ -39,7 +39,7 @@ class ContactTicketsTable
                     ->selectablePlaceholder(false)
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Tgl Kirim')
+                    ->label(__('filament.fields.sent_at'))
                     ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(),

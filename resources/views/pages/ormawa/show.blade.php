@@ -49,7 +49,7 @@
                                 {!! $organization->content !!}
                             </div>
                             @else
-                            <p class="text-muted">Informasi detail untuk {{ $organization->name }} akan segera tersedia.</p>
+                            <p class="text-muted">{{ __('landing.ormawa.no_content', ['name' => $organization->name]) }}</p>
                             @endif
 
                         </div>
@@ -63,7 +63,7 @@
     @if($organization->is_group && $organization->children->count() > 0)
     <section class="py-5 bg-light">
         <div class="container">
-            <h2 class="mb-4">{{ $organization->name }} - Daftar Organisasi</h2>
+            <h2 class="mb-4">{{ __('landing.ormawa.org_list_heading', ['name' => $organization->name]) }}</h2>
             <div class="row g-4">
                 @foreach($organization->children()->where('is_active', true)->orderBy('sort_order')->get() as $child)
                 <div class="col-md-4 col-lg-3">

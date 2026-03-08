@@ -26,24 +26,24 @@ class CompetitionThreadResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Prestasi';
+        return __('filament.resources.competition_thread.nav_group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Thread Kompetisi';
+        return __('filament.resources.competition_thread.nav_label');
     }
 
     protected static ?int $navigationSort = 41;
 
     public static function getLabel(): string
     {
-        return 'Thread';
+        return __('filament.resources.competition_thread.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Thread';
+        return __('filament.resources.competition_thread.plural_label');
     }
 
     protected static ?string $recordTitleAttribute = 'title';

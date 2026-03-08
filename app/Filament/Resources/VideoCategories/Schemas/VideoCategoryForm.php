@@ -13,10 +13,10 @@ class VideoCategoryForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Kategori Video')
+            Section::make(__('filament.sections.video_category'))
                 ->schema([
                     TextInput::make('name')
-                        ->label('Nama Kategori')
+                        ->label(__('filament.fields.name'))
                         ->required()
                         ->maxLength(255)
                         ->live(onBlur: true)
@@ -29,12 +29,12 @@ class VideoCategoryForm
                         ->maxLength(255),
 
                     TextInput::make('sort_order')
-                        ->label('Urutan')
+                        ->label(__('filament.fields.sort_order'))
                         ->numeric()
                         ->default(0),
 
                     Toggle::make('is_active')
-                        ->label('Aktif')
+                        ->label(__('filament.fields.is_active'))
                         ->default(true),
 
                     TextInput::make('type')

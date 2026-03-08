@@ -18,11 +18,11 @@ class StudentOrganizationForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Metadata')
+            Section::make(__('filament.sections.metadata'))
                 ->schema([
                     Grid::make(12)->schema([
                         TextInput::make('name')
-                            ->label('Nama')
+                            ->label(__('filament.fields.name'))
                             ->required()
                             ->maxLength(180)
                             ->live(onBlur: true)
@@ -55,18 +55,18 @@ class StudentOrganizationForm
                     ]),
 
                     TextInput::make('excerpt')
-                        ->label('Deskripsi Singkat')
+                        ->label(__('filament.fields.short_description'))
                         ->required()
                         ->maxLength(255)
                         ->columnSpanFull(),
 
                     Grid::make(12)->schema([
                         Toggle::make('is_active')
-                            ->label('Aktif')
+                            ->label(__('filament.fields.is_active'))
                             ->default(true)
                             ->columnSpan(2),
                         Toggle::make('is_group')
-                            ->label('Punya Sub Organisasi')
+                            ->label(__('filament.fields.has_sub_org'))
                             ->helperText('Group/Parent Organization.')
                             ->default(false)
                             ->live()
@@ -74,7 +74,7 @@ class StudentOrganizationForm
                             ->columnSpan(4),
 
                         Select::make('parent_id')
-                            ->label('Kategori')
+                            ->label(__('filament.fields.category'))
                             ->relationship(
                                 name: 'parent',
                                 titleAttribute: 'name',
@@ -119,10 +119,10 @@ class StudentOrganizationForm
                 ])
                 ->columnSpanFull(),
 
-            Section::make('Detail Konten')
+            Section::make(__('filament.sections.detail_content'))
                 ->schema([
                     RichEditor::make('content')
-                        ->label('Deskripsi Lengkap')
+                        ->label(__('filament.fields.full_description'))
                         ->nullable()
                         ->columnSpanFull(),
                 ])

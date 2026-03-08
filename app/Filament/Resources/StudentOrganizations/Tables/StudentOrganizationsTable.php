@@ -43,7 +43,7 @@ class StudentOrganizationsTable
                     ->circular(),
 
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
@@ -55,7 +55,7 @@ class StudentOrganizationsTable
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 TextColumn::make('sort_order')
@@ -64,12 +64,12 @@ class StudentOrganizationsTable
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                TernaryFilter::make('is_group')->label('Hanya Group'),
-                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_group')->label(__('filament.filters.group_only')),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
             ])
             ->actions([
                 Action::make('manageMembers')
-                    ->label('Kelola Sub Organisasi')
+                    ->label(__('filament.actions.manage_sub_org'))
                     ->icon('heroicon-o-view-columns')
                     ->color('info')
                     ->url(fn(StudentOrganization $record): string => \App\Filament\Resources\StudentOrganizations\StudentOrganizationResource::getUrl('index', [

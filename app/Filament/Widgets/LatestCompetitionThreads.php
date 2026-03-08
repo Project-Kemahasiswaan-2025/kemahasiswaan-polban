@@ -11,7 +11,12 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestCompetitionThreads extends BaseWidget
 {
-    protected static ?string $heading = 'Thread Kompetisi Aktif';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('filament.widgets.competition_threads.heading');
+    }
 
     protected static ?int $sort = 2;
 
@@ -29,10 +34,10 @@ class LatestCompetitionThreads extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Judul')
+                    ->label(__('filament.fields.title'))
                     ->wrap(),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('filament.fields.status'))
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'draft' => 'gray',
@@ -42,20 +47,20 @@ class LatestCompetitionThreads extends BaseWidget
                         default => 'gray',
                     })
                     ->formatStateUsing(fn(string $state): string => match ($state) {
-                        'draft' => 'Draft',
-                        'ongoing' => 'Berlangsung',
-                        'registration_closed' => 'Tutup (Registrasi)',
-                        'completed' => 'Selesai',
+                        'draft' => __('filament.options.draft'),
+                        'ongoing' => __('filament.options.ongoing'),
+                        'registration_closed' => __('filament.options.registration_closed'),
+                        'completed' => __('filament.options.completed'),
                         default => $state,
                     }),
                 Tables\Columns\TextColumn::make('registration_end')
-                    ->label('Batas Daftar')
+                    ->label(__('filament.fields.deadline'))
                     ->date()
                     ->sortable(),
             ])
             ->actions([
                 Action::make('view')
-                    ->label('Lihat')
+                    ->label(__('filament.actions.view'))
                     ->url(fn(CompetitionThread $record): string => CompetitionThreadResource::getUrl('view', ['record' => $record])),
             ]);
     }

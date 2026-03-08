@@ -38,24 +38,24 @@ class CompetitionsTable
         return $table
             ->columns([
                 ImageColumn::make('cover_image')
-                    ->label('Sampul')
+                    ->label(__('filament.fields.image'))
                     ->disk('public')
                     ->square(),
 
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
 
                 IconColumn::make('is_group')
                     ->visible(fn() => ! $hasParentIdFilter())
-                    ->label('Kategori')
+                    ->label(__('filament.fields.category'))
                     ->boolean()
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 TextColumn::make('sort_order')
@@ -64,12 +64,12 @@ class CompetitionsTable
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
-                TernaryFilter::make('is_group')->label('Hanya Kategori'),
-                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_group')->label(__('filament.filters.category_only')),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
             ])
             ->actions([
                 Action::make('manageSub')
-                    ->label('Kelola Sub')
+                    ->label(__('filament.actions.manage_sub'))
                     ->icon('heroicon-o-view-columns')
                     ->color('info')
                     ->url(fn(Competition $record): string => \App\Filament\Resources\Competitions\CompetitionResource::getUrl('index', [

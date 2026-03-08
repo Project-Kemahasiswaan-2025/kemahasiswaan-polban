@@ -16,7 +16,7 @@ class PosterCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama')
+                    ->label(__('filament.fields.name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(),
@@ -32,7 +32,7 @@ class PosterCategoriesTable
                     ->sortable(),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
             ])
             ->defaultSort('sort_order', 'asc')

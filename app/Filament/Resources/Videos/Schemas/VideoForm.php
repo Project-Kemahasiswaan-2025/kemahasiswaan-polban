@@ -17,17 +17,17 @@ class VideoForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Video YouTube')
+            Section::make(__('filament.sections.video_youtube'))
                 ->schema([
                     Grid::make(12)->schema([
                         TextInput::make('title')
-                            ->label('Judul')
+                            ->label(__('filament.fields.title'))
                             ->required()
                             ->maxLength(180)
                             ->columnSpan(10),
 
                         TextInput::make('sort_order')
-                            ->label('Urutan')
+                            ->label(__('filament.fields.sort_order'))
                             ->numeric()
                             ->default(0)
                             ->minValue(0)
@@ -35,13 +35,13 @@ class VideoForm
                     ]),
 
                     Textarea::make('description')
-                        ->label('Deskripsi')
+                        ->label(__('filament.fields.description'))
                         ->rows(4)
                         ->nullable()
                         ->columnSpanFull(),
 
                     Select::make('category_id')
-                        ->label('Kategori')
+                        ->label(__('filament.fields.category'))
                         ->relationship('category', 'name', fn($query) => $query->where('type', 'video'))
                         ->required()
                         ->searchable()
@@ -83,7 +83,7 @@ class VideoForm
                     Grid::make(12)->schema([
                         \Filament\Schemas\Components\Text::make('')
                             ->view('components.hr-divider', [
-                                'label' => 'Pengaturan Tampilan',
+                                'label' => __('filament.sections.display_settings'),
                                 'icon' => 'fas fa-cogs'
                             ])
                             ->columnSpanFull(),
@@ -91,14 +91,14 @@ class VideoForm
 
                     Grid::make(6)->schema([
                         DateTimePicker::make('active_from')
-                            ->label('Aktif Mulai')
+                            ->label(__('filament.fields.active_from'))
                             ->seconds(false)
                             ->nullable()
                             ->live()
                             ->suffixAction(
                                 Action::make('setNow')
                                     ->icon('heroicon-m-clock')
-                                    ->tooltip('Set hari ini')
+                                    ->tooltip(__('filament.actions.set_today'))
                                     ->action(fn($set) => $set('active_from', now()->seconds(0)))
                             )
                             ->afterStateUpdated(function ($set, $get, $state) {
@@ -110,7 +110,7 @@ class VideoForm
                             ->columnSpan(3),
 
                         DateTimePicker::make('active_to')
-                            ->label('Aktif Sampai')
+                            ->label(__('filament.fields.active_to'))
                             ->seconds(false)
                             ->nullable()
                             ->columnSpan(3),
@@ -118,12 +118,12 @@ class VideoForm
 
                     Grid::make(4)->schema([
                         Toggle::make('is_active')
-                            ->label('Aktif')
+                            ->label(__('filament.fields.is_active'))
                             ->default(true)
                             ->columnSpan(1),
 
                         Toggle::make('is_pinned')
-                            ->label('Pin')
+                            ->label(__('filament.fields.is_pinned'))
                             ->default(false)
                             ->columnSpan(1),
                     ]),

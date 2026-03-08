@@ -3,9 +3,9 @@
         <div class="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-2">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white">{{ __('menu.home') }}</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('beasiswa.index') }}" class="text-white">{{ __('menu.scholarships') }}</a></li>
-                    <li class="breadcrumb-item active text-white opacity-75" aria-current="page">Detail</li>
+                    <li class="breadcrumb-item active text-white opacity-75" aria-current="page">{{ __('landing.shared.detail') }}</li>
                 </ol>
             </nav>
             <h1 class="display-5 fw-bold">{{ $beasiswa['nama_beasiswa'] }}</h1>
@@ -27,32 +27,32 @@
                             @if($poster)
                             <div class="mb-4 rounded-3 overflow-hidden shadow-sm">
                                 <img src="{{ Str::startsWith($poster, 'http') ? $poster : asset('storage/posters/' . $poster) }}"
-                                    class="img-fluid w-100" alt="Poster Beasiswa"
+                                    class="img-fluid w-100" alt="{{ __('landing.beasiswa.poster_alt') }}"
                                     onerror="this.parentElement.innerHTML='<div class=\'bg-secondary py-5 text-center\'><i class=\'bi bi-mortarboard text-white display-1\'></i></div>'">
                             </div>
                             @endif
 
                             <div class="mb-4">
-                                <label class="small text-muted d-block mb-1">Tipe</label>
+                                <label class="small text-muted d-block mb-1">{{ __('landing.beasiswa.detail_type') }}</label>
                                 <span class="badge bg-primary rounded-pill px-3">{{ strtoupper($beasiswa['tipe_beasiswa']) }}</span>
                             </div>
 
                             <div class="mb-4">
-                                <label class="small text-muted d-block mb-1">Jenis</label>
+                                <label class="small text-muted d-block mb-1">{{ __('landing.beasiswa.detail_kind') }}</label>
                                 <span class="badge bg-info text-dark rounded-pill px-3">{{ strtoupper($beasiswa['jenis_beasiswa']) }}</span>
                             </div>
 
                             <div class="mb-4">
-                                <label class="small text-muted d-block mb-1">Kuota</label>
-                                <p class="fw-bold text-dark mb-0"><i class="bi bi-people me-2"></i>{{ $beasiswa['kuota'] ?? '-' }} Mahasiswa</p>
+                                <label class="small text-muted d-block mb-1">{{ __('landing.beasiswa.detail_quota') }}</label>
+                                <p class="fw-bold text-dark mb-0"><i class="bi bi-people me-2"></i>{{ $beasiswa['kuota'] ?? '-' }} {{ __('landing.shared.students') }}</p>
                             </div>
                             <div class="mb-4">
-                                <label class="small text-muted d-block mb-1">Sumber Beasiswa</label>
+                                <label class="small text-muted d-block mb-1">{{ __('landing.beasiswa.detail_source') }}</label>
                                 <p class="fw-bold text-dark mb-0"><i class="bi bi-building me-2"></i>{{ $beasiswa['sumber'] ?? '-' }}</p>
                             </div>
 
                             <div class="mb-4">
-                                <label class="small text-muted d-block mb-1">Batas Akhir Pendaftaran</label>
+                                <label class="small text-muted d-block mb-1">{{ __('landing.beasiswa.detail_deadline') }}</label>
                                 <p class="fw-bold text-danger mb-0">
                                     <i class="bi bi-calendar-event me-2"></i>
                                     {{ format_date($beasiswa['tanggal_berakhir']) }}
@@ -62,11 +62,11 @@
                             <div class="d-grid gap-2">
                                 @if(isset($beasiswa['link_beasiswa']['link_beasiswa']) && $beasiswa['link_beasiswa']['link_beasiswa'] !== '#')
                                 <a href="{{ $beasiswa['link_beasiswa']['link_beasiswa'] }}" target="_blank" class="btn btn-primary rounded-pill py-2 fw-bold">
-                                    Daftar Sekarang <i class="bi bi-box-arrow-up-right ms-2"></i>
+                                    {{ __('landing.beasiswa.register_now') }} <i class="bi bi-box-arrow-up-right ms-2"></i>
                                 </a>
                                 @endif
                                 <a href="{{ route('beasiswa.index') }}" class="btn btn-outline-secondary rounded-pill py-2">
-                                    <i class="bi bi-arrow-left me-2"></i> Kembali
+                                    <i class="bi bi-arrow-left me-2"></i> {{ __('landing.shared.back') }}
                                 </a>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                             <div class="row g-4 mb-5">
                                 @if(!empty($beasiswa['benefit_beasiswa']))
                                 <div class="col-md-6">
-                                    <h5 class="fw-bold mb-3"><i class="bi bi-gift text-primary me-2"></i>Benefit</h5>
+                                    <h5 class="fw-bold mb-3"><i class="bi bi-gift text-primary me-2"></i>{{ __('landing.beasiswa.benefit') }}</h5>
                                     <ul class="list-group list-group-flush">
                                         @foreach($beasiswa['benefit_beasiswa'] as $benefit)
                                         <li class="list-group-item border-0 px-0 py-2">
@@ -98,7 +98,7 @@
 
                                 @if(!empty($beasiswa['syarat_beasiswa']))
                                 <div class="col-md-6">
-                                    <h5 class="fw-bold mb-3"><i class="bi bi-check-circle text-success me-2"></i>Syarat</h5>
+                                    <h5 class="fw-bold mb-3"><i class="bi bi-check-circle text-success me-2"></i>{{ __('landing.beasiswa.requirement') }}</h5>
                                     <ul class="list-group list-group-flush">
                                         @foreach($beasiswa['syarat_beasiswa'] as $syarat)
                                         <li class="list-group-item border-0 px-0 py-2">
@@ -112,7 +112,7 @@
 
                             @if(!empty($beasiswa['syarat_dokumen']))
                             <div class="mb-5">
-                                <h5 class="fw-bold mb-3"><i class="bi bi-file-earmark-text text-info me-2"></i>Dokumen Diperlukan</h5>
+                                <h5 class="fw-bold mb-3"><i class="bi bi-file-earmark-text text-info me-2"></i>{{ __('landing.beasiswa.required_docs') }}</h5>
                                 <div class="row g-3">
                                     @foreach($beasiswa['syarat_dokumen'] as $doc)
                                     <div class="col-md-6">
@@ -128,14 +128,14 @@
 
                             <!-- Recipients Section -->
                             <div id="penerima-section" class="mt-5 pt-4 border-top d-none">
-                                <h5 class="fw-bold mb-4"><i class="bi bi-people-fill text-primary me-2"></i>Penerima Beasiswa</h5>
+                                <h5 class="fw-bold mb-4"><i class="bi bi-people-fill text-primary me-2"></i>{{ __('landing.beasiswa.recipients') }}</h5>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="border-0">NIM</th>
-                                                <th class="border-0">Nama Mahasiswa</th>
-                                                <th class="border-0">Prodi</th>
+                                                <th class="border-0">{{ __('landing.beasiswa.nim') }}</th>
+                                                <th class="border-0">{{ __('landing.beasiswa.student_name') }}</th>
+                                                <th class="border-0">{{ __('landing.beasiswa.study_program') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody id="penerima-list">

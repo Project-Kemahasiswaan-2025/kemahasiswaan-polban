@@ -25,7 +25,7 @@
     <!-- Poster Section -->
     <section class="py-5 bg-white" id="poster-section" style="display: none;">
         <div class="container">
-            <h2 class="text-center mb-5 fw-bold">Informasi Terbaru</h2>
+            <h2 class="text-center mb-5 fw-bold">{{ __('landing.home.latest_info') }}</h2>
             <div id="poster-tabs" class="d-flex flex-wrap justify-content-center gap-2 mb-5">
                 <!-- Category tabs will be loaded via AJAX -->
             </div>
@@ -40,11 +40,11 @@
         <div class="container">
             <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3">
                 <div>
-                    <h2 class="fw-bold mb-2">Kompetisi Terbaru</h2>
-                    <p class="text-muted mb-0">Ikuti kompetisi bergengsi dan raih prestasimu di tingkat nasional maupun internasional</p>
+                    <h2 class="fw-bold mb-2">{{ __('landing.home.latest_competitions') }}</h2>
+                    <p class="text-muted mb-0">{{ __('landing.home.competitions_desc') }}</p>
                 </div>
                 <a href="{{ route('competition.index') }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
-                    Lihat Semua Kompetisi <i class="bi bi-arrow-right ms-2"></i>
+                    {{ __('landing.home.view_all_competitions') }} <i class="bi bi-arrow-right ms-2"></i>
                 </a>
             </div>
             <div id="latest-competition-container">
@@ -58,11 +58,11 @@
         <div class="container">
             <div class="d-flex flex-wrap justify-content-between align-items-end mb-5 gap-3">
                 <div>
-                    <h2 class="fw-bold mb-2">Informasi Beasiswa</h2>
-                    <p class="text-muted mb-0">Temukan berbagai peluang beasiswa untuk mendukung perjalanan akademikmu</p>
+                    <h2 class="fw-bold mb-2">{{ __('landing.home.scholarship_info') }}</h2>
+                    <p class="text-muted mb-0">{{ __('landing.home.scholarship_desc') }}</p>
                 </div>
                 <a href="{{ route('beasiswa.index') }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
-                    Lihat Semua Beasiswa <i class="bi bi-arrow-right ms-2"></i>
+                    {{ __('landing.home.view_all_scholarship') }} <i class="bi bi-arrow-right ms-2"></i>
                 </a>
             </div>
             <div class="row g-4" id="latest-scholarship-container">
@@ -75,8 +75,8 @@
     <section class="py-5 bg-light">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mb-2">Akses Cepat</h2>
-                <p class="text-muted">Temukan informasi yang kamu butuhkan dengan satu klik</p>
+                <h2 class="fw-bold mb-2">{{ __('landing.home.quick_access') }}</h2>
+                <p class="text-muted">{{ __('landing.home.quick_access_desc') }}</p>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4">
@@ -87,7 +87,7 @@
                                     <i class="bi bi-people-fill"></i>
                                 </div>
                                 <h4 class="card-title text-dark">{{ __('menu.student_organizations') }}</h4>
-                                <p class="card-text text-muted">Jelajahi berbagai organisasi mahasiswa, UKM, dan komunitas di lingkungan Polban</p>
+                                <p class="card-text text-muted">{{ __('landing.home.ormawa_desc') }}</p>
                             </div>
                         </div>
                     </a>
@@ -101,7 +101,7 @@
                                     <i class="bi bi-trophy-fill"></i>
                                 </div>
                                 <h4 class="card-title text-dark">{{ __('menu.competitions') }}</h4>
-                                <p class="card-text text-muted">Informasi kompetisi akademik dan non-akademik terbaru untuk mengasah bakatmu</p>
+                                <p class="card-text text-muted">{{ __('landing.home.competitions_card_desc') }}</p>
                             </div>
                         </div>
                     </a>
@@ -115,7 +115,7 @@
                                     <i class="bi bi-mortarboard-fill"></i>
                                 </div>
                                 <h4 class="card-title text-dark">{{ __('menu.scholarship') }}</h4>
-                                <p class="card-text text-muted">Berbagai pilihan beasiswa internal maupun eksternal untuk membantu pembiayaan kuliah</p>
+                                <p class="card-text text-muted">{{ __('landing.home.scholarship_card_desc') }}</p>
                             </div>
                         </div>
                     </a>

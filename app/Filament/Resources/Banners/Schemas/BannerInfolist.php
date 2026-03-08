@@ -15,28 +15,28 @@ class BannerInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Banner')
+            Section::make(__('filament.sections.banner'))
                 ->schema([
                     ImageEntry::make('image_path')
-                        ->label('Gambar')
+                        ->label(__('filament.fields.image'))
                         ->disk('public')
                         ->columnSpanFull(),
 
                     Grid::make(12)->schema([
                         TextEntry::make('title')
-                            ->label('Judul')
+                            ->label(__('filament.fields.title'))
                             ->placeholder('-')
                             ->columnSpan(10),
 
                         TextEntry::make('sort_order')
-                            ->label('Urutan')
+                            ->label(__('filament.fields.sort_order'))
                             ->placeholder('-')
                             ->columnSpan(2),
                     ]),
 
                     Grid::make(12)->schema([
                         TextEntry::make('url')
-                            ->label('Link (opsional)')
+                            ->label(__('filament.fields.url_optional'))
                             ->placeholder('-')
                             ->state(function ($record) {
                                 if (blank($record->url)) {
@@ -44,8 +44,8 @@ class BannerInfolist
                                 }
 
                                 $suffix = match ($record->url_target) {
-                                    '_blank' => ' (Tab Baru)',
-                                    '_self'  => ' (Tab yang sama)',
+                                    '_blank' => __('filament.options.tab_new_suffix'),
+                                    '_self'  => __('filament.options.tab_same_suffix'),
                                     default  => '',
                                 };
 
@@ -59,7 +59,7 @@ class BannerInfolist
                     Grid::make(12)->schema([
                         Text::make('')
                             ->view('components.hr-divider', [
-                                'label' => 'Pengaturan Tampilan',
+                                'label' => __('filament.sections.display_settings'),
                                 'icon'  => 'fas fa-cogs',
                             ])
                             ->columnSpanFull(),
@@ -67,13 +67,13 @@ class BannerInfolist
 
                     Grid::make(6)->schema([
                         TextEntry::make('active_from')
-                            ->label('Aktif Mulai')
+                            ->label(__('filament.fields.active_from'))
                             ->dateTime('d M Y H:i')
                             ->placeholder('-')
                             ->columnSpan(3),
 
                         TextEntry::make('active_to')
-                            ->label('Aktif Sampai')
+                            ->label(__('filament.fields.active_to'))
                             ->dateTime('d M Y H:i')
                             ->placeholder('-')
                             ->columnSpan(3),
@@ -81,12 +81,12 @@ class BannerInfolist
 
                     Grid::make(4)->schema([
                         IconEntry::make('is_active')
-                            ->label('Aktif')
+                            ->label(__('filament.fields.is_active'))
                             ->boolean()
                             ->columnSpan(1),
 
                         IconEntry::make('is_pinned')
-                            ->label('Pin')
+                            ->label(__('filament.fields.is_pinned'))
                             ->boolean()
                             ->columnSpan(1),
                     ]),

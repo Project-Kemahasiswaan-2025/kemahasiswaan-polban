@@ -17,7 +17,7 @@ class ProfilePageForm
     {
         return $schema->schema([
             Grid::make(12)->schema([
-                Section::make('Informasi')
+                Section::make(__('filament.sections.information'))
                     ->columnSpan(7)
                     ->schema([
                         Hidden::make('section')
@@ -56,11 +56,11 @@ class ProfilePageForm
                         ]),
                     ]),
 
-                Section::make('Dokumen (Opsional)')
+                Section::make(__('filament.sections.document_optional'))
                     ->columnSpan(5)
                     ->schema([
                         FileUpload::make('document_path')
-                            ->label('Tampilan Dokumen (Gambar / PDF)')
+                            ->label(__('filament.fields.document_display'))
                             ->disk('public')
                             ->directory('pages/docs/profile')
                             ->acceptedFileTypes([
@@ -72,14 +72,14 @@ class ProfilePageForm
                             ->maxSize(10240)
                             ->downloadable()
                             ->openable()
-                            ->helperText('Akan tampil di atas konten.'),
+                            ->helperText(__('filament.fields.document_helper')),
                     ]),
 
-                Section::make('Konten')
+                Section::make(__('filament.sections.content'))
                     ->columnSpanFull()
                     ->schema([
                         RichEditor::make('content')
-                            ->label('Konten')
+                            ->label(__('filament.fields.content'))
                             ->nullable()
                             ->columnSpanFull(),
                     ]),

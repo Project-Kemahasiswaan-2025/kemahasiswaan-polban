@@ -13,17 +13,17 @@ class PosterInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Poster')
+            Section::make(__('filament.sections.poster'))
                 ->schema([
                     ImageEntry::make('image_path')
-                        ->label('Poster')
+                        ->label(__('filament.sections.poster'))
                         ->disk('public')
                         ->height(300),
 
-                    TextEntry::make('title')->label('Judul'),
-                    TextEntry::make('category.name')->label('Kategori')->placeholder('-'),
-                    TextEntry::make('created_at')->label('Dibuat')->date('d M Y')->placeholder('-'),
-                    IconEntry::make('is_active')->label('Aktif')->boolean(),
+                    TextEntry::make('title')->label(__('filament.fields.title')),
+                    TextEntry::make('category.name')->label(__('filament.fields.category'))->placeholder('-'),
+                    TextEntry::make('created_at')->label(__('filament.fields.created_at_label'))->date('d M Y')->placeholder('-'),
+                    IconEntry::make('is_active')->label(__('filament.fields.is_active'))->boolean(),
                 ]),
         ]);
     }

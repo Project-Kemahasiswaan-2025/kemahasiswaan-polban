@@ -14,42 +14,42 @@ class DownloadsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Nama Dokumen')
+                    ->label(__('filament.fields.document_name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('category.name')
-                    ->label('Kategori (Section)')
+                    ->label(__('filament.fields.category_section'))
                     ->badge()
                     ->color('info')
                     ->placeholder('-'),
 
                 TextColumn::make('file_size')
-                    ->label('Ukuran')
+                    ->label(__('filament.fields.file_size'))
                     ->formatStateUsing(fn($state) => $state ? number_format($state / 1024, 1) . ' KB' : '-')
                     ->sortable(),
 
                 TextColumn::make('file_type')
-                    ->label('Tipe File')
+                    ->label(__('filament.fields.file_type'))
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('is_active')
-                    ->label('Aktif')
+                    ->label(__('filament.fields.is_active'))
                     ->sortable(),
 
                 TextColumn::make('sort_order')
-                    ->label('Urutan')
+                    ->label(__('filament.fields.sort_order'))
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Dibuat')
+                    ->label(__('filament.fields.created_at_label'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([
-                TernaryFilter::make('is_active')->label('Aktif'),
+                TernaryFilter::make('is_active')->label(__('filament.fields.is_active')),
             ]);
     }
 }

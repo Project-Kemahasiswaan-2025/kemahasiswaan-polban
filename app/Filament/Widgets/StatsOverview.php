@@ -16,20 +16,20 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Organisasi', StudentOrganization::where('is_group', false)->count())
-                ->description('Organisasi & Unit Kegiatan')
+            Stat::make(__('filament.widgets.stats.total_org'), StudentOrganization::where('is_group', false)->count())
+                ->description(__('filament.widgets.stats.org_description'))
                 ->descriptionIcon('heroicon-m-building-library')
                 ->color('success'),
-            Stat::make('Total Unduhan', Download::whereNotNull('category_id')->count())
-                ->description('Dokumen di Pusat Unduhan')
+            Stat::make(__('filament.widgets.stats.total_downloads'), Download::whereNotNull('category_id')->count())
+                ->description(__('filament.widgets.stats.downloads_description'))
                 ->descriptionIcon('heroicon-m-document-arrow-down')
                 ->color('info'),
-            Stat::make('Layanan Aktif', Service::where('is_active', true)->where('parent_id', null)->count())
-                ->description('Layanan Kemahasiswaan')
+            Stat::make(__('filament.widgets.stats.active_services'), Service::where('is_active', true)->where('parent_id', null)->count())
+                ->description(__('filament.widgets.stats.services_description'))
                 ->descriptionIcon('heroicon-m-wrench-screwdriver')
                 ->color('warning'),
-            Stat::make('Tiket Baru', ContactTicket::where('status', 'issued')->count())
-                ->description('Perlu tindak lanjut')
+            Stat::make(__('filament.widgets.stats.new_tickets'), ContactTicket::where('status', 'issued')->count())
+                ->description(__('filament.widgets.stats.tickets_description'))
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
                 ->color('danger'),
         ];

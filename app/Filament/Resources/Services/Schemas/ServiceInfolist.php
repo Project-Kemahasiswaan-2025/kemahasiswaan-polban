@@ -16,16 +16,16 @@ class ServiceInfolist
     {
         return $schema->schema([
             // Row 1 — Informasi utama + CTA
-            Section::make('Informasi Layanan')
-                ->description('Ringkasan metadata layanan dan tombol aksi (CTA) bila mengarah ke halaman eksternal.')
+            Section::make(__('filament.sections.service_info'))
+                ->description(__('filament.sections.service_info_infolist_desc'))
                 ->schema([
                     Grid::make(12)->schema([
                         // Kiri
-                        Section::make('Metadata')
+                        Section::make(__('filament.sections.metadata'))
                             ->columnSpan(6)
                             ->schema([
                                 TextEntry::make('name')
-                                    ->label('Nama Layanan')
+                                    ->label(__('filament.fields.service_name'))
                                     ->weight('bold')
                                     ->size(TextSize::Large)
                                     ->columnSpanFull(),
@@ -37,13 +37,13 @@ class ServiceInfolist
                                         ->columnSpan(8),
 
                                     TextEntry::make('sort_order')
-                                        ->label('Urutan')
+                                        ->label(__('filament.fields.sort_order'))
                                         ->columnSpan(4),
                                 ]),
 
                                 Grid::make(12)->schema([
                                     IconEntry::make('is_active')
-                                        ->label('Aktif')
+                                        ->label(__('filament.fields.is_active'))
                                         ->boolean()
                                         ->columnSpan(4),
 
@@ -72,25 +72,25 @@ class ServiceInfolist
                             ]),
 
                         // Kanan
-                        Section::make('Ringkasan & CTA')
+                        Section::make(__('filament.sections.summary_cta'))
                             ->columnSpan(6)
                             ->schema([
                                 TextEntry::make('excerpt')
-                                    ->label('Ringkasan')
-                                    ->placeholder('Tidak ada ringkasan.')
+                                    ->label(__('filament.fields.summary'))
+                                    ->placeholder(__('filament.placeholders.no_summary'))
                                     ->columnSpanFull(),
 
-                                Section::make('Tombol Aksi')
-                                    ->description('Ditampilkan jika layanan memiliki redirect / aksi ke halaman eksternal.')
+                                Section::make(__('filament.sections.action_button'))
+                                    ->description(__('filament.sections.action_button_infolist_desc'))
                                     ->visible(fn($record) => filled($record?->cta_url) && filled($record?->cta_label))
                                     ->schema([
                                         Grid::make(12)->schema([
                                             TextEntry::make('cta_label')
-                                                ->label('Label Tombol')
+                                                ->label(__('filament.fields.cta_label'))
                                                 ->columnSpan(4),
 
                                             TextEntry::make('cta_url')
-                                                ->label('URL Aksi / Redirect')
+                                                ->label(__('filament.fields.cta_url'))
                                                 ->url(fn($state) => $state, true)
                                                 ->openUrlInNewTab()
                                                 ->copyable()
@@ -104,7 +104,7 @@ class ServiceInfolist
                 ->columnSpanFull(),
 
             // Row 2 — Konten
-            Section::make('Konten Halaman')
+            Section::make(__('filament.sections.page_content'))
                 ->columnSpanFull()
                 ->visible(function ($record): bool {
                     $raw = (string) ($record?->content ?? '');
@@ -141,24 +141,24 @@ class ServiceInfolist
                                 $html
                             );
                         })
-                        ->placeholder('Tidak ada konten.'),
+                        ->placeholder(__('filament.placeholders.no_content')),
                 ]),
 
             // Row 3 — Tautan lanjutan + Unduhan
-            Section::make('Tautan Lanjutan')
-                ->description('Daftar tautan terkait untuk melanjutkan ke halaman/portal eksternal yang masih berhubungan dengan layanan ini.')
+            Section::make(__('filament.sections.advanced_links'))
+                ->description(__('filament.sections.advanced_links_desc'))
                 ->collapsible()
                 ->visible(fn($record) => $record?->links?->isNotEmpty())
                 ->schema([
                     RepeatableEntry::make('links')
-                        ->label('Tautan')
+                        ->label(__('filament.fields.links'))
                         ->schema([
                             TextEntry::make('name')
-                                ->label('Judul')
+                                ->label(__('filament.fields.link_title'))
                                 ->weight('bold'),
 
                             TextEntry::make('url')
-                                ->label('URL Tujuan')
+                                ->label(__('filament.fields.link_url'))
                                 ->url(fn($state) => $state, true)
                                 ->openUrlInNewTab()
                                 ->copyable()
@@ -167,16 +167,16 @@ class ServiceInfolist
                         ->columns(1),
                 ]),
 
-            Section::make('Dokumen & Unduhan')
-                ->description('Dokumen yang tersedia untuk dibuka/diunduh.')
+            Section::make(__('filament.sections.documents_downloads'))
+                ->description(__('filament.sections.documents_downloads_infolist_desc'))
                 ->collapsible()
                 ->visible(fn($record) => $record?->downloads?->isNotEmpty())
                 ->schema([
                     RepeatableEntry::make('downloads')
-                        ->label('Dokumen')
+                        ->label(__('filament.fields.document'))
                         ->schema([
                             TextEntry::make('name')
-                                ->label('Nama')
+                                ->label(__('filament.fields.name'))
                                 ->weight('bold'),
 
                             TextEntry::make('file_path')

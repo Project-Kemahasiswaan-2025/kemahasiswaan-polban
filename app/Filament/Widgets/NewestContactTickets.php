@@ -11,7 +11,12 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class NewestContactTickets extends BaseWidget
 {
-    protected static ?string $heading = 'Tiket Bantuan Baru';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string|\Illuminate\Contracts\Support\Htmlable
+    {
+        return __('filament.widgets.contact_tickets.heading');
+    }
 
     protected static ?int $sort = 3;
 
@@ -28,21 +33,21 @@ class NewestContactTickets extends BaseWidget
             ->defaultPaginationPageOption(5)
             ->columns([
                 Tables\Columns\TextColumn::make('ticket_code')
-                    ->label('Kode')
+                    ->label(__('filament.fields.code'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nama Pengirim'),
+                    ->label(__('filament.fields.sender_name')),
                 Tables\Columns\TextColumn::make('subject')
-                    ->label('Subjek')
+                    ->label(__('filament.fields.subject'))
                     ->wrap(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Waktu Masuk')
+                    ->label(__('filament.fields.arrived_at'))
                     ->dateTime()
                     ->sortable(),
             ])
             ->actions([
                 Action::make('view')
-                    ->label('Tindak Lanjut')
+                    ->label(__('filament.actions.follow_up'))
                     ->icon('heroicon-m-eye')
                     ->url(fn(ContactTicket $record): string => ContactTicketResource::getUrl('view', ['record' => $record])),
             ]);

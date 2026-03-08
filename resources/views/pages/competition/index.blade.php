@@ -3,7 +3,7 @@
     <section class="page-header bg-primary text-white py-5">
         <div class="container">
             <h1 class="display-4 fw-bold">{{ __('menu.competitions') }}</h1>
-            <p class="lead">Kompetisi Nasional dan Internasional</p>
+            <p class="lead">{{ __('landing.competition.subtitle') }}</p>
         </div>
     </section>
 

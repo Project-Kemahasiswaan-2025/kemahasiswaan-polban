@@ -14,10 +14,10 @@ class CompetitionInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-            Section::make('Detail Kompetisi')
+            Section::make(__('filament.sections.competition_detail'))
                 ->schema([
                     Grid::make(12)->schema([
-                        Section::make('Identitas')
+                        Section::make(__('filament.sections.identity'))
                             ->columnSpan(4)
                             ->schema([
                                 ImageEntry::make('cover_image')
@@ -26,26 +26,26 @@ class CompetitionInfolist
                                     ->height(150),
 
                                 TextEntry::make('name')
-                                    ->label('Nama')
+                                    ->label(__('filament.fields.name'))
                                     ->weight('bold'),
                             ]),
 
-                        Section::make('Metadata')
+                        Section::make(__('filament.sections.metadata'))
                             ->columnSpan(8)
                             ->schema([
                                 Grid::make(2)->schema([
                                     TextEntry::make('slug'),
                                     TextEntry::make('parent.name')
-                                        ->label('Induk')
+                                        ->label(__('filament.fields.parent'))
                                         ->badge()
-                                        ->placeholder('Top Level'),
+                                        ->placeholder(__('filament.placeholders.top_level')),
 
                                     IconEntry::make('is_group')
-                                        ->label('Kategori')
+                                        ->label(__('filament.fields.category'))
                                         ->boolean(),
 
                                     IconEntry::make('is_active')
-                                        ->label('Aktif')
+                                        ->label(__('filament.fields.is_active'))
                                         ->boolean(),
 
                                     TextEntry::make('sort_order')->label('Order'),
@@ -54,18 +54,18 @@ class CompetitionInfolist
                     ]),
                 ]),
 
-            Section::make('Link & Konten')
+            Section::make(__('filament.sections.link_and_content'))
                 ->schema([
                     TextEntry::make('url')
-                        ->label('URL')
+                        ->label(__('filament.fields.url'))
                         ->url(fn($state) => $state, true)
                         ->icon('heroicon-m-link')
                         ->visible(fn($record) => filled($record->url)),
 
                     TextEntry::make('content')
-                        ->label('Konten')
+                        ->label(__('filament.fields.content'))
                         ->html()
-                        ->placeholder('Tidak ada rincian konten.'),
+                        ->placeholder(__('filament.placeholders.no_content')),
                 ]),
         ]);
     }

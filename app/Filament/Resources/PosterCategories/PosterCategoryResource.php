@@ -42,12 +42,12 @@ class PosterCategoryResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Kategori Poster';
+        return __('filament.resources.poster_category.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Kategori Poster';
+        return __('filament.resources.poster_category.plural_label');
     }
 
     public static function form(Schema $schema): Schema

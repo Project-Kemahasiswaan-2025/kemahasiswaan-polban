@@ -36,12 +36,12 @@ class DownloadResource extends Resource
 
     public static function getLabel(): string
     {
-        return 'Unduhan';
+        return __('filament.resources.download.label');
     }
 
     public static function getPluralLabel(): string
     {
-        return 'Unduhan';
+        return __('filament.resources.download.plural_label');
     }
 
     public static function form(Schema $schema): Schema
