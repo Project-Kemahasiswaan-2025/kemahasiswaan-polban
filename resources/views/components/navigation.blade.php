@@ -134,7 +134,7 @@
                     <a class="nav-link {{ request()->routeIs('contact.index') ? 'active' : '' }}" href="{{ route('contact.index') }}">{{ __('menu.contact') }}</a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item d-flex align-items-center ms-3">
                     <x-language-switcher />
                 </li>
             </ul>
