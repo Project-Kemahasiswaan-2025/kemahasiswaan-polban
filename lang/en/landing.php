@@ -56,6 +56,18 @@ return [
 
     'competition' => [
         'subtitle' => 'National and International Competitions',
+        'search_placeholder' => 'Search competitions, organizers, or other keywords...',
+        'status_ongoing' => 'Ongoing',
+        'status_closed' => 'Registration Closed',
+        'status_completed' => 'Completed',
+        'registration' => 'Registration',
+        'timeline_heading' => 'Competition Timeline',
+        'location' => 'Location',
+        'contact' => 'Contact Person',
+        'btn_detail' => 'Detail Info',
+        'btn_register' => 'Registration Link',
+        'btn_guidebook' => 'Guidebook / Technical Guide',
+        'load_error' => 'Failed to load competitions',
     ],
 
     'ormawa' => [

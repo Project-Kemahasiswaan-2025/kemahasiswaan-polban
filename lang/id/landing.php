@@ -70,6 +70,18 @@ return [
     // -------------------------------------------------------------------------
     'competition' => [
         'subtitle' => 'Kompetisi Nasional dan Internasional',
+        'search_placeholder' => 'Cari kompetisi, penyelenggara, atau kata kunci lainnya...',
+        'status_ongoing' => 'Sedang Berlangsung',
+        'status_closed' => 'Pendaftaran Ditutup',
+        'status_completed' => 'Selesai',
+        'registration' => 'Registrasi',
+        'timeline_heading' => 'Timeline Kompetisi',
+        'location' => 'Lokasi',
+        'contact' => 'Kontak Persona',
+        'btn_detail' => 'Detail Info',
+        'btn_register' => 'Link Pendaftaran',
+        'btn_guidebook' => 'Guidebook / Juknis',
+        'load_error' => 'Gagal memuat kompetisi',
     ],
 
     // -------------------------------------------------------------------------

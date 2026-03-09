@@ -10,9 +10,15 @@
     <!-- Filter Section -->
     <section class="py-4 bg-light">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 mx-auto">
-                    <select class="form-select" id="category-filter">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="input-group search-box shadow-sm">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-primary"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="search-input" placeholder="{{ __('landing.competition.search_placeholder') }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select shadow-sm h-100" id="category-filter">
                         <option value="">{{ __('app.all') }} {{ __('menu.competitions') }}</option>
                         @foreach($categories as $category)
                         <option value="{{ $category->slug }}">{{ $category->name }}</option>
@@ -62,6 +68,21 @@
     </style>
 
     @push('scripts')
+    <script>
+        window.competitionTranslations = {
+            status_ongoing: "{{ __('landing.competition.status_ongoing') }}",
+            status_closed: "{{ __('landing.competition.status_closed') }}",
+            status_completed: "{{ __('landing.competition.status_completed') }}",
+            registration: "{{ __('landing.competition.registration') }}",
+            timeline_heading: "{{ __('landing.competition.timeline_heading') }}",
+            location: "{{ __('landing.competition.location') }}",
+            contact: "{{ __('landing.competition.contact') }}",
+            btn_detail: "{{ __('landing.competition.btn_detail') }}",
+            btn_register: "{{ __('landing.competition.btn_register') }}",
+            btn_guidebook: "{{ __('landing.competition.btn_guidebook') }}",
+            load_error: "{{ __('landing.competition.load_error') }}",
+        };
+    </script>
     <script src="{{ asset('js/pages/competition.js') }}"></script>
     @endpush
 </x-layout.app>

@@ -22,6 +22,20 @@ class CompetitionController extends Controller
             });
         }
 
+        // Search filter
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%")
+                    ->orWhereHas('competition', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    })->orWhereHas('competition.parent', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
         // Filter by status if provided
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);

@@ -7,11 +7,28 @@ $(document).ready(function() {
     $('#category-filter').on('change', function() {
         loadCompetitions();
     });
+
+    $('#search-input').on('input', debounce(function() {
+        loadCompetitions();
+    }, 500));
 });
+
+// Debounce helper if not already available globally
+if (typeof debounce !== 'function') {
+    function debounce(func, wait) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), wait);
+        };
+    }
+}
 
 // Load Competitions
 function loadCompetitions(page = 1) {
     const category = $('#category-filter').val();
+    const search = $('#search-input').val();
     competitionCurrentPage = page;
     
     $('#loading').removeClass('d-none');
@@ -24,6 +41,7 @@ function loadCompetitions(page = 1) {
         method: 'GET',
         data: {
             category: category,
+            search: search,
             page: page
         },
         success: function(response) {
@@ -38,7 +56,7 @@ function loadCompetitions(page = 1) {
         },
         error: function() {
             $('#loading').addClass('d-none');
-            $('#competition-container').html('<div class="col-12 text-center"><p class="text-danger">Failed to load competitions</p></div>');
+            $('#competition-container').html(`<div class="col-12 text-center"><p class="text-danger">${window.competitionTranslations.load_error}</p></div>`);
         }
     });
 }
@@ -94,13 +112,13 @@ function renderCompetitions(competitions) {
         
         if (comp.status === 'ongoing') {
             statusClass = 'bg-primary';
-            statusLabel = 'Sedang Berlangsung';
+            statusLabel = window.competitionTranslations.status_ongoing;
         } else if (comp.status === 'registration_closed') {
             statusClass = 'bg-danger';
-            statusLabel = 'Pendaftaran Ditutup';
+            statusLabel = window.competitionTranslations.status_closed;
         } else if (comp.status === 'completed') {
             statusClass = 'bg-info text-dark';
-            statusLabel = 'Selesai';
+            statusLabel = window.competitionTranslations.status_completed;
         } else if (comp.status === 'draft') {
             statusLabel = 'Draft';
         }
@@ -122,7 +140,7 @@ function renderCompetitions(competitions) {
         if (comp.timelines && comp.timelines.length > 0) {
             timelineHtml = `
                 <div class="mt-4">
-                    <h6 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>Timeline Kompetisi</h6>
+                    <h6 class="fw-bold mb-3"><i class="bi bi-clock-history me-2"></i>${window.competitionTranslations.timeline_heading}</h6>
                     <div class="timeline-simple">
                         ${comp.timelines.map(t => `
                             <div class="timeline-item d-flex mb-2 pb-2 border-bottom border-light">
@@ -149,7 +167,7 @@ function renderCompetitions(competitions) {
                                     </div>
                                     ${comp.registration_range ? `
                                     <div class="text-muted small fw-semibold">
-                                        <i class="bi bi-calendar-event me-2"></i>Registrasi: ${comp.registration_range}
+                                        <i class="bi bi-calendar-event me-2"></i>${window.competitionTranslations.registration}: ${comp.registration_range}
                                     </div>` : ''}
                                 </div>
                                 
@@ -166,7 +184,7 @@ function renderCompetitions(competitions) {
                                         <div class="d-flex align-items-start mb-2">
                                             <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
                                             <div>
-                                                <small class="text-muted d-block lh-1 mb-1">Lokasi</small>
+                                                <small class="text-muted d-block lh-1 mb-1">${window.competitionTranslations.location}</small>
                                                 <span class="small fw-semibold text-dark">${comp.location}</span>
                                             </div>
                                         </div>` : ''}
@@ -175,7 +193,7 @@ function renderCompetitions(competitions) {
                                         <div class="d-flex align-items-start">
                                             <i class="bi bi-person-badge text-primary me-2 mt-1"></i>
                                             <div>
-                                                <small class="text-muted d-block lh-1 mb-1">Kontak Persona</small>
+                                                <small class="text-muted d-block lh-1 mb-1">${window.competitionTranslations.contact}</small>
                                                 <span class="small fw-semibold text-dark">${comp.contact_info}</span>
                                             </div>
                                         </div>` : ''}
@@ -188,17 +206,17 @@ function renderCompetitions(competitions) {
                                 <div class="mt-4 pt-3 border-top d-flex flex-wrap gap-2">
                                     ${comp.post_url ? `
                                     <a href="${comp.post_url}" target="_blank" class="btn btn-primary px-4">
-                                        <i class="bi bi-info-circle me-2"></i>Detail Info
+                                        <i class="bi bi-info-circle me-2"></i>${window.competitionTranslations.btn_detail}
                                     </a>` : ''}
                                     
                                     ${comp.registration_url ? `
                                     <a href="${comp.registration_url}" target="_blank" class="btn btn-success px-4">
-                                        <i class="bi bi-pencil-square me-2"></i>Link Pendaftaran
+                                        <i class="bi bi-pencil-square me-2"></i>${window.competitionTranslations.btn_register}
                                     </a>` : ''}
                                     
                                     ${comp.guidebook_url ? `
                                     <a href="${comp.guidebook_url}" target="_blank" class="btn btn-outline-info px-4">
-                                        <i class="bi bi-file-earmark-pdf me-2"></i>Guidebook / Juknis
+                                        <i class="bi bi-file-earmark-pdf me-2"></i>${window.competitionTranslations.btn_guidebook}
                                     </a>` : ''}
                                 </div>
                             </div>
