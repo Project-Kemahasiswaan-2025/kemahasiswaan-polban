@@ -1,0 +1,69 @@
+services:
+    webserver:
+        image: nginx:alpine
+        container_name: kemahasiswaan-nginx
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "8094:80"
+        volumes:
+            - .:/var/www/html
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d
+        command: /bin/sh -c "rm -f /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+        networks:
+            - app-network
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: kemahasiswaan-app
+        restart: unless-stopped
+        tty: true
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+        networks:
+            - app-network
+        user: root
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        depends_on:
+            - db
+
+    db:
+        image: mysql:8.0
+        container_name: kemahasiswaan-mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: kemahasiswaan
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_USER: kemahasiswaan
+            MYSQL_PASSWORD: secret
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - app-network
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: kemahasiswaan-phpmyadmin
+        restart: unless-stopped
+        ports:
+            - "8095:80"
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            MYSQL_ROOT_PASSWORD: secret
+        networks:
+            - app-network
+        depends_on:
+            - db
+
+networks:
+    app-network:
+        driver: bridge
+
+volumes:
+    dbdata:
+        driver: local
