@@ -129,6 +129,8 @@ return [
     'fields' => [
         'image' => 'Image',
         'image_helper' => 'Recommended image size: 1200x500px or similar ratio',
+        'poster_helper' => 'Recommended size: 900x1280px',
+        'org_cover_helper' => 'Recommended size: 300x200px',
         'title' => 'Title',
         'sort_order' => 'Sort Order',
         'url_optional' => 'Link (optional)',
@@ -208,7 +210,7 @@ return [
         'poster_from_gallery_helper' => 'Optional. Select an existing poster from the gallery as the thread visual.',
         'poster_preview' => 'Poster Preview',
         'custom_image' => 'Or Upload Image',
-        'custom_image_helper' => 'This image is only used for this thread, it will not be added to the poster gallery.',
+        'custom_image_helper' => 'This image is only used for this thread, it will not be added to the poster gallery. Recommended size: 900x1280px.',
         'service_name' => 'Service Name',
         'summary' => 'Summary',
         'cta_label' => 'Button Label',

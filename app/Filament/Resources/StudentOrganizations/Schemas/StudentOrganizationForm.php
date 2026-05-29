@@ -114,7 +114,8 @@ class StudentOrganizationForm
                             ->disk('public')
                             ->directory('org/covers')
                             ->image()
-                            ->columnSpan(8),
+                            ->columnSpan(8)
+                            ->helperText(__('filament.fields.org_cover_helper')),
                     ]),
                 ])
                 ->columnSpanFull(),

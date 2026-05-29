@@ -27,7 +27,8 @@ class PosterForm
                             ->directory('posters')
                             ->image()
                             ->required()
-                            ->columnSpan(4),
+                            ->columnSpan(4)
+                            ->helperText(__('filament.fields.poster_helper')),
 
                         Grid::make(12)->schema([
                             Select::make('category_id')

@@ -129,6 +129,8 @@ return [
     'fields' => [
         'image' => 'Gambar',
         'image_helper' => 'Rekomendasi ukuran gambar: 1200x500px atau rasio serupa',
+        'poster_helper' => 'Rekomendasi ukuran: 900x1280px',
+        'org_cover_helper' => 'Rekomendasi ukuran: 300x200px',
         'title' => 'Judul',
         'sort_order' => 'Urutan',
         'url_optional' => 'Link (opsional)',
@@ -208,7 +210,7 @@ return [
         'poster_from_gallery_helper' => 'Opsional. Pilih poster yang sudah ada di galeri sebagai visual thread.',
         'poster_preview' => 'Preview Poster',
         'custom_image' => 'Atau Upload Gambar',
-        'custom_image_helper' => 'Gambar ini hanya dipakai untuk thread ini, tidak masuk ke galeri poster.',
+        'custom_image_helper' => 'Gambar ini hanya dipakai untuk thread ini, tidak masuk ke galeri poster. Rekomendasi ukuran: 900x1280px.',
         'service_name' => 'Nama Layanan',
         'summary' => 'Ringkasan',
         'cta_label' => 'Label Tombol',
