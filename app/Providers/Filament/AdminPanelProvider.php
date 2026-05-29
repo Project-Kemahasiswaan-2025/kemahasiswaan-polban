@@ -38,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
                 Css::make('bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'),
             ])
             ->id('admin')
-            ->path('admin')
+            ->path('kemahasiswaan/admin')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
