@@ -57,9 +57,16 @@ class DownloadController extends Controller
             ->where('hash', $hash)
             ->firstOrFail();
 
+        if ($download->type === 'link' || !empty($download->external_url)) {
+            if (!filter_var($download->external_url, FILTER_VALIDATE_URL)) {
+                abort(404);
+            }
+            return redirect()->away($download->external_url);
+        }
+
         $path = $download->file_path;
 
-        if (!Storage::disk('public')->exists($path)) {
+        if (!$path || !Storage::disk('public')->exists($path)) {
             abort(404);
         }
 
@@ -68,7 +75,7 @@ class DownloadController extends Controller
 
         // Clean name (remove extension if user added it to name field)
         $cleanName = preg_replace('/\.' . preg_quote($extension, '/') . '$/i', '', $download->name);
-        $filename = $cleanName . '.' . $extension;
+        $filename = $cleanName . ($extension ? '.' . $extension : '');
 
         return Storage::disk('public')->download($path, $filename);
     }

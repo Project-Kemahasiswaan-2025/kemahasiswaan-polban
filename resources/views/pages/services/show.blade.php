@@ -114,14 +114,22 @@
                                 class="list-group-item list-group-item-action d-flex align-items-center py-3"
                                 target="_blank"
                                 rel="noopener">
+                                @if($download->type === 'link')
+                                <i class="bi bi-link-45deg text-primary fs-4 me-3"></i>
+                                @else
                                 <i class="bi bi-file-earmark-arrow-down text-primary fs-4 me-3"></i>
+                                @endif
 
                                 <div class="flex-grow-1">
                                     <div class="fw-bold text-wrap">{{ $download->name }}</div>
-                                    <small class="text-muted">Buka / unduh dokumen</small>
+                                    <small class="text-muted">{{ $download->type === 'link' ? 'Buka tautan dokumen' : 'Unduh dokumen' }}</small>
                                 </div>
 
+                                @if($download->type === 'link')
+                                <i class="bi bi-box-arrow-up-right ms-3 text-muted"></i>
+                                @else
                                 <i class="bi bi-download ms-3 text-muted"></i>
+                                @endif
                             </a>
                             @endforeach
                         </div>

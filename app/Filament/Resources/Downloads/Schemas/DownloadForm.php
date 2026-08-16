@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Downloads\Schemas;
 
+use App\Models\Download;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -16,6 +18,16 @@ class DownloadForm
         return $schema->schema([
             Section::make(__('filament.sections.document_info'))
                 ->schema([
+                    Radio::make('type')
+                        ->label(__('filament.fields.document_source_type'))
+                        ->options([
+                            'file' => __('filament.fields.source_file'),
+                            'link' => __('filament.fields.source_link'),
+                        ])
+                        ->default('file')
+                        ->inline()
+                        ->live(),
+
                     Grid::make(12)->schema([
                         TextInput::make('name')
                             ->label(__('filament.fields.document_name'))
@@ -39,7 +51,8 @@ class DownloadForm
 
                     FileUpload::make('file_path')
                         ->label(__('filament.fields.document_file'))
-                        ->required()
+                        ->visible(fn($get) => $get('type') === 'file' || !$get('type'))
+                        ->required(fn($get) => $get('type') === 'file' || !$get('type'))
                         ->disk('public')
                         ->directory('downloads/general')
                         ->live()
@@ -49,6 +62,22 @@ class DownloadForm
                                 if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                                     $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                                     $set('name', (string) str($filename)->replace(['-', '_'], ' ')->title());
+                                }
+                            }
+                        }),
+
+                    TextInput::make('external_url')
+                        ->label(__('filament.fields.external_url_link'))
+                        ->placeholder('https://example.com/dokumen.pdf')
+                        ->url()
+                        ->visible(fn($get) => $get('type') === 'link')
+                        ->required(fn($get) => $get('type') === 'link')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state, $set, $get) {
+                            if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
+                                $analysis = Download::analyzeUrl($state);
+                                if (!$get('name') && !empty($analysis['suggested_name'])) {
+                                    $set('name', $analysis['suggested_name']);
                                 }
                             }
                         }),

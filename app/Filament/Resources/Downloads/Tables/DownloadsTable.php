@@ -18,6 +18,13 @@ class DownloadsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('type')
+                    ->label(__('filament.fields.document_source_type'))
+                    ->badge()
+                    ->formatStateUsing(fn($state) => $state === 'link' ? __('filament.fields.source_link') : __('filament.fields.source_file'))
+                    ->color(fn($state) => $state === 'link' ? 'warning' : 'success')
+                    ->icon(fn($state) => $state === 'link' ? 'heroicon-o-link' : 'heroicon-o-document-arrow-down'),
+
                 TextColumn::make('category.name')
                     ->label(__('filament.fields.category_section'))
                     ->badge()
@@ -26,7 +33,7 @@ class DownloadsTable
 
                 TextColumn::make('file_size')
                     ->label(__('filament.fields.file_size'))
-                    ->formatStateUsing(fn($state) => $state ? number_format($state / 1024, 1) . ' KB' : '-')
+                    ->formatStateUsing(fn($state, $record) => $record->type === 'link' && !$state ? 'Tautan' : ($state ? number_format($state / 1024, 1) . ' KB' : '-'))
                     ->sortable(),
 
                 TextColumn::make('file_type')

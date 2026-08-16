@@ -22,12 +22,34 @@
                 <!-- Left: Preview -->
                 <div class="col-lg-8">
                     @php
-                    $extension = strtolower(pathinfo($download->file_path, PATHINFO_EXTENSION));
-                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'svg', 'webp']);
-                    $isPdf = $extension === 'pdf';
+                    $isLink = $download->type === 'link';
+                    $rawType = strtolower($download->file_type ?? '');
+                    $pathExt = strtolower(pathinfo($download->file_path ?? '', PATHINFO_EXTENSION));
+
+                    $isPdf = !$isLink && $download->file_path && ($pathExt === 'pdf' || str_contains($rawType, 'pdf'));
+                    $isImage = !$isLink && $download->file_path && (in_array($pathExt, ['jpg', 'jpeg', 'png', 'svg', 'webp']) || str_contains($rawType, 'image/'));
+
+                    $displayType = $pathExt ? strtoupper($pathExt) : ($rawType ? strtoupper(str_replace(['application/', 'image/'], '', $rawType)) : ($isLink ? 'LINK' : 'FILE'));
                     @endphp
 
-                    @if($isImage || $isPdf)
+                    @if($isLink)
+                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
+                        <div class="mb-3">
+                            <div class="d-inline-flex p-4 rounded-circle bg-warning-subtle text-warning mb-3">
+                                <i class="bi bi-link-45deg display-3"></i>
+                            </div>
+                        </div>
+                        <h3 class="fw-bold text-navy mb-2">Tautan Eksternal</h3>
+                        <p class="text-muted mx-auto" style="max-width: 500px;">
+                            Dokumen ini berada pada server/halaman luar. Klik tombol di sebelah kanan atau tombol di bawah untuk menuju ke dokumen target.
+                        </p>
+                        <div class="mt-3">
+                            <a href="{{ $download->url }}" class="btn btn-primary rounded-pill px-4 py-2" target="_blank">
+                                <i class="bi bi-box-arrow-up-right me-2"></i> Buka Tautan Dokumen
+                            </a>
+                        </div>
+                    </div>
+                    @elseif($isImage || $isPdf)
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                         <div class="card-header bg-white py-3 border-0">
                             <h5 class="mb-0 fw-bold"><i class="bi bi-eye me-2"></i>Pratinjau Dokumen</h5>
@@ -43,7 +65,7 @@
                         </div>
                     </div>
                     @else
-                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+                    <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
                         <i class="bi bi-file-earmark-binary display-1 text-muted mb-3"></i>
                         <h4 class="text-muted">Pratinjau tidak tersedia untuk tipe file ini</h4>
                         <p class="text-secondary">Silakan unduh dokumen untuk melihat isinya.</p>
@@ -68,11 +90,11 @@
                                 </div>
                                 <div class="p-3 bg-light rounded-4">
                                     <small class="text-muted d-block mb-1">Ukuran File</small>
-                                    <span class="fw-bold text-navy">{{ number_format($download->file_size / 1024, 1) }} KB</span>
+                                    <span class="fw-bold text-navy">{{ $download->file_size ? number_format($download->file_size / 1024, 1) . ' KB' : ($isLink ? 'Link Eksternal' : '-') }}</span>
                                 </div>
                                 <div class="p-3 bg-light rounded-4">
                                     <small class="text-muted d-block mb-1">Tipe File</small>
-                                    <span class="fw-bold text-navy">{{ strtoupper($extension) }}</span>
+                                    <span class="fw-bold text-navy">{{ $displayType }}</span>
                                 </div>
                             </div>
 
@@ -80,7 +102,11 @@
                                 <a href="{{ $download->url }}"
                                     class="btn btn-primary btn-lg rounded-pill shadow-sm"
                                     target="_blank">
+                                    @if($isLink)
+                                    <i class="bi bi-box-arrow-up-right me-2"></i> Buka Link
+                                    @else
                                     <i class="bi bi-download me-2"></i> Unduh Sekarang
+                                    @endif
                                 </a>
                                 @if($isPdf)
                                 <a href="{{ asset('storage/' . $download->file_path) }}"

@@ -134,6 +134,16 @@ class ServiceForm
                     Repeater::make('downloads')
                         ->relationship('downloads')
                         ->schema([
+                            Radio::make('type')
+                                ->label(__('filament.fields.document_source_type'))
+                                ->options([
+                                    'file' => __('filament.fields.source_file'),
+                                    'link' => __('filament.fields.source_link'),
+                                ])
+                                ->default('file')
+                                ->inline()
+                                ->live(),
+
                             Grid::make(12)->schema([
                                 TextInput::make('name')
                                     ->label(__('filament.fields.document_name'))
@@ -150,7 +160,8 @@ class ServiceForm
 
                             FileUpload::make('file_path')
                                 ->label('File')
-                                ->required()
+                                ->visible(fn($get) => $get('type') === 'file' || !$get('type'))
+                                ->required(fn($get) => $get('type') === 'file' || !$get('type'))
                                 ->disk('public')
                                 ->directory('downloads/services')
                                 ->live()
@@ -160,6 +171,22 @@ class ServiceForm
                                         if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                                             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                                             $set('name', (string) str($filename)->replace(['-', '_'], ' ')->title());
+                                        }
+                                    }
+                                }),
+
+                            TextInput::make('external_url')
+                                ->label(__('filament.fields.external_url_link'))
+                                ->placeholder('https://example.com/dokumen.pdf')
+                                ->url()
+                                ->visible(fn($get) => $get('type') === 'link')
+                                ->required(fn($get) => $get('type') === 'link')
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function ($state, $set, $get) {
+                                    if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
+                                        $analysis = \App\Models\Download::analyzeUrl($state);
+                                        if (!$get('name') && !empty($analysis['suggested_name'])) {
+                                            $set('name', $analysis['suggested_name']);
                                         }
                                     }
                                 }),

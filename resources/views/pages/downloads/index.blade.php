@@ -78,7 +78,11 @@
                                     <div class="flex-shrink-0">
                                         <a href="{{ route('download.show', $download->id) }}" class="text-decoration-none">
                                             <div class="bg-light-primary p-3 rounded-4 transition-hover">
+                                                @if($download->type === 'link')
+                                                <i class="bi bi-link-45deg text-primary fs-3"></i>
+                                                @else
                                                 <i class="bi bi-file-earmark-arrow-down text-primary fs-3"></i>
+                                                @endif
                                             </div>
                                         </a>
                                     </div>
@@ -88,6 +92,10 @@
                                         </a>
                                         <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
                                             <span><i class="bi bi-clock me-1"></i> {{ $download->updated_at->format('d M Y') }}</span>
+                                            @if($download->type === 'link')
+                                            <span class="text-secondary opacity-50">|</span>
+                                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle"><i class="bi bi-link-45deg me-1"></i> Link Eksternal</span>
+                                            @endif
                                             @if($download->file_size)
                                             <span class="text-secondary opacity-50">|</span>
                                             <span><i class="bi bi-hdd me-1"></i> {{ number_format($download->file_size / 1024, 1) }} KB</span>
@@ -101,7 +109,11 @@
                                             <a href="{{ $download->url }}"
                                                 class="btn btn-primary btn-sm rounded-pill px-4"
                                                 target="_blank">
+                                                @if($download->type === 'link')
+                                                <i class="bi bi-box-arrow-up-right me-2"></i> Buka Link
+                                                @else
                                                 <i class="bi bi-download me-2"></i> Unduh
+                                                @endif
                                             </a>
                                             <a href="{{ route('download.show', $download->id) }}"
                                                 class="btn btn-outline-primary btn-sm rounded-pill px-4">
