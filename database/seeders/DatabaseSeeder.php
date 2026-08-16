@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             RunningTextSeeder::class,
             DownloadSeeder::class,
             CompetitionThreadSeeder::class,
+            ChatbotSeeder::class,
         ]);
     }
 }

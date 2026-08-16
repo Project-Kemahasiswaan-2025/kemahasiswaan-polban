@@ -53,4 +53,5 @@ return [
     'nav_label_download_categories' => 'Download Categories',
     'nav_label_document_shortcuts' => 'Document Shortcuts',
     'nav_label_video_categories' => 'Video Categories',
+    'nav_label_chatbot' => 'Chatbot Configuration',
 ];

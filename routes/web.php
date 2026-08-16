@@ -27,5 +27,9 @@ Route::prefix('kemahasiswaan')->group(function () {
 	Route::get('/d/{hash}', [DownloadController::class, 'download'])->name('download.file');
 	Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 
+	// Chatbot Widget API Routes
+	Route::get('/chatbot/init', [\App\Http\Controllers\ChatbotController::class, 'init'])->name('chatbot.init');
+	Route::post('/chatbot/select', [\App\Http\Controllers\ChatbotController::class, 'select'])->middleware('throttle:30,1')->name('chatbot.select');
+
 	Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 });
