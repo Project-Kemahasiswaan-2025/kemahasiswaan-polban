@@ -356,7 +356,9 @@
         launcher.addEventListener('click', toggleChat);
         closeBtn.addEventListener('click', toggleChat);
         resetBtn.addEventListener('click', function() {
-            selectNode(null, 'root');
+            bodyEl.innerHTML = '';
+            isInitialized = false;
+            initChatbot();
         });
 
         if (navRoot) {

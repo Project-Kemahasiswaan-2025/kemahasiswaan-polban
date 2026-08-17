@@ -53,7 +53,7 @@ class ChatbotController extends Controller
         return response()->json([
             'status' => 'success',
             'session_token' => $session->session_token,
-            'welcome_message' => 'Halo! Selamat datang di Pusat Layanan Kemahasiswaan POLBAN. Ada yang bisa kami bantu? Silakan pilih topik di bawah ini:',
+            'welcome_message' => \App\Models\ChatbotSetting::getRandomWelcomeMessage(),
             'options' => $roots,
         ]);
     }

@@ -46,9 +46,27 @@
     </div>
 
     @if($node->bot_response)
-        <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1 italic bg-gray-50 dark:bg-gray-900/50 p-1.5 rounded">
-            "{{ Str::limit(strip_tags($node->bot_response), 80) }}"
-        </p>
+        @php
+            $variations = array_values(array_filter(array_map('trim', preg_split('/\n?\s*---\s*\n?/', $node->bot_response)), fn($v) => $v !== ''));
+        @endphp
+        <div class="space-y-1 pt-0.5">
+            @if(count($variations) > 1)
+                <div class="text-[10px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <i class="bi bi-shuffle"></i> {{ count($variations) }} Variasi Respon Bot (Acak):
+                </div>
+                <div class="space-y-1 pl-1">
+                    @foreach($variations as $idx => $var)
+                        <div class="text-[11px] text-gray-600 dark:text-gray-300 italic bg-gray-50 dark:bg-gray-900/50 p-1.5 rounded border-l-2 border-amber-400 dark:border-amber-600">
+                            <span class="font-semibold text-amber-700 dark:text-amber-300 not-italic">Variasi #{{ $idx + 1 }}:</span> "{{ Str::limit(strip_tags($var), 90) }}"
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 italic bg-gray-50 dark:bg-gray-900/50 p-1.5 rounded">
+                    "{{ Str::limit(strip_tags($variations[0] ?? $node->bot_response), 100) }}"
+                </p>
+            @endif
+        </div>
     @endif
 
     <!-- Recursive Children -->

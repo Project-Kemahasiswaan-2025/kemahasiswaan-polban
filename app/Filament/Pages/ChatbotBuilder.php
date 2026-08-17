@@ -24,6 +24,7 @@ class ChatbotBuilder extends Page
     public string $nodeTitle = '';
     public ?string $icon = null;
     public string $bot_response = '';
+    public array $bot_responses = [''];
     public string $action_type = 'node'; // node, jump, module, info
     public ?string $module_key = null;
     public ?int $target_node_id = null;
@@ -56,6 +57,10 @@ class ChatbotBuilder extends Page
     // Simulator State
     public array $simulatorMessages = [];
 
+    // Welcome Message Settings State
+    public bool $isWelcomeModalOpen = false;
+    public array $welcome_responses = [''];
+
     public static function getNavigationGroup(): ?string
     {
         return __('menu.nav_group_services');
@@ -77,7 +82,7 @@ class ChatbotBuilder extends Page
         $this->simulatorMessages = [
             [
                 'sender' => 'bot',
-                'text' => 'Halo! Selamat datang di Pusat Layanan Kemahasiswaan POLBAN. Ada yang bisa kami bantu? Silakan pilih topik di bawah ini:',
+                'text' => \App\Models\ChatbotSetting::getRandomWelcomeMessage(),
                 'options' => $roots->map(fn($r) => [
                     'id' => $r->id,
                     'title' => $r->title,
@@ -85,6 +90,53 @@ class ChatbotBuilder extends Page
                 ])->toArray(),
             ],
         ];
+    }
+
+    public function openWelcomeModal(): void
+    {
+        $this->welcome_responses = \App\Models\ChatbotSetting::getWelcomeVariations();
+        $this->isWelcomeModalOpen = true;
+    }
+
+    public function closeWelcomeModal(): void
+    {
+        $this->isWelcomeModalOpen = false;
+    }
+
+    public function addWelcomeVariation(): void
+    {
+        $this->welcome_responses[] = '';
+    }
+
+    public function removeWelcomeVariation(int $index): void
+    {
+        if (isset($this->welcome_responses[$index])) {
+            unset($this->welcome_responses[$index]);
+            $this->welcome_responses = array_values($this->welcome_responses);
+        }
+        if (empty($this->welcome_responses)) {
+            $this->welcome_responses = [''];
+        }
+    }
+
+    public function saveWelcomeSetting(): void
+    {
+        $this->validate([
+            'welcome_responses.*' => 'nullable|string',
+        ]);
+
+        $cleanVariations = array_values(array_filter(array_map('trim', $this->welcome_responses), fn($v) => $v !== ''));
+        $combinedWelcome = implode("\n---\n", $cleanVariations);
+
+        $setting = \App\Models\ChatbotSetting::getSettings();
+        $setting->update([
+            'welcome_message' => $combinedWelcome ?: 'Halo! Selamat datang di Pusat Layanan Kemahasiswaan POLBAN. Ada yang bisa kami bantu? Silakan pilih topik di bawah ini:',
+        ]);
+
+        Notification::make()->title('Konfigurasi pesan pengantar awal berhasil diperbarui.')->success()->send();
+
+        $this->closeWelcomeModal();
+        $this->resetSimulator();
     }
 
     public function simulatorSelect($nodeId, ?string $userTitle = null): void
@@ -229,6 +281,22 @@ class ChatbotBuilder extends Page
         }
     }
 
+    public function addResponseVariation(): void
+    {
+        $this->bot_responses[] = '';
+    }
+
+    public function removeResponseVariation(int $index): void
+    {
+        if (isset($this->bot_responses[$index])) {
+            unset($this->bot_responses[$index]);
+            $this->bot_responses = array_values($this->bot_responses);
+        }
+        if (empty($this->bot_responses)) {
+            $this->bot_responses = [''];
+        }
+    }
+
     public function openCreateModal(?int $parentId = null): void
     {
         $this->resetForm();
@@ -244,6 +312,18 @@ class ChatbotBuilder extends Page
         $this->nodeTitle = $node->title;
         $this->icon = $node->icon;
         $this->bot_response = $node->bot_response ?? '';
+
+        if (!empty($node->bot_response)) {
+            $parts = preg_split('/\n?\s*---\s*\n?/', $node->bot_response);
+            $this->bot_responses = array_values(array_filter(array_map('trim', $parts), fn($v) => $v !== ''));
+        } else {
+            $this->bot_responses = [''];
+        }
+
+        if (empty($this->bot_responses)) {
+            $this->bot_responses = [''];
+        }
+
         $this->action_type = $node->action_type ?? 'node';
         $this->module_key = $node->module_key;
         $this->target_node_id = $node->target_node_id;
@@ -265,17 +345,21 @@ class ChatbotBuilder extends Page
         $this->validate([
             'nodeTitle' => 'required|string|max:255',
             'action_type' => 'required|string',
-            'bot_response' => 'nullable|string',
+            'bot_responses.*' => 'nullable|string',
             'action_url' => 'nullable|string',
             'action_label' => 'nullable|string|max:255',
             'action_icon_position' => 'required|string|in:left,right',
         ]);
 
+        $cleanVariations = array_values(array_filter(array_map('trim', $this->bot_responses), fn($v) => $v !== ''));
+        $combinedResponse = implode("\n---\n", $cleanVariations);
+        $this->bot_response = $combinedResponse;
+
         $payload = [
             'parent_id' => $this->parentId,
             'title' => $this->nodeTitle,
             'icon' => $this->icon,
-            'bot_response' => $this->bot_response,
+            'bot_response' => $combinedResponse,
             'action_type' => $this->action_type,
             'module_key' => $this->action_type === 'module' ? $this->module_key : null,
             'target_node_id' => $this->action_type === 'jump' ? $this->target_node_id : null,
@@ -331,6 +415,7 @@ class ChatbotBuilder extends Page
         $this->nodeTitle = '';
         $this->icon = null;
         $this->bot_response = '';
+        $this->bot_responses = [''];
         $this->action_type = 'node';
         $this->module_key = null;
         $this->target_node_id = null;
@@ -346,6 +431,33 @@ class ChatbotBuilder extends Page
 
         $this->sort_order = 0;
         $this->is_active = true;
+    }
+
+    public static function formatMarkdown(?string $text): string
+    {
+        if (empty($text)) {
+            return '';
+        }
+
+        // Clean up 3+ consecutive newlines to maximum 2
+        $cleanText = preg_replace("/\n{3,}/", "\n\n", trim($text));
+
+        // Header ### Header
+        $cleanText = preg_replace('/^### (.*$)/m', '<h6 class="font-bold text-amber-700 dark:text-amber-400 text-xs mb-1 mt-1">$1</h6>', $cleanText);
+
+        // Bold **text**
+        $cleanText = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $cleanText);
+
+        // Italic *text*
+        $cleanText = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $cleanText);
+
+        // Markdown Links [label](url)
+        $cleanText = preg_replace('/\[([^\]]+)\]\(([^)]+)\)/', '<a href="$2" target="_blank" class="text-amber-600 dark:text-amber-400 font-semibold underline hover:text-amber-700">$1</a>', $cleanText);
+
+        // Inline Code `code`
+        $cleanText = preg_replace('/`([^`]+)`/', '<code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[10px]">$1</code>', $cleanText);
+
+        return nl2br($cleanText);
     }
 
     public function getViewData(): array

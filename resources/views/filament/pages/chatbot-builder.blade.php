@@ -110,12 +110,18 @@
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white">Alur Percakapan Bot</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Kelola hierarki pertanyaan, jawaban, lompatan (jump), icon opsi, dan modul dinamis.</p>
                 </div>
-                <button wire:click="openCreateModal(null)" type="button" class="cb-btn-primary text-xs flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Tambah Topik Utama
-                </button>
+                <div class="flex items-center gap-2">
+                    <button wire:click="openWelcomeModal" type="button" class="px-3 py-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition" title="Konfigurasi Pesan Pengantar Awal Chatbot">
+                        <i class="bi bi-chat-quote-fill text-amber-600"></i>
+                        <span>Pesan Pengantar Awal</span>
+                    </button>
+                    <button wire:click="openCreateModal(null)" type="button" class="cb-btn-primary text-xs flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Tambah Topik Utama
+                    </button>
+                </div>
             </div>
 
             <!-- List Root Nodes -->
@@ -151,9 +157,10 @@
                 <div class="p-4 space-y-3 h-[480px] overflow-y-auto bg-gray-50 dark:bg-gray-900/50 text-xs">
                     @foreach($simulatorMessages as $msg)
                     @if($msg['sender'] === 'bot')
+                    @php $isLatestBot = $loop->last; @endphp
                     <div class="flex flex-col items-start space-y-2">
-                        <div class="max-w-[85%] bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-700 whitespace-pre-line">
-                            {!! nl2br(e($msg['text'])) !!}
+                        <div class="max-w-[85%] bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-700 leading-relaxed text-xs">
+                            {!! \App\Filament\Pages\ChatbotBuilder::formatMarkdown($msg['text']) !!}
                         </div>
 
                         @if(!empty($msg['documents']))
@@ -201,12 +208,21 @@
                         @if(!empty($msg['options']))
                         <div class="w-full flex flex-wrap gap-1.5 pt-1">
                             @foreach($msg['options'] as $opt)
+                            @if($isLatestBot)
                             <button wire:click="simulatorSelect('{{ $opt['id'] }}', '{{ addslashes($opt['title']) }}')" type="button" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs transition shadow-sm font-medium inline-flex items-center gap-1.5">
                                 @if(!empty($opt['icon']))
                                 <i class="bi {{ $opt['icon'] }}"></i>
                                 @endif
                                 <span>{{ $opt['title'] }}</span>
                             </button>
+                            @else
+                            <button type="button" disabled class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 rounded-full text-xs font-medium inline-flex items-center gap-1.5 cursor-not-allowed opacity-60">
+                                @if(!empty($opt['icon']))
+                                <i class="bi {{ $opt['icon'] }}"></i>
+                                @endif
+                                <span>{{ $opt['title'] }}</span>
+                            </button>
+                            @endif
                             @endforeach
                         </div>
                         @endif
@@ -323,11 +339,40 @@
                 </div>
                 @endif
 
-                <!-- Bot Response -->
-                <div>
-                    <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Teks Balasan Bot</label>
-                    <textarea wire:model="bot_response" rows="3" class="w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white text-xs p-2.5 border" placeholder="Tuliskan balasan bot... (Gunakan '---' untuk memisahkan variasi sinonim kalimat)"></textarea>
-                    <span class="text-[10px] text-gray-400">Tips: Anda dapat memisahkan beberapa kalimat variasi menggunakan <code>---</code> agar balasan bot acak & bervariasi.</span>
+                <!-- Bot Response Variations -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Teks Balasan Bot
+                            @if(count($bot_responses) > 1)
+                                <span class="text-[10px] bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold ml-1">
+                                    🔀 {{ count($bot_responses) }} Variasi Acak
+                                </span>
+                            @endif
+                        </label>
+                        <button wire:click="addResponseVariation" type="button" class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 hover:underline">
+                            <i class="bi bi-plus-circle-fill"></i> Tambah Variasi
+                        </button>
+                    </div>
+
+                    <div class="space-y-2">
+                        @foreach($bot_responses as $index => $resp)
+                        <div class="p-2.5 bg-gray-50 dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                    <i class="bi bi-chat-text text-amber-500"></i> Variasi Respon #{{ $index + 1 }}
+                                </span>
+                                @if(count($bot_responses) > 1)
+                                <button wire:click="removeResponseVariation({{ $index }})" type="button" class="text-rose-500 hover:text-rose-700 p-0.5 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition flex items-center gap-1 text-[10px] font-semibold" title="Hapus Variasi Ini">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                                @endif
+                            </div>
+                            <textarea wire:model="bot_responses.{{ $index }}" rows="2" class="w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white text-xs p-2 border" placeholder="Tuliskan variasi balasan bot..."></textarea>
+                        </div>
+                        @endforeach
+                    </div>
+                    <p class="text-[10px] text-gray-400">Tips: Jika Anda membuat lebih dari 1 variasi, sistem akan memilih salah satu kalimat secara acak saat pengguna memilih opsi ini.</p>
                 </div>
 
                 <!-- Custom External Link / CTA Button Toggle & Settings -->
@@ -424,6 +469,75 @@
                 <div class="flex items-center justify-end space-x-2 border-t border-gray-100 dark:border-gray-700 pt-3">
                     <button wire:click="closeModal" type="button" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">Batal</button>
                     <button type="submit" class="cb-btn-primary text-xs">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @endif
+
+    <!-- MODAL FORM INITIAL WELCOME MESSAGE SETTING -->
+    @if($isWelcomeModalOpen)
+    <div class="cb-modal-backdrop">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700 space-y-4 text-gray-900 dark:text-gray-100 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-3">
+                <div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="bi bi-chat-quote-fill text-amber-600"></i> Konfigurasi Pesan Pengantar Awal
+                    </h3>
+                    <p class="text-[11px] text-gray-500 dark:text-gray-400">Pesan ini akan langsung dikirim oleh bot saat pertama kali pengguna membuka widget chatbot.</p>
+                </div>
+                <button wire:click="closeWelcomeModal" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form wire:submit.prevent="saveWelcomeSetting" class="space-y-4 text-xs">
+                <!-- Welcome Response Variations -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">
+                            Kalimat Salam & Pengantar
+                            @if(count($welcome_responses) > 1)
+                                <span class="text-[10px] bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full font-bold ml-1">
+                                    🔀 {{ count($welcome_responses) }} Variasi Acak
+                                </span>
+                            @endif
+                        </label>
+                        <button wire:click="addWelcomeVariation" type="button" class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-amber-700 dark:text-amber-400 hover:underline">
+                            <i class="bi bi-plus-circle-fill"></i> Tambah Variasi
+                        </button>
+                    </div>
+
+                    <div class="space-y-2">
+                        @foreach($welcome_responses as $index => $resp)
+                        <div class="p-2.5 bg-gray-50 dark:bg-gray-900/60 rounded-xl border border-gray-200 dark:border-gray-700 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                                    <i class="bi bi-chat-dots text-amber-500"></i> Variasi Pengantar #{{ $index + 1 }}
+                                </span>
+                                @if(count($welcome_responses) > 1)
+                                <button wire:click="removeWelcomeVariation({{ $index }})" type="button" class="text-rose-500 hover:text-rose-700 p-0.5 rounded hover:bg-rose-50 dark:hover:bg-rose-950/40 transition flex items-center gap-1 text-[10px] font-semibold" title="Hapus Variasi Ini">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                                @endif
+                            </div>
+                            <textarea wire:model="welcome_responses.{{ $index }}" rows="2.5" class="w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-white text-xs p-2 border" placeholder="misal: Halo! Selamat datang di Pusat Layanan Kemahasiswaan POLBAN..."></textarea>
+                        </div>
+                        @endforeach
+                    </div>
+                    <p class="text-[10px] text-gray-400">Tips: Jika Anda membuat beberapa variasi, sistem akan memilih salah satu pesan secara acak setiap kali pengunjung baru membuka widget chatbot.</p>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-gray-100 dark:border-gray-700">
+                    <button wire:click="closeWelcomeModal" type="button" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-semibold">
+                        Batal
+                    </button>
+                    <button type="submit" class="cb-btn-primary text-xs">
+                        Simpan Pengaturan
+                    </button>
                 </div>
             </form>
         </div>
