@@ -287,6 +287,55 @@
         color: #ffffff;
     }
 
+    .chat-pagination-bar {
+        border-top: 1px dashed #cbd5e1;
+        padding-top: 0.5rem;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+    .chat-page-btn {
+        min-width: 30px;
+        height: 30px;
+        padding: 0 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 6px;
+        background-color: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+        line-height: 1;
+    }
+
+    .chat-page-btn:hover:not(:disabled) {
+        background-color: #f1f5f9;
+        color: #001f3f;
+        border-color: #001f3f;
+    }
+
+    .chat-page-btn.active {
+        background-color: #001f3f !important;
+        color: #ffffff !important;
+        border-color: #001f3f !important;
+        box-shadow: 0 1px 3px rgba(0, 31, 63, 0.2);
+    }
+
+    .chat-page-btn:disabled, .chat-page-btn.disabled {
+        opacity: 0.35;
+        cursor: not-allowed !important;
+        pointer-events: none;
+    }
+
+    .chat-page-ellipsis {
+        font-size: 0.72rem;
+        color: #64748b;
+        padding: 0 2px;
+    }
+
     .bg-navy {
         background-color: #001f3f !important;
     }
@@ -417,18 +466,100 @@
             scrollToBottom();
         }
 
-        function appendBotMessage(text, options = [], actionUrl = null, actionLabel = null, actionIcon = null, actionIconPos = 'left', documents = []) {
-            let optionsHtml = '';
+        function appendBotMessage(text, options = [], actionUrl = null, actionLabel = null, actionIcon = null, actionIconPos = 'left', documents = [], pagination = null) {
+            let itemOptionsHtml = '';
+            let navOptionsHtml = '';
+
             if (options && options.length > 0) {
-                optionsHtml = '<div class="d-flex flex-column gap-1.5 mt-3 w-100">';
+                const itemOptions = [];
+                const navOptions = [];
+
                 options.forEach(opt => {
-                    const iconTag = opt.icon ? `<i class="bi ${escapeHtml(opt.icon)} me-2"></i>` : '';
-                    const actionType = opt.action_type || '';
-                    const moduleKey = opt.module_key || '';
-                    const moduleParam = opt.module_param || '';
-                    optionsHtml += `<button class="btn chat-option-btn" data-id="${opt.id}" data-action="${actionType}" data-module="${moduleKey}" data-param="${moduleParam}">${iconTag}${escapeHtml(opt.title)}</button>`;
+                    const isNav = opt.id === 'root' || opt.module_param === 'root' || opt.action_type === 'root' || (opt.title && opt.title.toLowerCase().startsWith('kembali'));
+                    if (isNav) {
+                        navOptions.push(opt);
+                    } else {
+                        itemOptions.push(opt);
+                    }
                 });
-                optionsHtml += '</div>';
+
+                if (itemOptions.length > 0) {
+                    itemOptionsHtml = '<div class="d-flex flex-column gap-1.5 mt-3 w-100">';
+                    itemOptions.forEach(opt => {
+                        const iconTag = opt.icon ? `<i class="bi ${escapeHtml(opt.icon)} me-2"></i>` : '';
+                        const actionType = opt.action_type || '';
+                        const moduleKey = opt.module_key || '';
+                        const moduleParam = opt.module_param || '';
+                        itemOptionsHtml += `<button class="btn chat-option-btn" data-id="${opt.id}" data-action="${actionType}" data-module="${moduleKey}" data-param="${moduleParam}">${iconTag}${escapeHtml(opt.title)}</button>`;
+                    });
+                    itemOptionsHtml += '</div>';
+                }
+
+                if (navOptions.length > 0) {
+                    navOptionsHtml = '<div class="d-flex flex-column gap-1.5 mt-2 w-100">';
+                    navOptions.forEach(opt => {
+                        const iconTag = opt.icon ? `<i class="bi ${escapeHtml(opt.icon)} me-2"></i>` : '';
+                        const actionType = opt.action_type || '';
+                        const moduleKey = opt.module_key || '';
+                        const moduleParam = opt.module_param || '';
+                        navOptionsHtml += `<button class="btn chat-option-btn" data-id="${opt.id}" data-action="${actionType}" data-module="${moduleKey}" data-param="${moduleParam}">${iconTag}${escapeHtml(opt.title)}</button>`;
+                    });
+                    navOptionsHtml += '</div>';
+                }
+            }
+
+            let paginationHtml = '';
+            if (pagination && pagination.total_pages > 1) {
+                const curPage = parseInt(pagination.current_page) || 1;
+                const totPages = parseInt(pagination.total_pages) || 1;
+                const baseId = pagination.base_id || '';
+                const modKey = pagination.module_key || 'ormawa';
+                const modParam = pagination.module_param || '';
+
+                let pageBtns = '';
+
+                // Prev
+                const prevDisabled = curPage <= 1;
+                const prevId = `${baseId}${curPage - 1}`;
+                pageBtns += `<button class="chat-page-btn ${prevDisabled ? 'disabled' : ''}" data-id="${prevId}" data-action="module_sub" data-module="${modKey}" data-param="${modParam}" data-title="Halaman ${curPage - 1}" ${prevDisabled ? 'disabled' : ''} title="Halaman Sebelumnya"><i class="bi bi-chevron-left"></i></button>`;
+
+                // Adaptive numbers
+                let startP = Math.max(1, curPage - 1);
+                let endP = Math.min(totPages, startP + 2);
+                if (endP - startP < 2) {
+                    startP = Math.max(1, endP - 2);
+                }
+
+                if (startP > 1) {
+                    const firstId = `${baseId}1`;
+                    pageBtns += `<button class="chat-page-btn" data-id="${firstId}" data-action="module_sub" data-module="${modKey}" data-param="${modParam}" data-title="Halaman 1">1</button>`;
+                    if (startP > 2) pageBtns += `<span class="chat-page-ellipsis">...</span>`;
+                }
+
+                for (let p = startP; p <= endP; p++) {
+                    const pageId = `${baseId}${p}`;
+                    const isActive = p === curPage;
+                    pageBtns += `<button class="chat-page-btn ${isActive ? 'active' : ''}" data-id="${pageId}" data-action="module_sub" data-module="${modKey}" data-param="${modParam}" data-title="Halaman ${p}">${p}</button>`;
+                }
+
+                if (endP < totPages) {
+                    if (endP < totPages - 1) pageBtns += `<span class="chat-page-ellipsis">...</span>`;
+                    const lastId = `${baseId}${totPages}`;
+                    pageBtns += `<button class="chat-page-btn" data-id="${lastId}" data-action="module_sub" data-module="${modKey}" data-param="${modParam}" data-title="Halaman ${totPages}">${totPages}</button>`;
+                }
+
+                // Next
+                const nextDisabled = curPage >= totPages;
+                const nextId = `${baseId}${curPage + 1}`;
+                pageBtns += `<button class="chat-page-btn ${nextDisabled ? 'disabled' : ''}" data-id="${nextId}" data-action="module_sub" data-module="${modKey}" data-param="${modParam}" data-title="Halaman ${curPage + 1}" ${nextDisabled ? 'disabled' : ''} title="Halaman Selanjutnya"><i class="bi bi-chevron-right"></i></button>`;
+
+                paginationHtml = `
+                    <div class="chat-pagination-bar">
+                        <div class="d-flex align-items-center justify-content-center gap-1">
+                            ${pageBtns}
+                        </div>
+                    </div>
+                `;
             }
 
             let docsHtml = '';
@@ -496,23 +627,25 @@
                     <div class="chat-bot-text">${formatMarkdown(text)}</div>
                     ${docsHtml}
                     ${ctaHtml}
-                    ${optionsHtml}
+                    ${itemOptionsHtml}
+                    ${paginationHtml}
+                    ${navOptionsHtml}
                 </div>
             `;
             bodyEl.insertAdjacentHTML('beforeend', html);
 
-            const newButtons = bodyEl.querySelectorAll('.chat-option-btn:not([data-bound])');
+            const newButtons = bodyEl.querySelectorAll('.chat-option-btn:not([data-bound]), .chat-page-btn:not([data-bound])');
             newButtons.forEach(btn => {
                 btn.setAttribute('data-bound', 'true');
                 btn.addEventListener('click', function() {
-                    if (isProcessing) return;
+                    if (isProcessing || this.disabled || this.classList.contains('disabled')) return;
                     const nodeId = this.getAttribute('data-id');
                     const action = this.getAttribute('data-action');
                     const moduleKey = this.getAttribute('data-module');
                     const moduleParam = this.getAttribute('data-param');
-                    const titleText = this.innerText;
+                    const titleText = this.getAttribute('data-title') || this.innerText;
 
-                    bodyEl.querySelectorAll('.chat-option-btn').forEach(b => b.disabled = true);
+                    bodyEl.querySelectorAll('.chat-option-btn, .chat-page-btn').forEach(b => b.disabled = true);
 
                     appendUserMessage(titleText);
                     selectNode(nodeId, action, moduleKey, moduleParam);
@@ -546,7 +679,7 @@
                 removeTyping();
                 isProcessing = false;
                 if (data.status === 'success') {
-                    appendBotMessage(data.message, data.options, data.action_url, data.action_label, data.action_icon, data.action_icon_position, data.documents);
+                    appendBotMessage(data.message, data.options, data.action_url, data.action_label, data.action_icon, data.action_icon_position, data.documents, data.pagination);
                 } else {
                     appendBotMessage(data.message || 'Maaf, terjadi kesalahan.');
                 }
@@ -566,17 +699,32 @@
 
         function formatMarkdown(text) {
             if (!text) return '';
-            let formatted = String(text).trim();
-            formatted = escapeHtml(formatted);
+            let raw = String(text).trim();
+
+            // Extract images before escapeHtml
+            const images = [];
+            raw = raw.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, function(match, alt, url) {
+                const placeholder = `___IMG_PLACEHOLDER_${images.length}___`;
+                images.push(`<img src="${url}" alt="${escapeHtml(alt)}" class="chat-org-logo mb-2 rounded border p-1 bg-white shadow-xs" style="max-height: 65px; object-fit: contain; display: block;">`);
+                return placeholder;
+            });
+
+            let formatted = escapeHtml(raw);
 
             // Inline code `...`
             formatted = formatted.replace(/`([^`]+)`/g, '<code class="bg-light text-dark px-1 py-0.5 rounded border" style="font-size: 11px;">$1</code>');
             // Headers ### **Header**
             formatted = formatted.replace(/### \*\*(.*?)\*\*/g, '<strong class="d-block text-navy fs-6 mb-1">$1</strong>');
+            formatted = formatted.replace(/### (.*$)/gm, '<strong class="d-block text-navy fs-6 mb-1">$1</strong>');
             // Bold **text**
             formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             // Markdown links [text](url)
             formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-primary text-decoration-underline font-weight-bold">$1</a>');
+
+            // Restore images
+            images.forEach((imgHtml, idx) => {
+                formatted = formatted.replace(`___IMG_PLACEHOLDER_${idx}___`, imgHtml);
+            });
 
             formatted = formatted.replace(/(\r\n|\n|\r){3,}/g, '\n\n');
             return formatted;

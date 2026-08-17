@@ -146,12 +146,17 @@ class ChatbotBuilder extends Page
             return;
         }
 
-        // Handle string format module IDs: module:{module_key}:{sub_action}:{param}
+        // Handle string format module IDs: module:{module_key}:{sub_action}:{param}(:page:{page_num})
+        $pageParam = 1;
         if (is_string($nodeId) && str_starts_with($nodeId, 'module:')) {
             $parts = explode(':', $nodeId);
             $moduleKey = $parts[1] ?? null;
             $subAction = $parts[2] ?? null;
             $moduleParam = $parts[3] ?? null;
+
+            if (isset($parts[4]) && $parts[4] === 'page' && isset($parts[5])) {
+                $pageParam = (int) $parts[5];
+            }
 
             $module = ChatbotModuleManager::getModule($moduleKey);
             if ($module) {
@@ -160,6 +165,8 @@ class ChatbotBuilder extends Page
                     'sub_action' => $subAction,
                     'param' => $moduleParam,
                     'service_id' => $moduleParam,
+                    'page' => $pageParam,
+                    'raw_node_id' => $nodeId,
                 ]);
 
                 $this->simulatorMessages[] = [
@@ -174,6 +181,7 @@ class ChatbotBuilder extends Page
                     'sender' => 'bot',
                     'text' => trim($rendered['message'] ?? ''),
                     'options' => $rendered['options'] ?? [],
+                    'pagination' => $rendered['pagination'] ?? null,
                     'documents' => $rendered['documents'] ?? [],
                     'action_url' => $actionUrl,
                     'action_label' => $rendered['action_label'] ?? null,
@@ -450,6 +458,9 @@ class ChatbotBuilder extends Page
 
         // Italic *text*
         $cleanText = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $cleanText);
+
+        // Markdown Image ![alt](url)
+        $cleanText = preg_replace('/!\[([^\]]*)\]\(([^)]+)\)/', '<img src="$2" alt="$1" class="h-16 object-contain rounded-lg border p-1 bg-white dark:bg-gray-800 my-1 block">', $cleanText);
 
         // Markdown Links [label](url)
         $cleanText = preg_replace('/\[([^\]]+)\]\(([^)]+)\)/', '<a href="$2" target="_blank" class="text-amber-600 dark:text-amber-400 font-semibold underline hover:text-amber-700">$1</a>', $cleanText);

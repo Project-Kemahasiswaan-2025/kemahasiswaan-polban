@@ -206,8 +206,91 @@
                         @endif
 
                         @if(!empty($msg['options']))
+                        @php
+                            $itemOpts = array_filter($msg['options'], function($opt) {
+                                return !($opt['id'] === 'root' || ($opt['module_param'] ?? null) === 'root' || ($opt['action_type'] ?? null) === 'root' || str_starts_with(strtolower($opt['title'] ?? ''), 'kembali'));
+                            });
+                            $navOpts = array_filter($msg['options'], function($opt) {
+                                return ($opt['id'] === 'root' || ($opt['module_param'] ?? null) === 'root' || ($opt['action_type'] ?? null) === 'root' || str_starts_with(strtolower($opt['title'] ?? ''), 'kembali'));
+                            });
+                        @endphp
+
+                        @if(!empty($itemOpts))
                         <div class="w-full flex flex-wrap gap-1.5 pt-1">
-                            @foreach($msg['options'] as $opt)
+                            @foreach($itemOpts as $opt)
+                            @if($isLatestBot)
+                            <button wire:click="simulatorSelect('{{ $opt['id'] }}', '{{ addslashes($opt['title']) }}')" type="button" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs transition shadow-sm font-medium inline-flex items-center gap-1.5">
+                                @if(!empty($opt['icon']))
+                                <i class="bi {{ $opt['icon'] }}"></i>
+                                @endif
+                                <span>{{ $opt['title'] }}</span>
+                            </button>
+                            @else
+                            <button type="button" disabled class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 rounded-full text-xs font-medium inline-flex items-center gap-1.5 cursor-not-allowed opacity-60">
+                                @if(!empty($opt['icon']))
+                                <i class="bi {{ $opt['icon'] }}"></i>
+                                @endif
+                                <span>{{ $opt['title'] }}</span>
+                            </button>
+                            @endif
+                            @endforeach
+                        </div>
+                        @endif
+                        @endif
+
+                        @if(!empty($msg['pagination']) && ($msg['pagination']['total_pages'] ?? 1) > 1)
+                        @php
+                            $curP = (int)($msg['pagination']['current_page'] ?? 1);
+                            $totP = (int)($msg['pagination']['total_pages'] ?? 1);
+                            $baseId = $msg['pagination']['base_id'] ?? '';
+                        @endphp
+                        <div class="w-full border-t border-dashed border-gray-300 dark:border-gray-700 pt-2 mt-2">
+                            <div class="flex items-center justify-center gap-1">
+                                <!-- Prev -->
+                                @if($curP > 1 && $isLatestBot)
+                                <button wire:click="simulatorSelect('{{ $baseId }}{{ $curP - 1 }}', 'Halaman {{ $curP - 1 }}')" type="button" class="w-7 h-7 inline-flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 font-bold transition text-xs">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                @else
+                                <button type="button" disabled class="w-7 h-7 inline-flex items-center justify-center bg-gray-100 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded text-gray-400 opacity-40 cursor-not-allowed text-xs">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                                @endif
+
+                                <!-- Page numbers -->
+                                @for($p = 1; $p <= $totP; $p++)
+                                @if($p === $curP)
+                                <button type="button" disabled class="min-w-[28px] h-7 px-1.5 inline-flex items-center justify-center bg-amber-600 text-white rounded font-bold text-xs shadow-xs">
+                                    {{ $p }}
+                                </button>
+                                @elseif($isLatestBot)
+                                <button wire:click="simulatorSelect('{{ $baseId }}{{ $p }}', 'Halaman {{ $p }}')" type="button" class="min-w-[28px] h-7 px-1.5 inline-flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 rounded font-semibold transition text-xs">
+                                    {{ $p }}
+                                </button>
+                                @else
+                                <button type="button" disabled class="min-w-[28px] h-7 px-1.5 inline-flex items-center justify-center bg-gray-100 dark:bg-gray-800/40 border border-gray-200 text-gray-400 rounded opacity-50 cursor-not-allowed text-xs">
+                                    {{ $p }}
+                                </button>
+                                @endif
+                                @endfor
+
+                                <!-- Next -->
+                                @if($curP < $totP && $isLatestBot)
+                                <button wire:click="simulatorSelect('{{ $baseId }}{{ $curP + 1 }}', 'Halaman {{ $curP + 1 }}')" type="button" class="w-7 h-7 inline-flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-100 font-bold transition text-xs">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                @else
+                                <button type="button" disabled class="w-7 h-7 inline-flex items-center justify-center bg-gray-100 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/60 rounded text-gray-400 opacity-40 cursor-not-allowed text-xs">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+
+                        @if(!empty($navOpts))
+                        <div class="w-full flex flex-wrap gap-1.5 pt-1">
+                            @foreach($navOpts as $opt)
                             @if($isLatestBot)
                             <button wire:click="simulatorSelect('{{ $opt['id'] }}', '{{ addslashes($opt['title']) }}')" type="button" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs transition shadow-sm font-medium inline-flex items-center gap-1.5">
                                 @if(!empty($opt['icon']))

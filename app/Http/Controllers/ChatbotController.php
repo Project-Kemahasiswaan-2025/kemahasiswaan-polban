@@ -95,12 +95,17 @@ class ChatbotController extends Controller
             ]);
         }
 
-        // Parse module string format ID: module:{module_key}:{sub_action}:{param}
+        // Parse module string format ID: module:{module_key}:{sub_action}:{param}(:page:{page_num})
+        $pageParam = 1;
         if (is_string($rawNodeId) && str_starts_with($rawNodeId, 'module:')) {
             $parts = explode(':', $rawNodeId);
             $moduleKey = $parts[1] ?? $moduleKey;
             $subAction = $parts[2] ?? $subAction;
             $moduleParam = $parts[3] ?? $moduleParam;
+
+            if (isset($parts[4]) && $parts[4] === 'page' && isset($parts[5])) {
+                $pageParam = (int) $parts[5];
+            }
         }
 
         // Direct Module Handling for Sub-actions
@@ -111,6 +116,8 @@ class ChatbotController extends Controller
                     'sub_action' => $subAction,
                     'param' => $moduleParam,
                     'service_id' => $moduleParam,
+                    'page' => $pageParam,
+                    'raw_node_id' => $rawNodeId,
                 ]);
 
                 $rawUrl = $rendered['action_url'] ?? null;
@@ -131,6 +138,7 @@ class ChatbotController extends Controller
                     'title' => $rendered['title'] ?? 'Dynamic Module',
                     'message' => trim($rendered['message'] ?? ''),
                     'options' => $rendered['options'] ?? [],
+                    'pagination' => $rendered['pagination'] ?? null,
                     'documents' => $rendered['documents'] ?? [],
                     'action_url' => $actionUrl,
                     'action_label' => $rendered['action_label'] ?? null,
