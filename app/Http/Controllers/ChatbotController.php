@@ -64,16 +64,22 @@ class ChatbotController extends Controller
     public function select(Request $request): JsonResponse
     {
         $request->validate([
-            'node_id' => 'nullable|integer',
+            'node_id' => 'nullable',
             'action' => 'nullable|string',
+            'module_key' => 'nullable|string',
+            'module_param' => 'nullable|string',
+            'sub_action' => 'nullable|string',
         ]);
 
         $session = $this->getOrCreateSession($request);
         $action = $request->input('action');
-        $nodeId = $request->input('node_id');
+        $rawNodeId = $request->input('node_id');
+        $moduleKey = $request->input('module_key');
+        $moduleParam = $request->input('module_param');
+        $subAction = $request->input('sub_action');
 
         // Handle 'root' or 'reset' action
-        if ($action === 'root') {
+        if ($action === 'root' || $rawNodeId === 'root') {
             $roots = ChatbotNode::query()
                 ->roots()
                 ->active()
@@ -89,13 +95,58 @@ class ChatbotController extends Controller
             ]);
         }
 
-        if (!$nodeId) {
+        // Parse module string format ID: module:{module_key}:{sub_action}:{param}
+        if (is_string($rawNodeId) && str_starts_with($rawNodeId, 'module:')) {
+            $parts = explode(':', $rawNodeId);
+            $moduleKey = $parts[1] ?? $moduleKey;
+            $subAction = $parts[2] ?? $subAction;
+            $moduleParam = $parts[3] ?? $moduleParam;
+        }
+
+        // Direct Module Handling for Sub-actions
+        if ($moduleKey) {
+            $module = ChatbotModuleManager::getModule($moduleKey);
+            if ($module) {
+                $rendered = $module->renderResponse($session, [
+                    'sub_action' => $subAction,
+                    'param' => $moduleParam,
+                    'service_id' => $moduleParam,
+                ]);
+
+                $rawUrl = $rendered['action_url'] ?? null;
+                $actionUrl = ChatbotNode::resolveSmartUrl($rawUrl);
+
+                // Log the interaction
+                ChatbotLog::create([
+                    'session_id' => $session->id,
+                    'node_id' => null,
+                    'user_action' => 'Module: ' . $moduleKey . ($subAction ? ':' . $subAction : ''),
+                    'bot_response_summary' => Str::limit(strip_tags($rendered['message'] ?? ''), 200),
+                    'created_at' => now(),
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'session_token' => $session->session_token,
+                    'title' => $rendered['title'] ?? 'Dynamic Module',
+                    'message' => trim($rendered['message'] ?? ''),
+                    'options' => $rendered['options'] ?? [],
+                    'documents' => $rendered['documents'] ?? [],
+                    'action_url' => $actionUrl,
+                    'action_label' => $rendered['action_label'] ?? null,
+                    'action_icon' => $rendered['action_icon'] ?? null,
+                    'action_icon_position' => $rendered['action_icon_position'] ?? 'left',
+                ]);
+            }
+        }
+
+        if (!$rawNodeId || !is_numeric($rawNodeId)) {
             return response()->json(['status' => 'error', 'message' => 'Invalid node ID'], 422);
         }
 
         $node = ChatbotNode::query()
             ->active()
-            ->find($nodeId);
+            ->find((int) $rawNodeId);
 
         if (!$node) {
             return response()->json(['status' => 'error', 'message' => 'Topik tidak ditemukan atau sudah tidak aktif.'], 444);
@@ -111,25 +162,31 @@ class ChatbotController extends Controller
 
         $botMessage = $node->getRandomResponse();
         $childOptions = [];
+        $documents = [];
         $actionUrl = $node->getResolvedActionUrl();
         $actionLabel = $node->action_label;
         $actionIcon = $node->action_icon;
         $actionIconPosition = $node->action_icon_position ?: 'left';
 
-        // Handle 'module' action type
+        // Handle 'module' action type on a ChatbotNode
         if ($node->action_type === 'module' && $node->module_key) {
             $module = ChatbotModuleManager::getModule($node->module_key);
             if ($module) {
-                $rendered = $module->renderResponse($session);
+                $rendered = $module->renderResponse($session, [
+                    'sub_action' => 'root',
+                ]);
                 if (!empty($rendered['message'])) {
                     $botMessage = trim($rendered['message']);
                 }
                 if (!empty($rendered['options'])) {
                     $childOptions = $rendered['options'];
                 }
+                if (!empty($rendered['documents'])) {
+                    $documents = $rendered['documents'];
+                }
                 if (!empty($rendered['action_url'])) {
                     $rawUrl = $rendered['action_url'];
-                    $actionUrl = preg_match('/^https?:\/\//i', $rawUrl) ? $rawUrl : url($rawUrl);
+                    $actionUrl = ChatbotNode::resolveSmartUrl($rawUrl);
                     $actionLabel = $rendered['action_label'] ?? 'Buka Halaman Related';
                     $actionIcon = $rendered['action_icon'] ?? 'bi-box-arrow-up-right';
                     $actionIconPosition = $rendered['action_icon_position'] ?? 'left';
@@ -161,6 +218,7 @@ class ChatbotController extends Controller
             'icon' => $node->icon,
             'message' => $botMessage ?: 'Berikut informasi yang dapat kami sajikan:',
             'options' => $childOptions,
+            'documents' => $documents,
             'action_url' => $actionUrl,
             'action_label' => $actionLabel,
             'action_icon' => $actionIcon,

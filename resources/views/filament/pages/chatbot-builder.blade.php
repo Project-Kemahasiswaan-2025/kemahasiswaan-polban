@@ -156,6 +156,32 @@
                             {!! nl2br(e($msg['text'])) !!}
                         </div>
 
+                        @if(!empty($msg['documents']))
+                        <div class="w-full space-y-1.5 pt-1">
+                            @foreach($msg['documents'] as $doc)
+                            <div class="flex items-start justify-between gap-2 p-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm w-full">
+                                <div class="flex items-start space-x-2 min-w-0 flex-1">
+                                    <i class="bi bi-file-earmark-pdf-fill text-rose-500 text-sm shrink-0 mt-0.5"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="font-bold text-[11px] text-gray-800 dark:text-gray-200 break-words leading-tight">{{ $doc['name'] }}</div>
+                                        <div class="text-[9px] text-gray-500 mt-0.5">{{ $doc['file_type'] }} {{ !empty($doc['file_size_formatted']) ? '• ' . $doc['file_size_formatted'] : '' }}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    @if(!empty($doc['can_preview']))
+                                    <a href="{{ $doc['preview_url'] }}" target="_blank" class="w-6 h-6 inline-flex items-center justify-center bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md text-xs hover:bg-gray-200 transition" title="Pratinjau Dokumen">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    @endif
+                                    <a href="{{ $doc['download_url'] }}" target="_blank" class="w-6 h-6 inline-flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white rounded-md text-xs transition" title="Unduh Dokumen">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+
                         @if(!empty($msg['action_url']))
                         <div class="pt-1">
                             <a href="{{ $msg['action_url'] }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 rounded-full font-semibold border border-amber-200 dark:border-amber-700 hover:bg-amber-100 transition text-xs">
@@ -175,7 +201,7 @@
                         @if(!empty($msg['options']))
                         <div class="w-full flex flex-wrap gap-1.5 pt-1">
                             @foreach($msg['options'] as $opt)
-                            <button wire:click="simulatorSelect({{ $opt['id'] }})" type="button" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs transition shadow-sm font-medium inline-flex items-center gap-1.5">
+                            <button wire:click="simulatorSelect('{{ $opt['id'] }}', '{{ addslashes($opt['title']) }}')" type="button" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs transition shadow-sm font-medium inline-flex items-center gap-1.5">
                                 @if(!empty($opt['icon']))
                                 <i class="bi {{ $opt['icon'] }}"></i>
                                 @endif

@@ -98,20 +98,54 @@ class ChatbotNode extends Model
     }
 
     /**
-     * Smart URL resolver: Converts relative paths like '/ormawa' or 'beasiswa' to full base URLs.
+     * Smart URL resolver: Converts relative paths (e.g. '/kontak', '/ormawa', '/layanan') to full URLs,
+     * with prefix awareness (e.g. '/kemahasiswaan/kontak') while remaining resilient if the prefix is changed/removed.
      */
-    public function getResolvedActionUrl(): ?string
+    public static function resolveSmartUrl(?string $url): ?string
     {
-        if (empty($this->action_url)) {
+        if (empty($url)) {
             return null;
         }
 
-        $url = trim($this->action_url);
+        $url = trim($url);
 
+        // 1. If full HTTP/HTTPS URL, return as is
         if (preg_match('/^https?:\/\//i', $url)) {
             return $url;
         }
 
-        return url($url);
+        $path = '/' . ltrim($url, '/');
+
+        // 2. Named route mapping for standard paths
+        $routeMap = [
+            '/kontak' => 'contact.index',
+            '/ormawa' => 'ormawa.index',
+            '/beasiswa' => 'beasiswa.index',
+            '/kompetisi' => 'competition.index',
+            '/unduhan' => 'download.index',
+            '/' => 'home',
+        ];
+
+        if (isset($routeMap[$path]) && \Illuminate\Support\Facades\Route::has($routeMap[$path])) {
+            return route($routeMap[$path]);
+        }
+
+        // 3. Dynamic Prefix Detection (e.g., /kemahasiswaan)
+        if (\Illuminate\Support\Facades\Route::has('home')) {
+            $homeUrl = route('home');
+            $parsedHomePath = parse_url($homeUrl, PHP_URL_PATH) ?? '';
+            $prefix = trim($parsedHomePath, '/');
+
+            if ($prefix && !str_starts_with($path, '/' . $prefix)) {
+                return url('/' . $prefix . $path);
+            }
+        }
+
+        return url($path);
+    }
+
+    public function getResolvedActionUrl(): ?string
+    {
+        return self::resolveSmartUrl($this->action_url);
     }
 }

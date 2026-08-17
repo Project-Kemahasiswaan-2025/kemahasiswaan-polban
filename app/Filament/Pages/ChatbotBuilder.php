@@ -87,8 +87,51 @@ class ChatbotBuilder extends Page
         ];
     }
 
-    public function simulatorSelect(int $nodeId): void
+    public function simulatorSelect($nodeId, ?string $userTitle = null): void
     {
+        if ($nodeId === 'root') {
+            $this->resetSimulator();
+            return;
+        }
+
+        // Handle string format module IDs: module:{module_key}:{sub_action}:{param}
+        if (is_string($nodeId) && str_starts_with($nodeId, 'module:')) {
+            $parts = explode(':', $nodeId);
+            $moduleKey = $parts[1] ?? null;
+            $subAction = $parts[2] ?? null;
+            $moduleParam = $parts[3] ?? null;
+
+            $module = ChatbotModuleManager::getModule($moduleKey);
+            if ($module) {
+                $mockSession = new \App\Models\ChatbotSession();
+                $rendered = $module->renderResponse($mockSession, [
+                    'sub_action' => $subAction,
+                    'param' => $moduleParam,
+                    'service_id' => $moduleParam,
+                ]);
+
+                $this->simulatorMessages[] = [
+                    'sender' => 'user',
+                    'text' => $userTitle ?: $rendered['title'] ?? 'Menu Modul',
+                ];
+
+                $rawUrl = $rendered['action_url'] ?? null;
+                $actionUrl = ChatbotNode::resolveSmartUrl($rawUrl);
+
+                $this->simulatorMessages[] = [
+                    'sender' => 'bot',
+                    'text' => trim($rendered['message'] ?? ''),
+                    'options' => $rendered['options'] ?? [],
+                    'documents' => $rendered['documents'] ?? [],
+                    'action_url' => $actionUrl,
+                    'action_label' => $rendered['action_label'] ?? null,
+                    'action_icon' => $rendered['action_icon'] ?? null,
+                    'action_icon_position' => $rendered['action_icon_position'] ?? 'left',
+                ];
+                return;
+            }
+        }
+
         $node = ChatbotNode::find($nodeId);
         if (!$node) {
             return;
@@ -110,6 +153,7 @@ class ChatbotBuilder extends Page
 
         $botText = $node->getRandomResponse();
         $options = [];
+        $documents = [];
         $actionUrl = $node->getResolvedActionUrl();
         $actionLabel = $node->action_label;
         $actionIcon = $node->action_icon;
@@ -119,12 +163,13 @@ class ChatbotBuilder extends Page
             $module = ChatbotModuleManager::getModule($node->module_key);
             if ($module) {
                 $mockSession = new \App\Models\ChatbotSession();
-                $rendered = $module->renderResponse($mockSession);
+                $rendered = $module->renderResponse($mockSession, ['sub_action' => 'root']);
                 $botText = trim($rendered['message'] ?? '');
                 $options = $rendered['options'] ?? [];
+                $documents = $rendered['documents'] ?? [];
                 if (!empty($rendered['action_url'])) {
                     $rawUrl = $rendered['action_url'];
-                    $actionUrl = preg_match('/^https?:\/\//i', $rawUrl) ? $rawUrl : url($rawUrl);
+                    $actionUrl = ChatbotNode::resolveSmartUrl($rawUrl);
                     $actionLabel = $rendered['action_label'] ?? 'Buka Halaman Related';
                     $actionIcon = $rendered['action_icon'] ?? 'bi-box-arrow-up-right';
                     $actionIconPosition = $rendered['action_icon_position'] ?? 'left';
@@ -143,6 +188,7 @@ class ChatbotBuilder extends Page
             'sender' => 'bot',
             'text' => $botText ?: 'Berikut informasi yang tersedia:',
             'options' => $options,
+            'documents' => $documents,
             'action_url' => $actionUrl,
             'action_label' => $actionLabel,
             'action_icon' => $actionIcon,
