@@ -152,7 +152,7 @@ class ServiceKnowledgeModule implements ChatbotModuleInterface
                     $docType = strtoupper(pathinfo($rawType, PATHINFO_EXTENSION) ?: 'FILE');
                 }
 
-                $docSizeFormatted = $doc->file_size ? round($doc->file_size / 1024) . ' KB' : '';
+                $docSizeFormatted = $this->formatFileSize($doc->file_size);
                 $lowerType = strtolower($doc->file_type ?: 'pdf');
                 $canPreview = in_array($lowerType, ['pdf', 'png', 'jpg', 'jpeg', 'svg', 'webp'])
                     || str_contains($lowerType, 'pdf')
@@ -203,5 +203,23 @@ class ServiceKnowledgeModule implements ChatbotModuleInterface
             'action_icon' => 'bi-box-arrow-up-right',
             'action_icon_position' => 'left',
         ];
+    }
+
+    /**
+     * Format bytes into readable KB / MB.
+     */
+    protected function formatFileSize(?int $bytes): string
+    {
+        if (!$bytes || $bytes <= 0) {
+            return '';
+        }
+
+        $kb = $bytes / 1024;
+        if ($kb >= 1024) {
+            $mb = $kb / 1024;
+            return round($mb, 1) . ' MB';
+        }
+
+        return round($kb) . ' KB';
     }
 }
