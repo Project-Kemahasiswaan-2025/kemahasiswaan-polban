@@ -37,6 +37,11 @@ class Competition extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
+    public function threads()
+    {
+        return $this->hasMany(CompetitionThread::class);
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (Competition $record) {

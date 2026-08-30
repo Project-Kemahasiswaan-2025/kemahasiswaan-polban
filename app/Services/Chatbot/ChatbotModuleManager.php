@@ -3,6 +3,7 @@
 namespace App\Services\Chatbot;
 
 use App\Contracts\ChatbotModuleInterface;
+use App\Services\Chatbot\Modules\CompetitionKnowledgeModule;
 use App\Services\Chatbot\Modules\DownloadKnowledgeModule;
 use App\Services\Chatbot\Modules\OrmawaKnowledgeModule;
 use App\Services\Chatbot\Modules\ServiceKnowledgeModule;
@@ -16,6 +17,7 @@ class ChatbotModuleManager
         'ormawa' => OrmawaKnowledgeModule::class,
         'services' => ServiceKnowledgeModule::class,
         'downloads' => DownloadKnowledgeModule::class,
+        'competitions' => CompetitionKnowledgeModule::class,
     ];
 
     public static function getModules(): array
