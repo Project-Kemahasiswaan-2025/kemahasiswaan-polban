@@ -1,9 +1,8 @@
 <div id="polbanChatbotWidget" class="chatbot-container">
     <!-- Floating Launcher Button -->
     <button id="chatbotLauncher" class="chatbot-launcher-btn shadow-lg" type="button" aria-label="Buka Chatbot Layanan">
-        <i class="bi bi-chat-dots-fill text-white fs-3 transition-icon"></i>
-        <i class="bi bi-x-lg text-white fs-3 transition-icon d-none"></i>
-        <span class="position-absolute top-0 start-100 translate-middle p-1.5 bg-success border border-light rounded-circle">
+        <i class="bi bi-chat-dots-fill text-white fs-5 transition-icon"></i>
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
             <span class="visually-hidden">Status Online</span>
         </span>
     </button>
@@ -36,29 +35,26 @@
             <!-- Messages dynamic rendering -->
         </div>
 
-        <!-- Footer / Nav Controls -->
-        <div class="chatbot-footer bg-white border-top p-2 d-flex align-items-center justify-content-between text-xs">
-            <button id="chatbotNavRoot" class="btn btn-link text-decoration-none text-navy p-1 text-xs fw-bold d-flex align-items-center">
-                <i class="bi bi-house-door-fill me-1"></i> Menu Utama
-            </button>
-            <span class="text-muted text-xs opacity-75">Pusat Layanan POLBAN</span>
-        </div>
+        <!-- Inner Close Button (Bottom Right inside Chat Box) -->
+        <button id="chatbotInnerCloseBtn" class="chatbot-inner-close-btn shadow-md" type="button" title="Tutup Chat">
+            <i class="bi bi-x-lg text-white"></i>
+        </button>
     </div>
 </div>
 
 <style>
     .chatbot-container {
         position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
+        bottom: 1.25rem;
+        right: 1.25rem;
         z-index: 1080;
         font-family: inherit;
     }
 
     .chatbot-launcher-btn {
-        width: 60px;
-        height: 60px;
-        border-radius: 30px;
+        width: 46px;
+        height: 46px;
+        border-radius: 23px;
         background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
         border: none;
         cursor: pointer;
@@ -70,19 +66,19 @@
 
     .chatbot-launcher-btn:hover {
         transform: scale(1.08);
-        box-shadow: 0 0.8rem 2rem rgba(0, 31, 63, 0.35) !important;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 31, 63, 0.3) !important;
     }
 
     .chatbot-window {
         position: absolute;
-        bottom: 75px;
+        bottom: 0;
         right: 0;
         width: 360px;
         max-width: calc(100vw - 2rem);
-        height: 520px;
-        max-height: calc(100vh - 120px);
+        height: 530px;
+        max-height: calc(100vh - 80px);
         background-color: #fff;
-        border-radius: 1rem;
+        border-radius: 1.25rem;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -95,8 +91,33 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        padding: 0.75rem;
+        padding: 0.85rem;
+        padding-bottom: 3.5rem;
         background-color: #ffffff;
+    }
+
+    .chatbot-inner-close-btn {
+        position: absolute;
+        bottom: 0.85rem;
+        right: 0.85rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+        color: #ffffff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 31, 63, 0.25);
+        z-index: 20;
+        transition: all 0.2s ease;
+    }
+
+    .chatbot-inner-close-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 16px rgba(0, 31, 63, 0.35);
     }
 
     .chat-bubble-bot {
@@ -376,11 +397,10 @@
         const launcher = document.getElementById('chatbotLauncher');
         const windowEl = document.getElementById('chatbotWindow');
         const closeBtn = document.getElementById('chatbotCloseBtn');
+        const innerCloseBtn = document.getElementById('chatbotInnerCloseBtn');
         const resetBtn = document.getElementById('chatbotResetBtn');
         const navRoot = document.getElementById('chatbotNavRoot');
         const bodyEl = document.getElementById('chatbotBody');
-        const iconDots = launcher.querySelector('.bi-chat-dots-fill');
-        const iconClose = launcher.querySelector('.bi-x-lg');
 
         let sessionToken = localStorage.getItem('polban_chatbot_session') || '';
         let isInitialized = false;
@@ -390,20 +410,23 @@
             const isHidden = windowEl.classList.contains('d-none');
             if (isHidden) {
                 windowEl.classList.remove('d-none');
-                iconDots.classList.add('d-none');
-                iconClose.classList.remove('d-none');
+                launcher.classList.add('d-none');
                 if (!isInitialized) {
                     initChatbot();
+                } else {
+                    scrollToBottom();
                 }
             } else {
                 windowEl.classList.add('d-none');
-                iconDots.classList.remove('d-none');
-                iconClose.classList.add('d-none');
+                launcher.classList.remove('d-none');
             }
         }
 
         launcher.addEventListener('click', toggleChat);
         closeBtn.addEventListener('click', toggleChat);
+        if (innerCloseBtn) {
+            innerCloseBtn.addEventListener('click', toggleChat);
+        }
         resetBtn.addEventListener('click', function() {
             bodyEl.innerHTML = '';
             isInitialized = false;
