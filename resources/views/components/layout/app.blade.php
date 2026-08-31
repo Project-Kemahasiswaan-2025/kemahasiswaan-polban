@@ -35,6 +35,8 @@
     <!-- Custom JS -->
     <script src="{{ asset('js/landing.js') }}"></script>
     
+    <x-chatbot-widget />
+
     @stack('scripts')
 </body>
 </html>

@@ -53,4 +53,5 @@ return [
     'nav_label_download_categories' => 'Kategori Unduhan',
     'nav_label_document_shortcuts' => 'Shortcut Dokumen',
     'nav_label_video_categories' => 'Kategori Video',
+    'nav_label_chatbot' => 'Konfigurasi Chatbot',
 ];
