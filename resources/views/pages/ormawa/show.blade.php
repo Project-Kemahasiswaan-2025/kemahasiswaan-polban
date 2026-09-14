@@ -78,11 +78,16 @@
                         </div>
                         @endif
 
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ $child->name }}</h5>
                             @if($child->excerpt)
-                            <p class="card-text text-muted">{{ Str::limit($child->excerpt, 100) }}</p>
+                            <p class="card-text text-muted flex-grow-1">{{ Str::limit($child->excerpt, 100) }}</p>
                             @endif
+                            <div class="mt-3 pt-2 border-top">
+                                <a href="{{ route('ormawa.show', $child->slug) }}" class="btn btn-outline-primary btn-sm w-100 fw-semibold d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-arrow-right-circle me-1"></i> Lihat Profil
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

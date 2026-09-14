@@ -42,8 +42,8 @@ $(document).ready(function() {
     function updateHeader(categorySlug) {
         const homeLabel = document.documentElement.lang === 'id' ? 'Beranda' : 'Home';
         const ormawaLabel = document.documentElement.lang === 'id' ? 'Organisasi Mahasiswa' : 'Student Organizations';
-        const homeUrl = '/';
-        const ormawaUrl = '/ormawa';
+        const homeUrl = '/kemahasiswaan';
+        const ormawaUrl = '/kemahasiswaan/ormawa';
 
         if (!categorySlug) {
             $('#header-title').text(ormawaLabel);
@@ -126,9 +126,9 @@ function renderOrmawa(organizations) {
     organizations.forEach(org => {
         let readMoreLink = '';
         if (org.is_group) {
-            readMoreLink = `/ormawa?category=${org.slug}`;
+            readMoreLink = `/kemahasiswaan/ormawa?category=${org.slug}`;
         } else {
-            readMoreLink = `/ormawa/${org.slug}`;
+            readMoreLink = `/kemahasiswaan/ormawa/${org.slug}`;
         }
         
         html += `
