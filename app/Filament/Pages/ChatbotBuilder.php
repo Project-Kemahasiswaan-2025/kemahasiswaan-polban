@@ -12,7 +12,7 @@ use Filament\Support\Icons\Heroicon;
 class ChatbotBuilder extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftRight;
-    protected static ?int $navigationSort = 55;
+    protected static ?int $navigationSort = 65;
     protected string $view = 'filament.pages.chatbot-builder';
 
     // Form Modal State
@@ -63,7 +63,7 @@ class ChatbotBuilder extends Page
 
     public static function getNavigationGroup(): ?string
     {
-        return __('menu.nav_group_services');
+        return __('filament.resources.contact_setting.nav_group');
     }
 
     public static function getNavigationLabel(): string
