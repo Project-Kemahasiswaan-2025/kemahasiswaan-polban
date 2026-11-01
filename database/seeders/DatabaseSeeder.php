@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             BannerSeeder::class,
             VideoSeeder::class,
             StudentOrganizationSeeder::class,
+            HimpunanSeeder::class,
             CompetitionSeeder::class,
             RunningTextConfigSeeder::class,
             RunningTextSeeder::class,
