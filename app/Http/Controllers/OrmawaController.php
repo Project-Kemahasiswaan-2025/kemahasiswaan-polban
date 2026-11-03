@@ -57,6 +57,7 @@ class OrmawaController extends Controller
     {
         $organization = StudentOrganization::where('slug', $slug)
             ->where('is_active', true)
+            ->with('highlights')
             ->firstOrFail();
 
         return view('pages.ormawa.show', compact('organization'));

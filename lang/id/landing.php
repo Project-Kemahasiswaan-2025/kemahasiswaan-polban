@@ -91,6 +91,7 @@ return [
         'subtitle'          => 'Organisasi Mahasiswa dan Unit Kegiatan Mahasiswa',
         'no_content'        => 'Informasi detail untuk :name akan segera tersedia.',
         'org_list_heading'  => ':name - Daftar Organisasi',
+        'highlights_heading' => 'Kegiatan & Pencapaian',
     ],
 
     // -------------------------------------------------------------------------

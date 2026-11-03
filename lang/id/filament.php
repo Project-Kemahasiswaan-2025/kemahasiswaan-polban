@@ -117,6 +117,8 @@ return [
         'document_media' => 'Dokumen / Media',
         'running_text_config' => 'Running Text Configuration',
         'running_text_config_desc' => 'Configure the global settings for the running text ticker',
+        'highlights' => 'Kegiatan & Pencapaian',
+        'highlights_desc' => 'Tampilkan foto kegiatan dan pencapaian yang telah diraih organisasi ini, ditampilkan di halaman profil publik.',
     ],
 
     'tabs' => [
@@ -131,6 +133,9 @@ return [
         'image_helper' => 'Rekomendasi ukuran gambar: 1200x500px atau rasio serupa',
         'poster_helper' => 'Rekomendasi ukuran: 900x1280px',
         'org_cover_helper' => 'Rekomendasi ukuran: 300x200px',
+        'highlight_repeater' => 'Daftar Kegiatan / Pencapaian',
+        'highlight_title' => 'Judul',
+        'highlight_description' => 'Deskripsi',
         'title' => 'Judul',
         'sort_order' => 'Urutan',
         'url_optional' => 'Link (opsional)',
@@ -266,6 +271,7 @@ return [
         'view' => 'Lihat',
         'follow_up' => 'Tindak Lanjut',
         'add_timeline' => 'Tambah Tahapan',
+        'add_highlight' => 'Tambah Item',
     ],
 
     'placeholders' => [

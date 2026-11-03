@@ -4,8 +4,10 @@ namespace App\Filament\Resources\StudentOrganizations\Schemas;
 
 use App\Models\StudentOrganization;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -126,6 +128,44 @@ class StudentOrganizationForm
                         ->label(__('filament.fields.full_description'))
                         ->nullable()
                         ->columnSpanFull(),
+                ])
+                ->columnSpanFull(),
+
+            Section::make(__('filament.sections.highlights'))
+                ->description(__('filament.sections.highlights_desc'))
+                ->schema([
+                    Repeater::make('highlights')
+                        ->label(__('filament.fields.highlight_repeater'))
+                        ->relationship()
+                        ->schema([
+                            FileUpload::make('image')
+                                ->label(__('filament.fields.image'))
+                                ->disk('public')
+                                ->directory('org/highlights')
+                                ->image()
+                                ->required()
+                                ->columnSpanFull(),
+                            TextInput::make('title')
+                                ->label(__('filament.fields.highlight_title'))
+                                ->required()
+                                ->maxLength(180)
+                                ->columnSpanFull(),
+                            Textarea::make('description')
+                                ->label(__('filament.fields.highlight_description'))
+                                ->rows(3)
+                                ->columnSpanFull(),
+                            TextInput::make('sort_order')
+                                ->label(__('filament.fields.sort_order'))
+                                ->numeric()
+                                ->default(0),
+                        ])
+                        ->defaultItems(0)
+                        ->reorderable()
+                        ->orderColumn('sort_order')
+                        ->itemLabel(fn(array $state): ?string => $state['title'] ?? null)
+                        ->collapsible()
+                        ->collapsed()
+                        ->addActionLabel(__('filament.actions.add_highlight')),
                 ])
                 ->columnSpanFull(),
         ]);

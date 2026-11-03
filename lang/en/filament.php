@@ -117,6 +117,8 @@ return [
         'document_media' => 'Document / Media',
         'running_text_config' => 'Running Text Configuration',
         'running_text_config_desc' => 'Configure the global settings for the running text ticker',
+        'highlights' => 'Activities & Achievements',
+        'highlights_desc' => 'Showcase photos of activities and achievements this organization has accomplished, displayed on the public profile page.',
     ],
 
     'tabs' => [
@@ -131,6 +133,9 @@ return [
         'image_helper' => 'Recommended image size: 1200x500px or similar ratio',
         'poster_helper' => 'Recommended size: 900x1280px',
         'org_cover_helper' => 'Recommended size: 300x200px',
+        'highlight_repeater' => 'Activity / Achievement Items',
+        'highlight_title' => 'Title',
+        'highlight_description' => 'Description',
         'title' => 'Title',
         'sort_order' => 'Sort Order',
         'url_optional' => 'Link (optional)',
@@ -266,6 +271,7 @@ return [
         'view' => 'View',
         'follow_up' => 'Follow Up',
         'add_timeline' => 'Add Stage',
+        'add_highlight' => 'Add Item',
     ],
 
     'placeholders' => [

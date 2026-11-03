@@ -74,6 +74,7 @@ return [
         'subtitle'         => 'Student Organizations and Activity Units',
         'no_content'       => 'Detailed information for :name will be available soon.',
         'org_list_heading' => ':name - Organization List',
+        'highlights_heading' => 'Activities & Achievements',
     ],
 
     'profile' => [

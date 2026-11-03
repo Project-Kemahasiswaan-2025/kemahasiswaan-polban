@@ -59,6 +59,30 @@
         </div>
     </section>
 
+    <!-- Activities & Achievements (if any) -->
+    @if($organization->highlights->count() > 0)
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-4">{{ __('landing.ormawa.highlights_heading') }}</h2>
+            <div class="row g-4">
+                @foreach($organization->highlights as $highlight)
+                <div class="col-md-4 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{{ Storage::url($highlight->image) }}" alt="{{ $highlight->title }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $highlight->title }}</h5>
+                            @if($highlight->description)
+                            <p class="card-text text-muted">{{ $highlight->description }}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     <!-- Child Organizations (if any) -->
     @if($organization->is_group && $organization->children->count() > 0)
     <section class="py-5 bg-light">

@@ -40,6 +40,11 @@ class StudentOrganization extends Model
         return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
     }
 
+    public function highlights(): HasMany
+    {
+        return $this->hasMany(OrganizationHighlight::class)->orderBy('sort_order');
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (StudentOrganization $record) {
